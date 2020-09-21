@@ -312,7 +312,8 @@ class CovidModels(NumericsCovid19):
                 constraint_keys, constant_keys)
 
     def get_solution_data(self,
-                          out_put_file_prefix_name='bocop_'
+                          out_put_file_prefix_name=
+                          './vaccination_pkl_solutions' + '/bocop'
                           ):
         bocop_file_name = self.bocop_solution_file
         state_keys, control_keys, parameter_keys, boundarycond_keys, \
