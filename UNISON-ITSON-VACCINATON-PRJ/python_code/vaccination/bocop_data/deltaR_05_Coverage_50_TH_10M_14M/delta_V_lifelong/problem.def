@@ -1,0 +1,104 @@
+# This file defines all dimensions and parameters
+# values for your problem :
+
+# Initial and final time :
+time.free string final
+time.initial double 0
+time.final double 1
+
+# Dimensions :
+state.dimension integer 9
+control.dimension integer 1
+algebraic.dimension integer 0
+parameter.dimension integer 1
+constant.dimension integer 26
+boundarycond.dimension integer 10
+constraint.dimension integer 9
+
+# Discretization :
+discretization.steps integer 3000
+discretization.method string midpoint
+
+# Optimization :
+optimization.type string batch
+batch.type integer 0
+batch.index integer 2
+batch.nrange integer 5
+batch.lowerbound double 0.1
+batch.upperbound double 0.9
+batch.directory string Folder_epsilon_01_09_uVx2
+
+# Initialization :
+initialization.type string from_init_file
+initialization.file string none
+
+# Parameter identification :
+paramid.type string false
+paramid.separator string ,
+paramid.file string no_directory
+paramid.dimension integer 0
+
+# Names :
+state.0 string S(t)
+state.1 string E(t)
+state.2 string I_S(t)
+state.3 string I_A(t)
+state.4 string R(t)
+state.5 string D(t)
+state.6 string V(t)
+state.7 string X(t)
+state.8 string xZero
+control.0 string u_V
+parameter.0 string finalTime
+boundarycond.0 string S_0
+boundarycond.1 string E_0
+boundarycond.2 string I_S_0
+boundarycond.3 string I_A_0
+boundarycond.4 string R_0
+boundarycond.5 string D_0
+boundarycond.6 string V_0
+boundarycond.7 string X_0
+boundarycond.8 string X_f
+boundarycond.9 string xZero_0
+constraint.0 string conservation_law
+constraint.1 string positivity_s
+constraint.2 string positivity_e
+constraint.3 string positivity_i_s
+constraint.4 string positivity_i_a
+constraint.5 string positivity_r
+constraint.6 string positivity_d
+constraint.7 string positivity_v
+constraint.8 string constraint.8
+constant.0 string beta_s
+constant.1 string beta_a
+constant.2 string epsilon
+constant.3 string delta_e
+constant.4 string delta_v
+constant.5 string delta_r
+constant.6 string p
+constant.7 string alpha_a
+constant.8 string theta
+constant.9 string alpha_s
+constant.10 string mu
+constant.11 string mu_s
+constant.12 string mu_t
+constant.13 string lambda_v
+constant.14 string lambda_t
+constant.15 string a_S
+constant.16 string a_D
+constant.17 string a_V
+constant.18 string c_V
+constant.19 string c_T
+constant.20 string h_max
+constant.21 string d_final
+constant.22 string coverage
+constant.23 string hospitalization_rate
+constant.24 string d_max
+constant.25 string n_pop
+
+# Solution file :
+solution.file string solution_epsilon_085_v1.sol
+
+# Iteration output frequency :
+iteration.output.frequency integer 0
+

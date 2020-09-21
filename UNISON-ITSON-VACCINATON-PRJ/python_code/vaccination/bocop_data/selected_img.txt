@@ -1,0 +1,13 @@
+Scenario 00: Likening of efficiencty
+delta_r = 0.5* 365
+coverage = 0.5
+time horizon =  10 m - 14
+delta_v = 0.5
+
+Scenario 01: Likening of vaccine imunuty with .9 efficiencty
+# three solutions
+delta_v = 1.0 
+# three solutions
+Sceario 0.3 Main solution epsilon:0.7, delta_V: 0.5
+delta_v = lifelong
+# four solutions
