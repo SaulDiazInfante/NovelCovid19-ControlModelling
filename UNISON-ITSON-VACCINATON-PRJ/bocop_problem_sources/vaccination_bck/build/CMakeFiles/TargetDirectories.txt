@@ -1,0 +1,4 @@
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/vaccination/build/CMakeFiles/rebuild_cache.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/vaccination/build/CMakeFiles/edit_cache.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/vaccination/build/CMakeFiles/CORE.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/vaccination/build/CMakeFiles/bocop.dir

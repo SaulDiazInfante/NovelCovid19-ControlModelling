@@ -1,0 +1,27 @@
+This is Ipopt version 3.12.12, running with linear solver mumps.
+NOTE: Other linear solvers might be more efficient (see Ipopt documentation).
+
+Number of nonzeros in equality constraint Jacobian...:   393010
+Number of nonzeros in inequality constraint Jacobian.:    72000
+Number of nonzeros in Lagrangian Hessian.............:   309001
+
+Total number of variables............................:    57010
+                     variables with only lower bounds:     6002
+                variables with lower and upper bounds:    24008
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:    57010
+Total number of inequality constraints...............:    24000
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:    24000
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  9.9999900e-03 1.90e-01 1.00e+00   0.0 0.00e+00    -  0.00e+00 0.00e+00   0
+MUMPS returned INFO(1) = -9 and requires more memory, reallocating.  Attempt 1
+  Increasing icntl[13] from 1000 to 2000.
+MUMPS returned INFO(1) = -9 and requires more memory, reallocating.  Attempt 2
+  Increasing icntl[13] from 2000 to 4000.
+MUMPS returned INFO(1) = -9 and requires more memory, reallocating.  Attempt 3
+  Increasing icntl[13] from 4000 to 8000.
+   1  1.1230276e-02 1.89e-01 9.00e+02  -0.6 1.20e+00    -  1.69e-01 5.13e-03f  1
+   2  2.1751152e-01 5.61e-02 2.02e+03  -0.7 5.11e-01    -  8.78e-02 7.02e-01f  1

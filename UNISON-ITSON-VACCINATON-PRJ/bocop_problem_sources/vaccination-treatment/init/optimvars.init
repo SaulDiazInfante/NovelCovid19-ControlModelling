@@ -1,0 +1,9 @@
+# Optimization parameters starting point file.
+# This file contains initialization values
+# for all optimization parameters
+
+# Number of optimization parameters :
+1
+
+# Initial values :
+0.1

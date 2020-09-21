@@ -1,0 +1,101 @@
+# This file defines all dimensions and parameters
+# values for your problem :
+
+# Initial and final time :
+time.free string none
+time.initial double 0
+time.final double 365
+
+# Dimensions :
+state.dimension integer 10
+control.dimension integer 2
+algebraic.dimension integer 0
+parameter.dimension integer 0
+constant.dimension integer 26
+boundarycond.dimension integer 12
+constraint.dimension integer 3
+
+# Discretization :
+discretization.steps integer 100
+discretization.method string midpoint
+
+# Optimization :
+optimization.type string single
+batch.type integer 0
+batch.index integer 0
+batch.nrange integer 1
+batch.lowerbound double 0
+batch.upperbound double 0
+batch.directory string none
+
+# Initialization :
+initialization.type string from_init_file
+initialization.file string none
+
+# Parameter identification :
+paramid.type string false
+paramid.separator string ,
+paramid.file string no_directory
+paramid.dimension integer 0
+
+# Names :
+state.0 string suceptible
+state.1 string exposed
+state.2 string infected_symptomatic
+state.3 string infected_asymptomatic
+state.4 string recovered
+state.5 string death
+state.6 string vaccinated
+state.7 string treated
+state.8 string c_v
+state.9 string mayer_state
+control.0 string u_V
+control.1 string u_T
+boundarycond.0 string s_0
+boundarycond.1 string e_0
+boundarycond.2 string i_s_0
+boundarycond.3 string i_a_0
+boundarycond.4 string r_0
+boundarycond.5 string d_0
+boundarycond.6 string d_f
+boundarycond.7 string v_0
+boundarycond.8 string treated_0
+boundarycond.9 string cv_0
+boundarycond.10 string cv_t_f
+boundarycond.11 string mayer_state_0
+constraint.0 string conservation_law
+constraint.1 string hospitalization_constraint
+constraint.2 string mortality_constraint
+constant.0 string beta_s
+constant.1 string beta_a
+constant.2 string epsilon
+constant.3 string delta_e
+constant.4 string delta_v
+constant.5 string delta_r
+constant.6 string p
+constant.7 string alpha_a
+constant.8 string alpha_t
+constant.9 string alpha_s
+constant.10 string mu
+constant.11 string mu_s
+constant.12 string mu_t
+constant.13 string lambda_v
+constant.14 string lambda_t
+constant.15 string a_s
+constant.16 string a_d
+constant.17 string a_v
+constant.18 string c_v
+constant.19 string c_t
+constant.20 string h_max
+constant.21 string d_final
+constant.22 string coverage
+constant.23 string hospitalization_rate
+constant.24 string mortality_rate
+constant.25 string d_max
+
+# Solution file :
+solution.file string solution.sol
+
+# Iteration output frequency :
+iteration.output.frequency integer 0
+

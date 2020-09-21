@@ -1,0 +1,20 @@
+# ** Batch optimization parameters **
+# Index of the varying constant : 2
+# Starting value of this constant : 0.1
+# Ending value of this constant : 0.99
+# Number of steps in this interval (number of optimizations) : 10
+
+# ** Optimization results **
+#  n   | constant value  |  final objective  |  constraint viol. |  nb iter. | status |
+1        0.1                40.4383             0.00340648          135        2        
+2        0.198889           40.1777             0.0032448           744        2        
+3        0.297778           39.8901             0.00309051          372        2        
+4        0.396667           39.5799             0.00292516          2086       2        
+5        0.495556           662.67              0.115214            5000       -1       
+6        0.594444           38.8953             0.00255808          297        2        
+7        0.693333           38.5833             0.0023518           493        2        
+8        0.792222           38.1081             0.00213141          213        2        
+9        0.891111           37.6647             0.00190216          213        2        
+10       0.99               37.2301             0.00166443          322        2        
+
+# Successful optimizations : 0/10

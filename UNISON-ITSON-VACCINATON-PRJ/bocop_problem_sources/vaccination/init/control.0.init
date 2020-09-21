@@ -1,0 +1,9 @@
+# Starting point file.
+# This file contains the values of the initial points
+# for variable u_V
+
+# Type of initialization :
+constant
+
+# Constant value for the starting point :
+0.1

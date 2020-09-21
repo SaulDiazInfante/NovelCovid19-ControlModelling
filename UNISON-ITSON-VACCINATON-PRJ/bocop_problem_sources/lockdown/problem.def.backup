@@ -1,0 +1,94 @@
+# This file defines all dimensions and parameters
+# values for your problem :
+
+# Initial and final time :
+time.free string final
+time.initial double 0
+time.final double 1
+
+# Dimensions :
+state.dimension integer 9
+control.dimension integer 1
+algebraic.dimension integer 0
+parameter.dimension integer 1
+constant.dimension integer 16
+boundarycond.dimension integer 9
+constraint.dimension integer 10
+
+# Discretization :
+discretization.steps integer 5000
+discretization.method string midpoint
+
+# Optimization :
+optimization.type string single
+batch.type integer 0
+batch.index integer 0
+batch.nrange integer 1
+batch.lowerbound double 0
+batch.upperbound double 0
+batch.directory string none
+
+# Initialization :
+initialization.type string from_init_file
+initialization.file string none
+
+# Parameter identification :
+paramid.type string false
+paramid.separator string ,
+paramid.file string no_directory
+paramid.dimension integer 0
+
+# Names :
+state.0 string lockdown
+state.1 string suceptible
+state.2 string exposed
+state.3 string syntomatic_infected
+state.4 string asyntomatoc_infected
+state.5 string hospitalized
+state.6 string recovered
+state.7 string death
+state.8 string meyer_form
+control.0 string lockdow_exit
+parameter.0 string finalTime
+boundarycond.0 string lockdown_0
+boundarycond.1 string suceptible_0
+boundarycond.2 string exposed_0
+boundarycond.3 string symtopmatic_0
+boundarycond.4 string asymptomatic_0
+boundarycond.5 string hospitalized_0
+boundarycond.6 string recovered_0
+boundarycond.7 string death_0
+boundarycond.8 string x_zero
+constraint.0 string lockdown_positivity
+constraint.1 string suceptible_positivity
+constraint.2 string exposed__positivity
+constraint.3 string symtopmatic_positivity
+constraint.4 string asymptomatic_positivity
+constraint.5 string hospitalized_positivity
+constraint.6 string recovered_positivity
+constraint.7 string death_positivity
+constraint.8 string hospitalized_constrain
+constraint.9 string conservation_law
+constant.0 string beta_s
+constant.1 string beta_a
+constant.2 string epsilon
+constant.3 string delta_u
+constant.4 string delta_e
+constant.5 string delta_s
+constant.6 string p
+constant.7 string alpha_a
+constant.8 string alpha_h
+constant.9 string alpha_s
+constant.10 string mu_s
+constant.11 string mu_h
+constant.12 string h_max
+constant.13 string a_h
+constant.14 string a_d
+constant.15 string a_u
+
+# Solution file :
+solution.file string covid19-Sonoral
+
+# Iteration output frequency :
+iteration.output.frequency integer 0
+

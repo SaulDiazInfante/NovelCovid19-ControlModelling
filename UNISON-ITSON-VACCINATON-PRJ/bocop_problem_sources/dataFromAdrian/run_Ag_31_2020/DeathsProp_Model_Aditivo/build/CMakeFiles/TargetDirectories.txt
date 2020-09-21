@@ -1,0 +1,4 @@
+/home/adrian/Bocop/DeathsProp_Model_Aditivo/build/CMakeFiles/rebuild_cache.dir
+/home/adrian/Bocop/DeathsProp_Model_Aditivo/build/CMakeFiles/edit_cache.dir
+/home/adrian/Bocop/DeathsProp_Model_Aditivo/build/CMakeFiles/bocop.dir
+/home/adrian/Bocop/DeathsProp_Model_Aditivo/build/CMakeFiles/CORE.dir

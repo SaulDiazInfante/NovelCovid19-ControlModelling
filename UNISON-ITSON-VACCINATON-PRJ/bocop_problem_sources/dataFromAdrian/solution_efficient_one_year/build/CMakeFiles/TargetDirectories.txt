@@ -1,0 +1,4 @@
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/dataFromAdrian/solution_efficient_one_year/build/CMakeFiles/rebuild_cache.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/dataFromAdrian/solution_efficient_one_year/build/CMakeFiles/edit_cache.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/dataFromAdrian/solution_efficient_one_year/build/CMakeFiles/CORE.dir
+/home/saul/Desktop/WorikingProjects/Covid/COVID19-Sonora/bocop_problem_sources/dataFromAdrian/solution_efficient_one_year/build/CMakeFiles/bocop.dir

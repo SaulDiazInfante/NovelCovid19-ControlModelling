@@ -1,0 +1,46 @@
+# This file contains all the bounds of your problem.
+# Bounds are stored in standard format : 
+# [lower bound]  [upper bound] [type of bound]
+
+# Dimensions (boundary conditions, state, control, algebraic 
+# variables, optimization parameters, path constraints) :
+12 10 2 0 0 3
+0.937049746800439 0.937049746800439 equal
+0.055702939989765 0.055702939989765 equal
+0.000225367676459256 0.000225367676459256 equal
+0.00251850236581226 0.00251850236581226 equal
+0.00360093390096676 0.00360093390096676 equal
+0.000902509266558033 0.000902509266558033 equal
+0.003 0.003 equal
+0 0 equal
+0 0 equal
+0 0 equal
+0.7 0.7 equal
+0 0 equal
+
+# Bounds for the initial and final conditions :
+
+# Bounds for the state variables :
+0 1 both
+0 1 both
+0 1 both
+0 1 both
+0 1 both
+0 1 both
+0 1 both
+0 1 both
+0 2e+20 lower
+0 2e+20 lower
+0.001 1 both
+0.001 1 both
+
+# Bounds for the control variables :
+
+# Bounds for the algebraic variables :
+
+0 0 equal
+-1 0 both
+-1 0 both
+# Bounds for the optimization parameters :
+
+# Bounds for the path constraints :
