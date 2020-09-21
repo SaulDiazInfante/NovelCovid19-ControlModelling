@@ -1,0 +1,147 @@
+  According to dynamics in equation \eqref{model1}, we modulate the vaccination rate by 
+a time-dependent control signal  $u_V(t)$. We add  compartment $X$ to count all the vaccine
+applications of susceptible, exposed, asymptomatic and
+recovered individuals. This process is modeled by
+\begin{equation}
+    \label{eqn:counter}
+      X'(t) =
+        (\lambda_V + u_V(t))(S + E + I_A + R)
+\end{equation}
+and describes the number of applied vaccines at time $t$.
+ 
+Consider
+  {$${x(t):= (S,E,I_S,I_A,R,D,V,X)^{\top}(t)}$$} and control signal
+  $u_v(\cdot)$. We quantify the cost and reward of a vaccine strategy 
+  policy via the penalization functional
+  \begin{equation}
+    \label{eqn:cost_functional}
+    J(u_V):=
+      \int _0 ^ T
+      a_S I_S + a_d D +
+      \frac{1}{2}
+      %\left(
+        c_V u_v^2
+        % + c_T u_T^2
+      %\right)
+      ds.
+  \end{equation}
+  In other words, we assume in functional $J$ that pandemic cost is proportional to the
+  symptomatic and death reported cases and that a vaccination policy
+  implies quadratic consumption of resources.
+
+  Further, since we aim to simulate vaccination policies at different coverage
+  scenarios, we impose the vaccination counter state's final
+  time condition $X(T)$
+  \begin{equation}
+    \begin{aligned}
+      x(T) &= (\cdot, \cdot, \cdot, \cdot, \cdot, X(T))^{\top},
+      \in \Omega
+      \\
+      X(T)
+        &= x_{cover age},
+      \\
+      x_{coverage}
+        & \in
+        \left \{
+          \text{Low(0.2)},\text{Mid(0.5)}, \text{High(0.8)}
+        \right \} .
+    \end{aligned}
+  \end{equation}
+  Thus, given the time horizon $T$, we impose that the last fraction of
+  vaccinated populations corresponds to 20\%, 50\% or 80\%, and
+  the rest of final states as free. We also impose the path constraint
+  \begin{equation}
+    \label{eqn:path_constrain}
+    \Phi(x,t):= \kappa I_S(t) \leq B,
+    \qquad \forall t \in [0, T],
+  \end{equation}
+  to ensure that healthcare services will not be overloaded. Here $\kappa$
+  denotes hospitalization rate, and $B$ is the load capacity of a
+  health system.
+
+Given a fixed time horizon and vaccine efficiency, 
+we estimate the constant vaccination rate as the solution of
+\begin{equation}
+    x_{coverage} = 1 - \exp(-\lambda_v T).
+\end{equation}
+ That is, $\lambda_v$ denotes the constant rate
+to cover  a fraction $x_{coverage}$ in time horizon $T$. 
+Thus, according to this vaccination rate, we postulate a policy $u_v$ that 
+modulates vaccination rate according to $\lambda_V$ as a baseline. That is,
+optimal vaccination amplifies or attenuates the estimated baseline 
+$\lambda_V$ in a interval $[\lambda_v^{\min}, \lambda_v^{\max}]$ 
+to optimize functional $J(\cdot)$\textemdash minimizing 
+symptomatic, death reported cases and optimizing resources.
+
+    Our objective is minimize the cost functional
+  \eqref{eqn:cost_functional}\textemdash over an appropriated functional
+  space\textemdash subject to the dynamics in equations \eqref{model1} and \eqref{eqn:counter},
+  boundary conditions, and the path constrain in \eqref{eqn:path_constrain}.
+  That is, we search for vaccination policies $u_V(\cdot)$, which
+  solve the following optimal control problem (OCP)
+  \begin{equation}
+    \label{eqn:optimal_control_problem}
+    \begin{aligned}
+      & \min_{u \in \mathcal U}
+        J(u) =
+        \int_0 ^ T
+          a_S I_S(s) + a_d D(s) +
+          \frac{1}{2}
+          %\left(
+            c_V u_v^2(s)
+            % + c_T u_T^2
+            %\right)
+            ds,
+      \\
+      \text{s.t.} &
+      \\
+      S'(t)
+        &=
+          \mu \bar{N}-\frac{\beta_S
+          I_S+\beta_AI_A}{\bar{N}}S -
+          (\mu + \lambda_V + u_V(t))S + \delta_V V + \delta_R R
+        \\
+      E'(t)
+        &=
+          \frac{\beta_S I_S+\beta_AI_A}{\bar{N}}S+(1-\epsilon) \frac{\beta_S I_S+\beta_AI_A}{\bar{N}}V
+          -(\mu+\delta_E) E
+        \\
+      I'_S(t)
+        &=p
+          \delta_E
+          E-(\mu + \alpha_S) I_S
+        \\
+      I'_A(t)
+        &= (1 - p) \delta_E E-(\mu + \alpha_A) I_A
+        \\
+      R'(t)
+        &= (1 - \theta) \alpha_S I_S + \alpha_A I_A
+           - (\mu + \delta_R) R
+        \\
+      D'(t)&=
+        \theta \alpha_S I_S
+        \\
+      V'(t)&=
+        (\lambda_V + u_V(t)) S - (1 -\epsilon)
+        \frac{\beta_S I_S + \beta_AI_A}{\bar{N}} V
+        -(\mu + \delta_V) V
+        \\
+      X'(t)&=
+        (\lambda_V + u_V(t))(S + E + I_A + R)
+      \\
+      \\
+       S(0) &= S_0, \ E(0) = E_0, \ I_S(0) = I_{S_{0}},
+      \\
+      I_A(0) &= I_{A_{0}}, \ R(0) = R_0, \ D(0) = D_0,
+      \\
+      V(0) &= 0, X(0) = 0, \quad
+      u_V(.) \in [u_{\min}, u^{\max}],
+      \\
+      X(T) &= x_{coverage},
+      \quad
+       \kappa I_S(t) \leq B, \qquad \forall t \in [0, T],
+      \\
+      \bar{N}(t) &= S + E + I_S + I_A + R + V.
+    \end{aligned}
+  \end{equation}
+Next section illustrates our results.

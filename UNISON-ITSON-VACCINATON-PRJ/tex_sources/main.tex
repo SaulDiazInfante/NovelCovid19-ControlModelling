@@ -1,0 +1,114 @@
+\documentclass[preprint, sort&compress]{elsarticle}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsbsy}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amstext}
+\usepackage{mathrsfs}
+\usepackage{graphpap}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{graphics,graphicx}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{abstract}
+\usepackage{hyperref}
+\hypersetup{colorlinks = true, allcolors = blue}
+\usepackage[nameinlink,noabbrev]{cleveref} 
+\renewcommand{\abstractname}{}   
+\renewcommand{\absnamepos}{empty} 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\e}{\varepsilon}
+\newcommand{\f}{\mathfrak{F}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newtheorem{teor}{Theorem}
+\newtheorem{lemma}{Lemma}
+%
+\makeatletter \def\ps@pprintTitle{ \let\@oddhead\@empty \let\@evenhead\@empty \let\@oddfoot\@empty \let\@evenfoot\@oddfoot } \makeatother
+
+\makeatletter \def\ps@pprintTitle{ \let\@oddhead\@empty \let\@evenhead\@empty \let\@oddfoot\@empty \let\@evenfoot\@oddfoot } \makeatother
+%
+\begin{document}
+	\begin{frontmatter}
+		\title{
+			Optimal vaccination preventive policies for COVID-19\\
+			\large{Research Report (WHO-SAGE)}
+		}
+		\author{%
+	 	    Grupo ITSON-CONACyT-UNISON\\
+	 	    September 18, 2020
+		}%
+	%	\author[add:conacyt_unison]{%
+	%		Sa\'ul D\'iaz-Infante%
+	%		\corref{corresponding_author}%
+	%	}%
+	%	\ead{saul.diazinfante@unison.mx}
+	%	\address[add:conacyt_unison]{
+	%	    CONACYT-Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, M\'exico, C.P. 83000.
+	%	}		
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%	\author[add:unison]%
+	%	{Manuel Adrian Acu\~na-Zegarra}
+	%	\ead{adrian.acuna@unison.mx}
+	%	\address[add:unison]{
+	%	    Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, M\'exico, C.P. 83000.
+	%	}
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%	\author[add:itson]%
+	%	    {David Baca-Carrasco}
+	%	    \ead{david.baca@itson.edu.mx}
+	%	\address[add:itson]{
+	%	        Departamento de Matem\'aticas, Instituto Tecnol\'ogico de Sonora,
+	%	    	5 de Febrero 818 Sur, Colonia Centro, Ciudad Obregón, Sonora, M\'exico, C.P. 85000.
+	%	}
+	%	\ead{davidbaca@correo.mx}
+	%	\author[add:unison]%
+	%	{Daniel Olmos-Liceaga}
+	%	\ead{daniel.olmos@unison.mx}
+		%\address[add:unison]%{
+		    %Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, C.P. 83000, M\'exico.
+		%}
+
+	%	\cortext[corresponding_author]{Corresponding author}
+		%\begin{abstract}
+		%	Abstract
+		%\end{abstract}
+		%\begin{keyword}
+		%	Optimal Control,
+		%	Vaccination,
+		%	COVID-19.
+		%\end{keyword}
+	\end{frontmatter}
+
+	\section{Introduction}
+		\input{introduction}
+	\section{Mathematical model formulation}%{Preventive vaccination and treatment mathematical model}
+	    %\textbf{[David, Daniel, Adrian]}
+		\input{model_formulation}
+	\section{Parameter fitting}%calibration}
+	    %\textbf{[Adrian, Daniel]}
+	    \input{parameter_fitting}
+	\section{Vaccination Model Analysis}
+		%\textbf{[David]}
+		\input{analysis}
+	\section{Optimal Vaccine policies}
+		\input{optimal_controll_modeling}
+	\section{Numerical experiments}
+		\input{numerical_experiments}
+	\section{Conclusions}
+		\input{conclusions}
+	\bibliographystyle{ieeetr}%{plain}%{abbrvnat}%{unsrt}
+    \bibliography{Vaccination_Bibliography}
+		%\textbf{[Adrian]}
+		%\input{bibliography}
+\end{document}
