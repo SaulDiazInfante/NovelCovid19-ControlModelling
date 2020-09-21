@@ -28,10 +28,10 @@ class CovidModels(NumericsCovid19):
                  bocop_parameters_json_file='./bocop_run_parameters/' +
                                             'bocop_run_parameters' +
                                             '.json',
-                 vaccination_parameters_json_file='vaccination_model_parameters'
+                 vaccination_parameters_json_file='./vaccination_model_parameters/'
                                                   + 'vaccination_parameters' +
                                                   '.json',
-                 bocop_solution_file='bocop_data' + 'solution_deltav_0.sol'
+                 bocop_solution_file='./bocop_data/' + 'solution_deltav_0.sol'
                  ):
         super().__init__()
         with open(vaccination_parameters_json_file) as json_file:
