@@ -1,0 +1,144 @@
+---
+title: "COURSERAModelling Project"
+author: "Saul Diaz Infante Velasco"
+date: "6/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(python.reticulate = FALSE)
+```
+
+
+### Aim
+
+This project assesses your ability to build an infectious disease model and parameterise it. It draws on the mathematical and computer-based skills you've been developing throughout this specialisation.
+
+### How to complete this project
+
+    Read the task below and identify the questions you need to investigate Use the Jupyter Notebook provided in this lesson to write and run any code you need. Tip: make use of code you have written previously.
+    Answer the quiz contained in this lesson using your 'model findings' 
+
+You have 3 attempts at successfully completing this project, so do take note of any feedback you can pick up along the way.
+
+In total, this project should take you 2 hours. Please note though, this is an approximation and you'll not be timed.
+
+### Task
+
+A new respiratory virus has begun circulating in another country. So far, epidemiological investigations have yielded the data below.
+
+* Write down a model for this disease and use the information below to determine the values of all model parameters. 
+
+* If a vaccine conferring ‘all-or-nothing’ immunity with 80% effectiveness becomes available before an epidemic begins in your own country, what is the minimum coverage of this vaccine, in order to prevent an epidemic?
+
+### Epidemiological data
+* All infected individuals go through an **incubation period**, which lasts on **average for 4 days**. During this time, individuals are not infectious, nor do they have any excess mortality risk.
+    
+* All **infected individuals eventually develop symptoms**, and the **mean duration of symptoms** before recovery or death is **5 days**. Symptomatic individuals are infectious, as well as having a **3% case fatality rate**. Those who survive the infection are thought to have long-term immunity.
+* In the source country, the **peak prevalence** (i.e. maximum number of symptomatic people during the epidemic) **was observed to be 8% **of the population.
+* Assume that the source country and your own country are epidemiologically equivalent (i.e. that disease transmission follows the same parameters in both settings). 
+
+Hint: You may find it helpful to use a combination of paper-based and computer-based modelling, to answer these questions. Since the data is in the form of proportions, not absolute numbers, your choice of population size should not affect your answers to the questions above. Note down all the parameters and values you calculate or estimate during your work.
+
+Hint: It may help you to look back at the first course in this specialisation, Developing the SIR Model, and especially the lecture on Competing Hazards: https://www.coursera.org/learn/idm-gmph/item/PUGSx 
+
+
+# Answer 
+Since al individuals go through an average incubation period of 4 days
+and the fatlity rate of this disease is 3%.
+I base my answer in a SEIDR sructure. Bellow I explan each comprtimental equtaion.
+$$
+    \begin{align}
+    S'(t) &= -\beta SI, \qquad S(0) = S_0
+    \\
+    E'(t) &= \beta SI -\kappa E, \qquad E(0) = E_0
+    \\
+    I'(t) &= \kappa E - (\gamma + \delta) I, \qquad I(0) = I_0
+    \\
+    R'(t) &= \gamma I, \qquad R(0) = 0
+    \\
+    D'(t) &= \delta I, \qquad D(0) = 0
+    \end{align}
+$$
+According to the data description
+
+Parameter | 
+--------- |------------------------
+latentcy time |$\kappa = 4^{-1} \text{days}$
+mean recovery |$\gamma = 5^{-1} \text{days}$
+fatality rate |$\delta = 0.03$
+
+```{r}
+library(deSolve)
+library(reshape2)
+library(ggplot2)
+library(dplyr)
+
+seird_model <- function(time, state, parameters) {  
+  with(as.list(c(state, parameters)), {
+    
+    N <- S + E + I + R + D
+    
+    lambda <- beta * I
+    
+    # The differential equations
+    dS <- -lambda * S               
+    dE <- lambda * S - kappa * E
+    dI <- kappa * E - (delta + gamma) * I
+    dR <- gamma * I
+    dD <- delta * I
+    
+    # Output
+    return(list(c(dS, dE, dI, dR, dD))) 
+  })
+}
+```
+Becouse we have not information about initial conditions or 
+the size of the affected population I'll use the samen parameters as 
+in the past activities. Also we normalize respect to whole population.
+
+```{r}
+    N <- 763
+    initial_state_values <- c(
+        S = 761/N,
+        E = 0,
+        I = 1/N,
+        R = 0,
+        D = 0
+    )
+    
+```
+Now I load some parameters according with data description. T remains
+of the paramaters are postulated.
+```{r}
+    p_0 <- c(
+        beta = .4620967,
+        kappa = 0.25,
+        gamma = 0.2,
+        delta = 0.03
+        )
+```
+Now I define the time of integrarion and call to the LSODA solver
+```{r}
+times <- seq(from = 0, to = 120, length.out = 100)
+    ### Calculate model output
+model_sample <- as.data.frame(
+    ode(
+        y = initial_state_values,
+        times = times,
+        func = seird_model,
+        parms = p_0
+    )
+)
+```
+Finally we display the plot for the incidence reprdouced by our model.
+```{r}
+ggplot(data = model_sample, aes(time, I)) + 
+    geom_line() +
+    geom_point()
+```
+```{r}
+acme_point <- max(model_sample$I)
+paste('acme:', acme_point)
+```
