@@ -18,7 +18,8 @@ class NumericsCovid19:
                  bocop_parameters_json_file='./bocop_run_parameters/' +
                                             'bocop_run_parameters' +
                                             '.json',
-                 vaccination_parameters_json_file='./vaccination_model_parameters'
+                 vaccination_parameters_json_file='./vaccination_model_'+
+                                                    'parameters'
                                                   + '/vaccination_parameters' +
                                                   '.json',
                  bocop_solution_file=bocop_main_scene_data,
@@ -139,11 +140,14 @@ class NumericsCovid19:
 
     def read_bocop_parameters_values(self,
                                      parameters_prefix_file_name=
+                                     './vaccination_model_parameters/' +
                                      'vaccination_parameters'):
         [state_keys, control_keys, parameter_keys,
          boundarycond_keys, constraint_keys, constant_keys] = \
             self.read_bocop_parameters_keys(parameters_prefix_file_name=
-                                            'vaccination_parameters')
+                                            './vaccination_model_parameters/' +
+                                            'vaccination_parameters'
+                                            )
         path = self.bocop_solution_file
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
@@ -244,9 +248,10 @@ class NumericsCovid19:
             df = pd.DataFrame(self.x_sol_vaccine)
             file_name_prefix = 'constant_' + file_name_prefix
         df.columns = self.time_state_solution_names
-        file_name = file_name_prefix + dt_string + ".pkl"
+        pkl_data_folder = './vaccination_pkl_solutions/'
+        file_name = pkl_data_folder + file_name_prefix + dt_string + ".pkl"
         df.to_pickle(file_name)
-        df.to_pickle(file_name_prefix + '.pkl')
+        df.to_pickle(pkl_data_folder + file_name_prefix + '.pkl')
         return
 
     def vaccination_constant_control(self, t):

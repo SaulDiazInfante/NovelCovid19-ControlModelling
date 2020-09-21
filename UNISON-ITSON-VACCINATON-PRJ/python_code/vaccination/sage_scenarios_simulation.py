@@ -51,7 +51,8 @@ class CovidModels(NumericsCovid19):
         # self.df_constant_vaccination_solution = pd.
 
     def get_run_bocop_parameters(self,
-                                 prefix_file_name='bocop_run_parameters'
+                                 prefix_file_name='./bocop_run_parameters/' +
+                                                  'bocop_run_parameters'
                                  ):
         bocop_file_name = self.bocop_solution_file
 
