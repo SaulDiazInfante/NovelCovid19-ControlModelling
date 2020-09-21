@@ -664,7 +664,7 @@ class CovidModels(NumericsCovid19):
                 fill='tonexty',
                 line=dict(color=fill_color_pallet[4], width=0.7),
                 legendgroup='Saved lives',
-                name='Saved lives (CP)'
+                name='(CP)'
             )
 
         coverage_t = constant_vaccination_coverage(df_constant_vaccination)
@@ -731,7 +731,7 @@ class CovidModels(NumericsCovid19):
                 fill='tonexty',
                 line=dict(color=border_color_pallet[1], width=.70, dash='dot'),
                 legendgroup='Saved lives',
-                name='Saved lives (OP)'
+                name='(OP)'
             )
 
         fig.append_trace(trace_no_vac_i_s, 1, 1)
@@ -770,6 +770,89 @@ class CovidModels(NumericsCovid19):
                           #  "gridcolor": "gray",
                           #  "gridwidth": 2,}
                           )
+        # fig.layout.font.size = 10
+        fig.add_annotation(
+            dict(
+                text='Coverage',
+                align='left',
+                font=dict(family="Courier New", size=10),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.11,
+                y=1.01)
+        )
+        fig.add_annotation(
+            dict(
+                text='Cost',
+                align='left',
+                font=dict(family="Courier New", size=10),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.07,
+                y=0.83)
+        )
+        fig.add_annotation(
+            dict(
+                text='Beds',
+                align='left',
+                font=dict(family="Courier New",
+                          size=10),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.07,
+                y=0.61)
+        )
+        fig.add_annotation(
+            dict(
+                text='Mitigation',
+                align='left',
+                font=dict(family="Courier New",
+                          size=10),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.1375,
+                y=0.43)
+        )
+        fig.add_annotation(
+            dict(
+                text='Saved Lives',
+                align='left',
+                font=dict(family="Courier New",
+                          size=10),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.1475,
+                y=0.23)
+        )
+        data_label = {'eps': prm["epsilon"],
+                        'delta_v': round(prm["delta_v"], 1),
+                        'time_unit': 'days'}
+        str_vaccination_par = \
+            r'$\epsilon={:1.2f}, \quad \delta_V ^{{-1}}={:1.1f} \ \textbf{{{' \
+            r':>5}}}$'.format(
+                data_label['eps'],
+                data_label['delta_v'],
+                data_label['time_unit'])
+        fig.add_annotation(
+            dict(
+                text=str_vaccination_par,
+                align='left',
+                font=dict(family="Courier New",
+                          size=12),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=1.0,
+                y=1.25,
+                borderpad=4,
+                borderwidth=2
+            )
+        )
         if not os.path.exists("images"):
             os.mkdir("images")
         # fig.write_image("images/fig1.pdf")
@@ -782,4 +865,4 @@ class CovidModels(NumericsCovid19):
         fig.to_image(format="pdf", engine="kaleido")
         fig.write_image("images/fig1.pdf")
         # TODO:  Edit legend respect to groups
-        fig.show()
+        # fig.show()
