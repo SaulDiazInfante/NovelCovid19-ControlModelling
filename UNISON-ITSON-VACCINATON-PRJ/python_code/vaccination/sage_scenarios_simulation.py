@@ -19,7 +19,7 @@ class CovidModels(NumericsCovid19):
 
     def __init__(self,
                  uncontrolled_solution_path='./vaccination_pkl_solutions/' +
-                                             'no_vaccination_data_solution.pkl',
+                                            'no_vaccination_data_solution.pkl',
                  optimal_controlled_solution='./vaccination_pkl_solutions/' +
                                              'bocop_solution.pkl',
                  constant_controlled_solution='./vaccination_pkl_solutions/' +
@@ -28,7 +28,8 @@ class CovidModels(NumericsCovid19):
                  bocop_parameters_json_file='./bocop_run_parameters/' +
                                             'bocop_run_parameters' +
                                             '.json',
-                 vaccination_parameters_json_file='./vaccination_model_parameters/'
+                 vaccination_parameters_json_file='./vaccination_model' +
+                                                  '_parameters/'
                                                   + 'vaccination_parameters' +
                                                   '.json',
                  bocop_solution_file='./bocop_data/' + 'solution_deltav_0.sol'
@@ -227,8 +228,9 @@ class CovidModels(NumericsCovid19):
         self.parameters = prm
         return prm
 
-    def read_bocop_parameters_keys(self, parameters_prefix_file_name=
-    'vaccination_parameters_'):
+    def read_bocop_parameters_keys(self,
+                                   parameters_prefix_file_name=
+                                   'vaccination_parameters_'):
         # TODO: Recover parameters key from bocop_run_parameters.json
         bocop_file_name = self.bocop_solution_file
         star_pointer_block = 0
@@ -240,9 +242,6 @@ class CovidModels(NumericsCovid19):
         constraint_keys = []
         constant_keys = []
         path = bocop_file_name
-        time_now = datetime.now()
-        dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
-        path_json = parameters_prefix_file_name + dt_string + '.json'
         with open(path) as f:
             all_lines = f.readlines()
         i = 0
@@ -315,21 +314,19 @@ class CovidModels(NumericsCovid19):
                           out_put_file_prefix_name='bocop_'
                           ):
         bocop_file_name = self.bocop_solution_file
-        state_keys, control_keys, parameter_keys, \
-        boundarycond_keys, constraint_keys, constant_keys = \
+        state_keys, control_keys, parameter_keys, boundarycond_keys, \
+            constraint_keys, constant_keys = \
             self.read_bocop_parameters_keys(parameters_prefix_file_name=
-                                            'vaccination_parameters')
+                                                'vaccination_parameters')
 
         bocop_parameters_file = self.bocop_parameters_json_file
         bocop_prm = pd.read_json(bocop_parameters_file, typ='series')
-        col_names_ = ['time', 's', 'e',
-                      'i_s', 'i_a', 'r', 'd', 'v',
-                      'x_vac', 'x_zero', 'u_V']
         # self.time_state_solution_names
         offset = bocop_prm["discretization.steps"]
         with open(bocop_file_name) as f:
             all_lines = f.readlines()
         i = 0
+        j = 0
         t_s = []
         data = []
         control = []
@@ -621,7 +618,7 @@ class CovidModels(NumericsCovid19):
         trace_vaccination_max = go.Scatter(
             x=df_oc['time'],
             y=n_cdmx * (
-                    df_oc["u_V"].max() \
+                    df_oc["u_V"].max()
                     + lambda_v_base * np.ones(df_oc["u_V"].shape[0])
             ),
             line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
