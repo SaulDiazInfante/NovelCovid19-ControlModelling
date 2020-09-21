@@ -1,0 +1,21 @@
+{
+    "time.free": "final",
+    "time.initial": 0,
+    "time.final": 1,
+    "state.dimension": 9,
+    "control.dimension": 1,
+    "algebraic.dimension": 0,
+    "parameter.dimension": 1,
+    "constant.dimension": 26,
+    "boundarycond.dimension": 10,
+    "constraint.dimension": 9,
+    "discretization.steps": 3000,
+    "discretization.method": "midpoint",
+    "optimization.type": "batch",
+    "batch.index": 2,
+    "batch.nrange": 5,
+    "batch.lowerbound": 0,
+    "batch.upperbound": 0,
+    "batch.directory": "Folder_epsilon",
+    "solution.file": "Folder_epsilon/epsilon-7.000000e-01.sol"
+}
