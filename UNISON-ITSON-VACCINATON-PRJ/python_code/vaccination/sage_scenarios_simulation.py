@@ -18,15 +18,20 @@ import plotly.io as pio
 class CovidModels(NumericsCovid19):
 
     def __init__(self,
-                 uncontrolled_solution_path='no_vaccination_data_solution.pkl',
-                 optimal_controlled_solution='bocop_solution.pkl',
-                 constant_controlled_solution='constant_vaccination_' +
+                 uncontrolled_solution_path='./vaccination_pkl_solutions/' +
+                                             'no_vaccination_data_solution.pkl',
+                 optimal_controlled_solution='./vaccination_pkl_solutions/' +
+                                             'bocop_solution.pkl',
+                 constant_controlled_solution='./vaccination_pkl_solutions/' +
+                                              'constant_vaccination_' +
                                               'data_solution.pkl',
-                 bocop_parameters_json_file='bocop_run_parameters' +
+                 bocop_parameters_json_file='./bocop_run_parameters/' +
+                                            'bocop_run_parameters' +
                                             '.json',
-                 vaccination_parameters_json_file='vaccination_parameters' +
+                 vaccination_parameters_json_file='vaccination_model_parameters'
+                                                  + 'vaccination_parameters' +
                                                   '.json',
-                 bocop_solution_file='solution_deltav_0.sol'
+                 bocop_solution_file='bocop_data' + 'solution_deltav_0.sol'
                  ):
         super().__init__()
         with open(vaccination_parameters_json_file) as json_file:
