@@ -1,0 +1,17 @@
+{
+    "_comment1": " delta_e value is (5.1 * days)^(-1), \n alpha_a = (5.97  * days)^(-1), alpha_h = (20 * days)^(-1)",
+    "beta_s": 0.4,
+    "beta_a": 0.5,
+    "epsilon": 1e-8,
+    "delta_u": 0.05,
+    "delta_e": 0.19607843137254904,
+    "delta_s": 0.05,
+    "p": 0.55,
+    "alpha_a": 0.16750418760469013,
+    "alpha_h": 0.05,
+    "alpha_s": 0.092,
+    "mu_s": 0.00050693802035152,
+    "mu_h": 0.1,
+    "n_whole": 8918653,
+    "T": 180
+}
