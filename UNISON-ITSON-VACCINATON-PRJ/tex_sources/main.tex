@@ -22,10 +22,11 @@
 \usepackage{siunitx}
 \usepackage{abstract}
 \usepackage{hyperref}
+\usepackage{siunitx}
 \hypersetup{colorlinks = true, allcolors = blue}
-\usepackage[nameinlink,noabbrev]{cleveref} 
-\renewcommand{\abstractname}{}   
-\renewcommand{\absnamepos}{empty} 
+\usepackage[nameinlink,noabbrev]{cleveref}
+\renewcommand{\abstractname}{}
+\renewcommand{\absnamepos}{empty}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\e}{\varepsilon}
 \newcommand{\f}{\mathfrak{F}}
@@ -34,20 +35,32 @@
 \newtheorem{teor}{Theorem}
 \newtheorem{lemma}{Lemma}
 %
-\makeatletter \def\ps@pprintTitle{ \let\@oddhead\@empty \let\@evenhead\@empty \let\@oddfoot\@empty \let\@evenfoot\@oddfoot } \makeatother
-
-\makeatletter \def\ps@pprintTitle{ \let\@oddhead\@empty \let\@evenhead\@empty \let\@oddfoot\@empty \let\@evenfoot\@oddfoot } \makeatother
+\makeatletter \def
+\ps@pprintTitle{
+     \let\@oddhead\@empty \let\@evenhead\@empty
+    \let\@oddfoot\@empty
+    \let\@evenfoot\@oddfoot
+}
+\makeatother
+\makeatletter
+\def\ps@pprintTitle{
+    \let\@oddhead\@empty
+    \let\@evenhead\@empty
+    \let\@oddfoot\@empty
+    \let\@evenfoot\@oddfoot
+}
+\makeatother
 %
 \begin{document}
-	\begin{frontmatter}
-		\title{
-			Optimal vaccination preventive policies for COVID-19\\
-			\large{Research Report (WHO-SAGE)}
-		}
-		\author{%
-	 	    Grupo ITSON-CONACyT-UNISON\\
-	 	    September 18, 2020
-		}%
+    \begin{frontmatter}
+        \title{
+            Optimal vaccination preventive policies for COVID-19\\
+            \large{Research Report (WHO-SAGE)}
+        }
+        \author{%
+            Grupo ITSON-CONACyT-UNISON\\
+            September 18, 2020
+        }%
 	%	\author[add:conacyt_unison]{%
 	%		Sa\'ul D\'iaz-Infante%
 	%		\corref{corresponding_author}%
@@ -55,8 +68,8 @@
 	%	\ead{saul.diazinfante@unison.mx}
 	%	\address[add:conacyt_unison]{
 	%	    CONACYT-Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, M\'exico, C.P. 83000.
-	%	}		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%	}
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%	\author[add:unison]%
 	%	{Manuel Adrian Acu\~na-Zegarra}
 	%	\ead{adrian.acuna@unison.mx}

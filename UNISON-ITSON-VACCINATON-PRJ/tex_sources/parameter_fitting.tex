@@ -28,60 +28,83 @@
 
 \begin{table}[h!]
 \begin{center}
-	\begin{tabular}{>{\centering}p{0.2\textwidth}p{0.4\textwidth}p{0.2\textwidth}}
-		\toprule
-	    Parameter & 95\% Confidence Interval & Quantile 50
-			\\
-			\midrule
-      $\beta_S$ & $[0.6689, 1.191]$   &  $0.9303$ \\
-      $\beta_A$ & $[0.5019, 0.7867]$  &  $0.6441$ \\
-      $p$       & $[0.06088, 0.2239]$ &  $0.1213$ \\
-      $\xi$     & $[0.3707, 0.4113]$  & $0.3905$  \\
-      %$\mu_S$ & $1.930\times 10^{-1}$ $(9.464\times 10^{-2},3.416\times 10^{-1})$ %   \\
-      %$\alpha_S$ & $1.017\times 10^{-1}$ $(5.685\times 10^{-2},1.797\times 10^{-1})$    \\
-      %$\alpha_A$ & $1.928\times 10^{-1}$ $(1.143\times 10^{-1},3.04\times 10^{-1})$  \\
+    \begin{tabular}{>{\centering}p{0.2\textwidth}p{0.4\textwidth}p{0.2\textwidth}}
+        \toprule
+        Parameter & 95\% Confidence Interval & Quantile 50
+        \\
+        \midrule
+        $\beta_S$ & $[\num{0.6689}, \num{1.191}]$   &  $\num{0.9303}$
+        \\
+        $\beta_A$ & $[\num{0.5019}, \num{0.7867}]$  &  $\num{0.6441}$
+        \\
+        $p$       & $[\num{0.06088}, \num{0.2239}]$ &  $\num{0.1213}$
+        \\
+        $\xi$     & $[\num{0.3707}, \num{0.4113}]$  & $\num{0.3905}$
+        \\
+      %$\mu_S$ & $1.930\times 10^{-1}$ $(9.464\times 10^{-2},3.416\times
+      % 10^{-1})$ %   \\
+      %$\alpha_S$ & $1.017\times 10^{-1}$ $(5.685\times 10^{-2},1.797\times
+      % 10^{-1})$    \\
+      %$\alpha_A$ & $1.928\times 10^{-1}$ $(1.143\times 10^{-1},3.04\times
+      % 10^{-1})$  \\
       %$R_0$ & $5.385$ $(4.062,7.782)$
-	  %		\\
-			\bottomrule
-	\end{tabular}
+        \\
+    \bottomrule
+\end{tabular}
   \caption{Estimated values for some parameters of system~\ref{model1}.}\label{table_icparam}
 \end{center}
 \end{table}
 
 %\pagebreak
 \begin{table}[h!]
-\begin{center}
-	\begin{tabular}{>{\centering}p{0.2\textwidth}p{0.2\textwidth}p{0.2\textwidth}}
-		\toprule
-		Parameter & Value & References
-		\\
-		\midrule
-		$\delta_{E}^{-1}$ & $5.1\ \text{days}$   &  \cite{Tian2020}
-		\\
-		$\alpha_{S}^{1}$  & $5.97\ \text{days}$  &  \cite{Acuna2020}
-		\\
-		$\alpha_{A}^{-1}$ & $10.81\ \text{days}$ & \cite{Acuna2020}
-		\\
-		$\delta_{R}^{-1}$ & $1\ \text{year}$     &
-		\\
-		$\mu^{-1}$        & $75\ \text{years}$   &
-		\\
-		\bottomrule
-		\end{tabular}
-		\caption{Fixed parameters values of system~\ref{model1}.}\label{table_fixparam}
-	\end{center}
+    \begin{center}
+        \begin{tabular}{>{\centering}p{0.2\textwidth}p{0.2\textwidth}p{0.2\textwidth}}
+            \toprule
+            Parameter & Value & References
+            \\
+            \midrule
+            $\delta_{E}^{-1}$ & \SI{5.1}{days}   &  \cite{Tian2020}
+            \\
+            $\alpha_{S}^{1}$  & \SI{5.97}{days}  &  \cite{Acuna2020}
+            \\
+            $\alpha_{A}^{-1}$ & \SI{10.81}{days} & \cite{Acuna2020}
+            \\
+            $\delta_{R}^{-1}$ & \SI{1}{years}     &
+            \\
+            $\mu^{-1}$        & \SI{75}{years}   &
+            \\
+            \bottomrule
+        \end{tabular}
+        \caption{
+            Fixed parameters values of system~\ref{model1}.
+        }
+        \label{table_fixparam}
+    \end{center}
 \end{table}
+%
 
-Figure~\ref{Figure1} shows the fitting curves for the two time periods. With the obtained parameters, we simulated the evolution of the number of infected individuals starting on February 19, 2020 until July 2022. With  these dates, it is possible to observe two outbreaks (Figure~\ref{Figure2}), where the second one is referred to as the second wave of COVID-19. With this scenario, it is possible to evaluate the effect of different vaccination strategies, which we consider to start to be applied on March 2021, which is the time prior to the onset of the second wave.
+Figure~\ref{Figure1} shows the fitting curves for the two time periods. With
+the obtained parameters, we simulated the evolution of the number of infected
+individuals starting on February 19, 2020 until July 2022. With  these dates,
+it is possible to observe two outbreaks (Figure~\ref{Figure2}), where the
+second one is referred to as the second wave of COVID-19. With this scenario,
+it is possible to evaluate the effect of different vaccination strategies,
+which we consider to start to be applied on March 2021, which is the time prior
+to the onset of the second wave.
 \begin{figure}[!h]
   \includegraphics[width=\textwidth]{FittingCurves.eps}
-  \caption{Fitting curves for the early phase of the COVID-19 outbreak in Mexico City plus the surrounding metropolitan area. The left side shows the outbreak from February 19 to March 23, 2020. The right side shows the outbreak from March 23 to April 23, 2020.}
+  \caption{Fitting curves for the early phase of the COVID-19 outbreak in
+      Mexico City plus the surrounding metropolitan area. The left side shows
+      the outbreak from February 19 to March 23, 2020. The right side shows the
+      outbreak from March 23 to April 23, 2020.}
   \label{Figure1}
 \end{figure}
 \pagebreak
 \begin{figure}[!h]
   \includegraphics[width=\textwidth]{Solutions.eps}
-  \caption{Dynamics populations without vaccination process. Here, system~\ref{model1} is reduced when considering $\lambda_V = \delta_V = 0$, $\epsilon = 1$, and $V(0) = 0$.}
-  \label{Figure2}
+  \caption{Dynamics populations without vaccination process. Here,
+      system~\ref{model1} is reduced when considering $\lambda_V = \delta_V =
+      0$, $\epsilon = 1$, and $V(0) = 0$.}
+    \label{Figure2}
 \end{figure}
 \pagebreak
