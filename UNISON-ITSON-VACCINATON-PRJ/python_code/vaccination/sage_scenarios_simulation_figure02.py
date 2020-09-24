@@ -514,108 +514,24 @@ class CovidModels(NumericsCovid19):
         # Solution without vaccination
         ########################################################################
         fig = make_subplots(
-            rows=3, cols=3,
+            rows=3, cols=2,
             specs=[
-                [{}, {}, {"rowspan": 2}],
-                [{}, {}, None],
-                [{"colspan": 2}, None, {}]
+                [{}, {}],
+                [{}, {}],
+                [{"colspan": 2}]
             ],
-            subplot_titles=("Symptomatic",
-                            "Hospitalised",
-                            "Death",
-                            "Asymptomatic",
-                            "Coverage",
-                            "Vaccination Policy",
-                            "Cost"
-                            ),
+            subplot_titles=(
+                "Coverage",
+                "Vaccination Policy",
+                "Cost"
+            ),
             horizontal_spacing=0.17,
             vertical_spacing=0.3,
         )
         n_cdmx = self.parameters['n_pop'] / 100000.0
-        fig.add_trace(
-            go.Scatter(
-                x=df_not_vaccination['time'],
-                y=n_cdmx * df_not_vaccination['i_s'],
-                line=dict(color=border_color_pallet[1], width=1.0, dash='dot'),
-                legendgroup='Prevalence',
-                name='Without<br>vaccination',
-                showlegend=True
-            ),
-            row=1, col=1
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=df_not_vaccination['time'],
-                y=0.25 ** 2 * n_cdmx * df_not_vaccination['i_s'],
-                line=dict(color=border_color_pallet[1], width=1.0, dash='dot'),
-                showlegend=False,
-                legendgroup='Optimized resources',
-                name='OP'
-            ),
-            row=1, col=2
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=df_not_vaccination['time'],
-                y=n_cdmx * df_not_vaccination['i_a'],
-                line=dict(color=border_color_pallet[1], width=1.0, dash='dot'),
-                legendgroup='Mitigation',
-                showlegend=False
-            ),
-            row=2, col=1
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=df_not_vaccination['time'],
-                y=n_cdmx * df_not_vaccination['d'],
-                line=dict(color=border_color_pallet[1], width=1.0, dash='dot'),
-                legendgroup='Saved lives',
-                name='(OP)',
-                showlegend=False
-            ),
-            row=1, col=3
-        )
         ########################################################################
         # constant_vaccination
         ########################################################################
-        trace_constant_vac_i_s = go.Scatter(
-            x=df_constant_vaccination['time'],
-            y=n_cdmx * df_constant_vaccination['i_s'],
-            fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), .7)}",
-            line=dict(color=fill_color_pallet[2], width=1.0),
-            showlegend=True,
-            legendgroup='Mitigation',
-            name='(CP)'
-        )
-        trace_constant_vac_i_a = go.Scatter(
-            x=df_constant_vaccination['time'],
-            y=n_cdmx * df_constant_vaccination['i_a'],
-            fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), 0.7)}",
-            line=dict(color=fill_color_pallet[2], width=1.0),
-            showlegend=False
-        )
-        trace_constant_vac_hospitalization = go.Scatter(
-            x=df_constant_vaccination['time'],
-            y=0.25 ** 2 * n_cdmx * df_constant_vaccination['i_s'],
-            fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[6]), 0.7)}",
-            line=dict(color=fill_color_pallet[6], width=0.7),
-            legendgroup='Optimized resources',
-            name='(CP)',
-            showlegend=True
-        )
-        trace_constant_vac_d = \
-            go.Scatter(
-                x=df_constant_vaccination['time'],
-                y=n_cdmx * df_constant_vaccination['d'],
-                fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[4]), 0.8)}",
-                fill='tonexty',
-                line=dict(color=fill_color_pallet[4], width=1.0),
-                legendgroup='Saved lives',
-                name='(CP)'
-            )
         coverage_t = constant_vaccination_coverage(df_constant_vaccination)
         trace_constant_vac_coverage = go.Scatter(
             x=df_constant_vaccination['time'],
@@ -641,56 +557,7 @@ class CovidModels(NumericsCovid19):
         #######################################################################
         # Optimal solution trace
         #######################################################################
-        trace_optimal_prevalence = go.Scatter(
-            x=df_oc['time'],
-            y=n_cdmx * df_oc['i_s'],
-            line=dict(color=border_color_pallet[1],
-                      width=1.0,
-                      dash='solid'),
-            legendgroup='Prevalence',
-            name='vaccination',
-            showlegend=True
-        )
-        trace_optimal_i_s = go.Scatter(
-            x=df_oc['time'],
-            y=n_cdmx * df_oc['i_s'],
-            fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), 0.7)}",
-            legendgroup='Mitigation',
-            line=dict(color=border_color_pallet[1], width=.7),
-            name='(OP)',
-            showlegend=True
-        )
         #
-        trace_optimal_hospitalization = go.Scatter(
-            x=df_oc['time'],
-            y=0.25 ** 2 * n_cdmx * df_oc['i_s'],
-            fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[7]), 0.7)}",
-            line=dict(color=border_color_pallet[1], width=.7),
-            legendgroup='Optimized resources',
-            showlegend=True,
-            name='(OP)'
-        )
-        trace_optimal_d = go.Scatter(
-                x=df_oc['time'],
-                y=n_cdmx * df_oc['d'],
-                fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[5]), 0.4)}",
-                fill='tonexty',
-                legendgroup='Saved lives',
-                line=dict(color=border_color_pallet[1], width=1),
-                showlegend=True,
-                name='(OP)'
-        )
-        #
-        trace_optimal_i_a = go.Scatter(
-                x=df_oc['time'],
-                y=n_cdmx * df_oc['i_a'],
-                fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), 0.7)}",
-                fill='tonexty',
-                line=dict(color=border_color_pallet[1], width=.7),
-                showlegend=False
-        )
         trace_optimal_vac_coverage = go.Scatter(
                 x=df_oc['time'],
                 y=df_oc['x_vac'],
@@ -730,31 +597,12 @@ class CovidModels(NumericsCovid19):
             line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
             showlegend=False
         )
-        trace_vaccination_max = go.Scatter(
-            x=df_oc['time'],
-            y=n_cdmx * (
-                    df_oc["u_V"].max()
-                    + lambda_v_base * np.ones(df_oc["u_V"].shape[0])
-            ),
-            line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
-            showlegend=False
-        )
-        fig.append_trace(trace_constant_vac_i_s, 1, 1)
-        fig.append_trace(trace_optimal_i_s, 1, 1)
-        fig.append_trace(trace_optimal_prevalence, 1, 1)
-        fig.append_trace(trace_constant_vac_hospitalization, 1, 2)
-        fig.append_trace(trace_optimal_hospitalization, 1, 2)
-        fig.append_trace(trace_constant_vac_i_a, 2, 1)
-        fig.append_trace(trace_optimal_i_a, 2, 1)
-        fig.append_trace(trace_constant_vac_coverage, 2, 2)
-        fig.append_trace(trace_optimal_vac_coverage, 2, 2)
-        fig.append_trace(trace_constant_vac_d, 1, 3)
-        fig.append_trace(trace_optimal_d, 1, 3)
+        fig.append_trace(trace_constant_vac_coverage, 1, 1)
+        fig.append_trace(trace_optimal_vac_coverage, 1, 1)
+        fig.append_trace(trace_optimal_cost, 1, 2)
+        fig.append_trace(trace_constant_vac_cost, 1, 2)
         fig.append_trace(trace_vaccination_base, 3, 1)
-        fig.append_trace(trace_vaccination_max, 3, 1)
         fig.append_trace(trace_optimal_vaccination_policy, 3, 1)
-        fig.append_trace(trace_optimal_cost, 3, 3)
-        fig.append_trace(trace_constant_vac_cost, 3, 3)
         #
         # Axis labels
         #
@@ -1082,6 +930,6 @@ class CovidModels(NumericsCovid19):
         pio.kaleido.scope.default_height = golden_width / golden_ratio
         pio.kaleido.scope.default_scale = 0.5
         fig.to_image(format="pdf", engine="kaleido")
-        fig.write_image("images/fig1.pdf")
+        fig.write_image("images/fig02.pdf")
         # TODO:  Edit legend respect to groups
         # fig.show()

@@ -107,245 +107,191 @@ df_not_vaccination = pd.read_pickle(no_vaccination_sol_path)
 df_constant_vaccination = pd.read_pickle(constant_vaccination_path)
 border_color_pallet = px.colors.sequential.ice
 fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
-
-fig01 = make_subplots(
-    rows=1, cols=3,
+########################################################################
+# Solution without vaccination
+########################################################################
+fig02 = make_subplots(
+    rows=3, cols=2,
     specs=[
-        [{}, {}, {}]
+        [{"rowspan": 2}, {"rowspan": 2}],
+        [None, None],
+        [{"colspan": 2}, None]
     ],
-    subplot_titles=("Symptomatic",
-                    "Hospitalized",
-                    "Death"
-                    ),
-    horizontal_spacing=0.17
+    subplot_titles=(
+        "Coverage",
+        "Cost",
+        "Vaccination Policy"
+    ),
+    horizontal_spacing=0.17,
+    vertical_spacing=0.3,
 )
 n_cdmx = 100000.0 / prm['n_pop']
-fig01.add_trace(
-    go.Scatter(
-        x=df_not_vaccination['time'],
-        y=n_cdmx * df_not_vaccination['i_s'],
-        line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
-        legendgroup='Prevalence',
-        name='Without<br>vaccination',
-        showlegend=True
-    ),
-    row=1, col=1
-)
-fig01.add_trace(
-    go.Scatter(
-        x=df_not_vaccination['time'],
-        y=0.25 ** 2 * n_cdmx * df_not_vaccination['i_s'],
-        line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
-        showlegend=False,
-        legendgroup='Optimized resources',
-        name='OP'
-    ),
-    row=1, col=2
-)
-fig01.add_trace(
-    go.Scatter(
-        x=df_not_vaccination['time'],
-        y=n_cdmx * df_not_vaccination['d'],
-        line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
-        legendgroup='Saved lives',
-        name='(OP)',
-        showlegend=False
-    ),
-    row=1, col=3
-)
 ########################################################################
 # constant_vaccination
 ########################################################################
-trace_constant_vac_i_s = go.Scatter(
+coverage_t = constant_vaccination_coverage(df_constant_vaccination)
+trace_constant_vac_coverage = go.Scatter(
     x=df_constant_vaccination['time'],
-    y=n_cdmx * df_constant_vaccination['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), .7)}",
-    line=dict(color=fill_color_pallet[2], width=.7),
-    showlegend=True,
-    legendgroup='Mitigation',
-    name='(CP)'
-)
-trace_constant_vac_hospitalization = go.Scatter(
-    x=df_constant_vaccination['time'],
-    y=0.25 ** 2 * n_cdmx * df_constant_vaccination['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[6]), 0.7)}",
-    line=dict(color=fill_color_pallet[6], width=0.7),
-    legendgroup='Optimized resources',
-    name='(CP)',
+    y=coverage_t,
+    fill='tozeroy',
+    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[18]), 0.7)}",
+    line=dict(color=fill_color_pallet[18], width=0.7),
+    legendgroup='Coverage',
+    name='(CP) Coverage',
     showlegend=True
 )
-trace_constant_vac_d = \
-    go.Scatter(
-        x=df_constant_vaccination['time'],
-        y=n_cdmx * df_constant_vaccination['d'],
-        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[4]), 0.8)}",
-        fill='tonexty',
-        line=dict(color=fill_color_pallet[4], width=.7),
-        legendgroup='Saved lives',
-        name='(CP)'
-    )
+cost_t = constant_vaccination_cost(df_constant_vaccination)
+trace_constant_vac_cost = go.Scatter(
+    x=df_constant_vaccination['time'],
+    y=n_cdmx * cost_t,
+    fill='tonexty',
+    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[16]), 0.7)}",
+    line=dict(color=fill_color_pallet[16], width=1.0),
+    legendgroup='Cost',
+    name='(CP) Cost',
+    showlegend=True
+)
 #######################################################################
 # Optimal solution trace
 #######################################################################
-trace_optimal_prevalence = go.Scatter(
-    x=df_oc['time'],
-    y=n_cdmx * df_oc['i_s'],
-    line=dict(color=border_color_pallet[1],
-              width=.7,
-              dash='solid'),
-    legendgroup='Prevalence',
-    name='vaccination',
-    showlegend=True
-)
-trace_optimal_i_s = go.Scatter(
-    x=df_oc['time'],
-    y=n_cdmx * df_oc['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), 0.7)}",
-    legendgroup='Mitigation',
-    line=dict(color=border_color_pallet[1], width=.7),
-    name='(OP)',
-    showlegend=True
+#
+trace_optimal_vac_coverage = go.Scatter(
+        x=df_oc['time'],
+        y=df_oc['x_vac'],
+        line=dict(color=fill_color_pallet[19], width=.7),
+        fill='tozeroy',
+        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+        legendgroup='Coverage',
+        name="(OP) Coverage",
+        showlegend=True
 )
 #
-trace_optimal_hospitalization = go.Scatter(
-    x=df_oc['time'],
-    y=0.25 ** 2 * n_cdmx * df_oc['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[7]), 0.7)}",
-    line=dict(color=border_color_pallet[1], width=.7),
-    legendgroup='Optimized resources',
-    showlegend=True,
-    name='(OP)'
-)
-trace_optimal_d = go.Scatter(
+lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
+trace_optimal_vaccination_policy = go.Scatter(
         x=df_oc['time'],
-        y=n_cdmx * df_oc['d'],
-        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[5]), 0.4)}",
-        fill='tonexty',
-        legendgroup='Saved lives',
-        line=dict(color=border_color_pallet[1], width=1),
-        showlegend=True,
-        name='(OP)'
+        y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t),
+        fill='tozeroy',
+        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+        line=dict(color=fill_color_pallet[0], width=0.7),
+        name="Optimal<br>Vaccination",
+        legendgroup='Policy',
+        showlegend=True
 )
-
-fig01.append_trace(trace_constant_vac_i_s, 1, 1)
-fig01.append_trace(trace_optimal_i_s, 1, 1)
-fig01.append_trace(trace_optimal_prevalence, 1, 1)
-fig01.append_trace(trace_constant_vac_hospitalization, 1, 2)
-fig01.append_trace(trace_optimal_hospitalization, 1, 2)
-fig01.append_trace(trace_constant_vac_d, 1, 3)
-fig01.append_trace(trace_optimal_d, 1, 3)
+trace_optimal_cost = go.Scatter(
+        x=df_oc['time'],
+        y=n_cdmx * df_oc['x_zero'],
+        line=dict(color=fill_color_pallet[16], width=1.0),
+        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
+        fill='tozeroy',
+        legendgroup='Cost',
+        name='(OP) Cost',
+        showlegend=True
+)
+#
+trace_vaccination_base = go.Scatter(
+    x=df_oc['time'],
+    y=n_cdmx * lambda_v_base * np.ones(df_oc["u_V"].shape[0]),
+    line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
+    name='Constant<br>policy',
+    showlegend=True
+)
+fig02.append_trace(trace_constant_vac_coverage, 1, 1)
+fig02.append_trace(trace_optimal_vac_coverage, 1, 1)
+fig02.append_trace(trace_optimal_cost, 1, 2)
+fig02.append_trace(trace_constant_vac_cost, 1, 2)
+fig02.append_trace(trace_vaccination_base, 3, 1)
+fig02.append_trace(trace_optimal_vaccination_policy, 3, 1)
 #
 # Axis labels
 #
-fig01.add_annotation(
+fig02.add_annotation(
     dict(
-        text='Cases per 100,000 inhabitants',
+        text='Population proportion',
         align='left',
         textangle=-90,
-        font=dict(family="Arial", size=11),
+        font=dict(family="Arial", size=10),
         showarrow=False,
         xref='paper',
         yref='paper',
-        x=-0.095,
-        y=0.8)
+        x=-0.075,
+        y=.9)
 )
-fig01.update_xaxes(
+fig02.update_xaxes(
     title_text="Time (days)",
     title_font=dict(size=10, family='Arial'),
     tickfont=dict(size=10, family='Arial'),
     row=1, col=1
 )
-fig01.update_xaxes(
+fig02.update_xaxes(
     title_text="Time (days)",
     title_font=dict(size=10, family='Arial'),
     tickfont=dict(size=10, family='Arial'),
     row=1, col=2
 )
-fig01.update_xaxes(
+fig02.update_xaxes(
     title_text="Time (days)",
     title_font=dict(size=10, family='Arial'),
     tickfont=dict(size=10, family='Arial'),
-    row=1, col=3
+    row=3, col=1
 )
 #
-fig01.update_yaxes(
+fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
     row=1, col=1
 )
-fig01.update_yaxes(
+fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
     row=1, col=2
 )
-fig01.update_yaxes(
+#
+fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
-    row=1, col=1
-)
-fig01.update_yaxes(
+    row=1, col=3)
+fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
-    row=1, col=2
+    row=2, col=1
 )
 
-fig01.update_yaxes(
+fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
-    row=1, col=3
+    row=2, col=2
+)
+fig02.add_annotation(
+    dict(
+        text="Doses per<br>100,000<br>inhabitants",
+        align='left',
+        textangle=-90,
+        font=dict(family="Arial", size=10),
+        showarrow=False,
+        xref='paper',
+        yref='paper',
+        x=-0.15,
+        y=-0.1)
+)
+fig02.update_yaxes(
+    tickfont=dict(size=10, family='Arial'),
+    row=3, col=1
+)
+fig02.add_annotation(
+    dict(
+        text="Cost per 100,000 inhabitants",
+        align='left',
+        textangle=-90,
+        font=dict(family="Arial", size=10),
+        showarrow=False,
+        xref='paper',
+        yref='paper',
+        x=0.50,
+        y=0.95)
 )
 #
-#
-#
+fig02.update_yaxes(tickfont=dict(size=10, family='Arial'),
+                 row=3, col=3)
 #
 r_0, r_v_0, r_opt_v_0 = reproductive_number(**prm)
 c_r_0 = decimal.Decimal(r_0)
 c_r_v_0 = decimal.Decimal(r_v_0)
 c_r_opt_v_0 = decimal.Decimal(r_opt_v_0)
-#
-# Legend annotations
-# ----------------------------------------------------------------------
-# Mitigation
-# ----------------------------------------------------------------------
-fig01.add_annotation(
-    dict(
-        text='Mitigation',
-        align='left',
-        font=dict(family="Arial",
-                  size=10),
-        showarrow=False,
-        xref='paper',
-        yref='paper',
-        x=1.21,
-        y=0.78)
-)
-# ----------------------------------------------------------------------
-# Saved Beds
-# ----------------------------------------------------------------------
-fig01.add_annotation(
-    dict(
-        text='Beds',
-        align='left',
-        font=dict(family="Arial",
-                  size=10),
-        showarrow=False,
-        xref='paper',
-        yref='paper',
-        x=1.17,
-        y=0.56)
-)
-fig01.add_annotation(
-    dict(
-        text='Saved Lives',
-        align='left',
-        font=dict(family="Arial",
-                  size=10),
-        showarrow=False,
-        xref='paper',
-        yref='paper',
-        x=1.23,
-        y=0.385
-    )
-)
 
 data_label = {'eps': prm["epsilon"],
                 'delta_v': round(prm["delta_v"], 1),
@@ -356,7 +302,7 @@ str_vaccination_par = \
         data_label['eps'],
         data_label['delta_v'],
         data_label['time_unit'])
-fig01.add_annotation(
+fig02.add_annotation(
     dict(
         text=str_vaccination_par,
         align='left',
@@ -371,24 +317,7 @@ fig01.add_annotation(
         borderwidth=1
     )
 )
-str_policy_legend = '<b>Vaccination Policy:</b><br>' + \
-    '    Optimal (OP)<br>' + \
-    '    Constant (CP)'
-fig01.add_annotation(
-    dict(
-        text=str_policy_legend,
-        align='left',
-        font=dict(family="Arial",
-                  size=12),
-        showarrow=False,
-        xref='paper',
-        yref=''
-             'paper',
-        x=1.295,
-        y=0.05
-    )
-)
-fig01.update_layout(
+fig02.update_layout(
     font=dict(family="Arial", size=10),
     template="simple_white",
     showlegend=True,
@@ -406,9 +335,9 @@ fig01.update_layout(
                 )
 )
 # ----------------------------------------------------------------------
-# fig01ure alpha number
+# fig02ure alpha number
 # ----------------------------------------------------------------------
-fig01.add_annotation(
+fig02.add_annotation(
     dict(
         text='<b>A)',
         align='left',
@@ -421,7 +350,7 @@ fig01.add_annotation(
         y=1.06,
     )
 )
-fig01.add_annotation(
+fig02.add_annotation(
     dict(
         text='<b>B)',
         align='left',
@@ -430,11 +359,12 @@ fig01.add_annotation(
         showarrow=False,
         xref='paper',
         yref='paper',
-        x=0.37,
+        x=0.57,
         y=1.06,
     )
 )
-fig01.add_annotation(
+#
+fig02.add_annotation(
     dict(
         text='<b>C)',
         align='left',
@@ -443,22 +373,21 @@ fig01.add_annotation(
         showarrow=False,
         xref='paper',
         yref='paper',
-        x=0.785,
-        y=1.06,
+        x=-0.032,
+        y=.14,
     )
 )
-for i in fig01['layout']['annotations']:
+#
+for i in fig02['layout']['annotations']:
     i['font'] = dict(family="Arial", size=10)
 if not os.path.exists("images"):
     os.mkdir("images")
-# fig01.write_image("images/fig011.pdf")
+# fig02.write_image("images/fig021.pdf")
 golden_width = 718  # width in px
 golden_ratio = 1.618
 pio.kaleido.scope.default_format = "eps"
 pio.kaleido.scope.default_width = golden_width
 pio.kaleido.scope.default_height = golden_width / golden_ratio
-pio.kaleido.scope.default_scale = .50
-fig01.to_image(format="pdf", engine="kaleido")
-fig01.write_image("images/fig01.pdf")
-# TODO:  Edit legend respect to groups
-# fig01.show()
+pio.kaleido.scope.default_scale = 0.5
+fig02.to_image(format="pdf", engine="kaleido")
+fig02.write_image("images/fig02.pdf")
