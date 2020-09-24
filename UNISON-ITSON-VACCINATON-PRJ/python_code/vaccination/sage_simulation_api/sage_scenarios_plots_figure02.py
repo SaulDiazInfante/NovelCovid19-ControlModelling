@@ -1,5 +1,4 @@
 import numpy as np
-import re
 import json
 import pandas as pd
 import os
@@ -8,7 +7,6 @@ import plotly.graph_objects as go
 import decimal
 import bokeh.palettes as bokeh_palettes
 import plotly.io as pio
-from datetime import datetime
 from plotly.subplots import make_subplots
 from scipy import integrate
 
@@ -34,9 +32,9 @@ def reproductive_number(**kwargs):
     u_v_0 = df_oc['u_V'][0]
     opt_fac = (mu + delta_v + (1.0 - epsilon) * (lambda_v + u_v_0)) / \
               (mu + delta_v + (lambda_v + u_v_0))
-    r_v_0 = fac * r_00
+    r_v_0_ = fac * r_00
     opt_r_v_0 = opt_fac * r_00
-    return r_00, r_v_0, opt_r_v_0
+    return r_00, r_v_0_, opt_r_v_0
 
 
 def hex_to_rgb(hex_color: str) -> tuple:
@@ -79,7 +77,7 @@ def constant_vaccination_coverage(df_solution):
 
 
 def load_parameters(file_name='/vaccination_model_parameters/' +
-                    'vaccination_parameters.json '):
+                              'vaccination_parameters.json '):
     """ Load the parameters given a JSON file.
     Parameters
     ----------
@@ -156,36 +154,36 @@ trace_constant_vac_cost = go.Scatter(
 #######################################################################
 #
 trace_optimal_vac_coverage = go.Scatter(
-        x=df_oc['time'],
-        y=df_oc['x_vac'],
-        line=dict(color=fill_color_pallet[19], width=.7),
-        fill='tozeroy',
-        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
-        legendgroup='Coverage',
-        name="(OP) Coverage",
-        showlegend=True
+    x=df_oc['time'],
+    y=df_oc['x_vac'],
+    line=dict(color=fill_color_pallet[19], width=.7),
+    fill='tozeroy',
+    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+    legendgroup='Coverage',
+    name="(OP) Coverage",
+    showlegend=True
 )
 #
 lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
 trace_optimal_vaccination_policy = go.Scatter(
-        x=df_oc['time'],
-        y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t),
-        fill='tozeroy',
-        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
-        line=dict(color=fill_color_pallet[0], width=0.7),
-        name="Optimal<br>Vaccination",
-        legendgroup='Policy',
-        showlegend=True
+    x=df_oc['time'],
+    y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t),
+    fill='tozeroy',
+    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+    line=dict(color=fill_color_pallet[0], width=0.7),
+    name="Optimal<br>vaccination<br>policy",
+    legendgroup='Policy',
+    showlegend=True
 )
 trace_optimal_cost = go.Scatter(
-        x=df_oc['time'],
-        y=n_cdmx * df_oc['x_zero'],
-        line=dict(color=fill_color_pallet[16], width=1.0),
-        fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
-        fill='tozeroy',
-        legendgroup='Cost',
-        name='(OP) Cost',
-        showlegend=True
+    x=df_oc['time'],
+    y=n_cdmx * df_oc['x_zero'],
+    line=dict(color=fill_color_pallet[16], width=1.0),
+    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
+    fill='tozeroy',
+    legendgroup='Cost',
+    name='(OP) Cost',
+    showlegend=True
 )
 #
 trace_vaccination_base = go.Scatter(
@@ -286,7 +284,7 @@ fig02.add_annotation(
 )
 #
 fig02.update_yaxes(tickfont=dict(size=10, family='Arial'),
-                 row=3, col=3)
+                   row=3, col=3)
 #
 r_0, r_v_0, r_opt_v_0 = reproductive_number(**prm)
 c_r_0 = decimal.Decimal(r_0)
@@ -294,14 +292,32 @@ c_r_v_0 = decimal.Decimal(r_v_0)
 c_r_opt_v_0 = decimal.Decimal(r_opt_v_0)
 
 data_label = {'eps': prm["epsilon"],
-                'delta_v': round(prm["delta_v"], 1),
-                'time_unit': 'days'}
+              'delta_v': round(prm["delta_v"], 1),
+              'time_unit': 'days'}
 str_vaccination_par = \
     r'$\epsilon={:1.2f}, \quad \delta_V ^{{-1}}={:1.1f} \ \mathtt{{{' \
     r':>5}}}$'.format(
         data_label['eps'],
         data_label['delta_v'],
         data_label['time_unit'])
+str_policy_legend = '<b>Vaccination Policy:</b><br>' + \
+                    '    Optimal (OP)<br>' + \
+                    '    Constant (CP)'
+fig02.add_annotation(
+    dict(
+        text=str_policy_legend,
+        align='left',
+        font=dict(family="Arial",
+                  size=12),
+        showarrow=False,
+        xref='paper',
+        yref=''
+             'paper',
+        x=1.325,
+        y=0.05
+    )
+)
+
 fig02.add_annotation(
     dict(
         text=str_vaccination_par,
@@ -322,9 +338,9 @@ fig02.update_layout(
     template="simple_white",
     showlegend=True,
     title_text="R0: " + str(round(c_r_0, 6))
-    + '\t\tRv: ' + str(round(c_r_v_0, 6))
-    + '\t\tOC-Rv: '
-    + str(round(c_r_opt_v_0, 6)),
+               + '\t\tRv: ' + str(round(c_r_v_0, 6))
+               + '\t\tOC-Rv: '
+               + str(round(c_r_opt_v_0, 6)),
     legend=dict(xanchor='left',
                 yanchor='top',
                 x=1.1,

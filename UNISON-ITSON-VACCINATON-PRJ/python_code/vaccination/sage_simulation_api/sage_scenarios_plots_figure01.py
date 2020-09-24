@@ -1,5 +1,3 @@
-import numpy as np
-import re
 import json
 import pandas as pd
 import os
@@ -8,7 +6,6 @@ import plotly.graph_objects as go
 import decimal
 import bokeh.palettes as bokeh_palettes
 import plotly.io as pio
-from datetime import datetime
 from plotly.subplots import make_subplots
 from scipy import integrate
 
@@ -34,9 +31,9 @@ def reproductive_number(**kwargs):
     u_v_0 = df_oc['u_V'][0]
     opt_fac = (mu + delta_v + (1.0 - epsilon) * (lambda_v + u_v_0)) / \
               (mu + delta_v + (lambda_v + u_v_0))
-    r_v_0 = fac * r_00
+    r_v_0_ = fac * r_00
     opt_r_v_0 = opt_fac * r_00
-    return r_00, r_v_0, opt_r_v_0
+    return r_00, r_v_0_, opt_r_v_0
 
 
 def hex_to_rgb(hex_color: str) -> tuple:
