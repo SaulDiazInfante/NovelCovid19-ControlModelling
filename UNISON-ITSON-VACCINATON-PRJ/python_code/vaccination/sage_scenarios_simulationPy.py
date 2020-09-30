@@ -16,4 +16,6 @@ scm.read_bocop_parameters_values()
 scm.get_lsoda_solution(constant_control=False)
 scm.get_lsoda_solution(constant_control=True)
 scm.get_solution_data()
-scm.sage_scenarios_plot()
+fig01 = scm.sage_plot_fig01()
+fig02 = scm.sage_plot_fig02()
+

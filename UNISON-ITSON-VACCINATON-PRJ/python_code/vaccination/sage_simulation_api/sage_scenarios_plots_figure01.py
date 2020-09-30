@@ -106,9 +106,9 @@ border_color_pallet = px.colors.sequential.ice
 fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
 
 fig01 = make_subplots(
-    rows=1, cols=3,
+    rows=1, cols=2,
     specs=[
-        [{}, {}, {}]
+        [{},{}]
     ],
     subplot_titles=("Symptomatic",
                     "Hospitalized",
@@ -116,7 +116,7 @@ fig01 = make_subplots(
                     ),
     horizontal_spacing=0.17
 )
-n_cdmx = 100000.0 / prm['n_pop']
+n_cdmx = prm["n_pop"] / 100000
 fig01.add_trace(
     go.Scatter(
         x=df_not_vaccination['time'],
@@ -131,24 +131,13 @@ fig01.add_trace(
 fig01.add_trace(
     go.Scatter(
         x=df_not_vaccination['time'],
-        y=0.25 ** 2 * n_cdmx * df_not_vaccination['i_s'],
-        line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
-        showlegend=False,
-        legendgroup='Optimized resources',
-        name='OP'
-    ),
-    row=1, col=2
-)
-fig01.add_trace(
-    go.Scatter(
-        x=df_not_vaccination['time'],
         y=n_cdmx * df_not_vaccination['d'],
         line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
         legendgroup='Saved lives',
         name='(OP)',
         showlegend=False
     ),
-    row=1, col=3
+    row=1, col=2
 )
 ########################################################################
 # constant_vaccination
@@ -162,16 +151,6 @@ trace_constant_vac_i_s = go.Scatter(
     showlegend=True,
     legendgroup='Mitigation',
     name='(CP)'
-)
-trace_constant_vac_hospitalization = go.Scatter(
-    x=df_constant_vaccination['time'],
-    y=0.25 ** 2 * n_cdmx * df_constant_vaccination['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[6]), 0.7)}",
-    line=dict(color=fill_color_pallet[6], width=0.7),
-    legendgroup='Optimized resources',
-    name='(CP)',
-    showlegend=True
 )
 trace_constant_vac_d = \
     go.Scatter(
@@ -207,16 +186,6 @@ trace_optimal_i_s = go.Scatter(
     showlegend=True
 )
 #
-trace_optimal_hospitalization = go.Scatter(
-    x=df_oc['time'],
-    y=0.25 ** 2 * n_cdmx * df_oc['i_s'],
-    fill='tonexty',
-    fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[7]), 0.7)}",
-    line=dict(color=border_color_pallet[1], width=.7),
-    legendgroup='Optimized resources',
-    showlegend=True,
-    name='(OP)'
-)
 trace_optimal_d = go.Scatter(
         x=df_oc['time'],
         y=n_cdmx * df_oc['d'],
@@ -231,10 +200,8 @@ trace_optimal_d = go.Scatter(
 fig01.append_trace(trace_constant_vac_i_s, 1, 1)
 fig01.append_trace(trace_optimal_i_s, 1, 1)
 fig01.append_trace(trace_optimal_prevalence, 1, 1)
-fig01.append_trace(trace_constant_vac_hospitalization, 1, 2)
-fig01.append_trace(trace_optimal_hospitalization, 1, 2)
-fig01.append_trace(trace_constant_vac_d, 1, 3)
-fig01.append_trace(trace_optimal_d, 1, 3)
+fig01.append_trace(trace_constant_vac_d, 1, 2)
+fig01.append_trace(trace_optimal_d, 1, 2)
 #
 # Axis labels
 #
@@ -262,12 +229,6 @@ fig01.update_xaxes(
     tickfont=dict(size=10, family='Arial'),
     row=1, col=2
 )
-fig01.update_xaxes(
-    title_text="Time (days)",
-    title_font=dict(size=10, family='Arial'),
-    tickfont=dict(size=10, family='Arial'),
-    row=1, col=3
-)
 #
 fig01.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
@@ -286,10 +247,6 @@ fig01.update_yaxes(
     row=1, col=2
 )
 
-fig01.update_yaxes(
-    tickfont=dict(size=10, family='Arial'),
-    row=1, col=3
-)
 #
 #
 #
@@ -320,18 +277,6 @@ fig01.add_annotation(
 # ----------------------------------------------------------------------
 fig01.add_annotation(
     dict(
-        text='Beds',
-        align='left',
-        font=dict(family="Arial",
-                  size=10),
-        showarrow=False,
-        xref='paper',
-        yref='paper',
-        x=1.17,
-        y=0.56)
-)
-fig01.add_annotation(
-    dict(
         text='Saved Lives',
         align='left',
         font=dict(family="Arial",
@@ -340,7 +285,7 @@ fig01.add_annotation(
         xref='paper',
         yref='paper',
         x=1.23,
-        y=0.385
+        y=0.57
     )
 )
 
@@ -427,23 +372,11 @@ fig01.add_annotation(
         showarrow=False,
         xref='paper',
         yref='paper',
-        x=0.37,
+        x=0.57,
         y=1.06,
     )
 )
-fig01.add_annotation(
-    dict(
-        text='<b>C)',
-        align='left',
-        font=dict(family="Arial",
-                  size=14),
-        showarrow=False,
-        xref='paper',
-        yref='paper',
-        x=0.785,
-        y=1.06,
-    )
-)
+
 for i in fig01['layout']['annotations']:
     i['font'] = dict(family="Arial", size=10)
 if not os.path.exists("images"):

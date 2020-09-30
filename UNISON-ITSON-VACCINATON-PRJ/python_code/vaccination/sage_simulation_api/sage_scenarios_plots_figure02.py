@@ -19,7 +19,7 @@ def reproductive_number(**kwargs):
     alpha_a = kwargs['alpha_a']
     lambda_v = kwargs['lambda_v']
     epsilon = kwargs['epsilon']
-    delta_v = kwargs['delta_v']
+    delta_v = 1.0 / kwargs['delta_v']
     mu = kwargs['mu']
     p = kwargs['p']
 
@@ -45,18 +45,31 @@ def hex_to_rgb(hex_color: str) -> tuple:
            int(hex_color[2:4], 16), int(hex_color[4:6], 16)
 
 
-def constant_vaccination_cost(df_solution):
+def daly_vaccination_cost(df_solution) -> float:
     """
-
+        Units in DALY, see
+        https://www.who.int/healthinfo/global_burden_disease/metrics_daly/en/
     """
-    a_D = prm['a_D']
-    a_S = prm['a_S']
+    mu = prm['mu']
+    delta_e = prm['delta_e']
+    alpha_s = prm['alpha_s']
+    mu_s = prm['mu_s']
+    # a_D = prm['a_D']
+    # a_S = prm['a_S']
     c_V = prm['c_V']
     u_V = prm['lambda_v']
     t = df_solution['time']
     i_s = df_solution['i_s']
     d = df_solution['d']
-    f = a_S * i_s + a_D * d + 0.5 * c_V * u_V ** 2
+    life_expectancy = mu ** (-1.0)
+    disability_weight = 0.5
+    case_average_duration = delta_e ** (-1.0) + \
+                            alpha_s ** (-1.0) + \
+                            mu_s ** (-1.0)
+    years_of_life_lost = life_expectancy * d
+    years_of_life_disability = disability_weight * case_average_duration * i_s
+    daly = years_of_life_lost + years_of_life_disability
+    f = daly + 0.5 * c_V * u_V ** 2
     cost_t_ = integrate.cumtrapz(f, t, initial=0)
     return cost_t_
 
@@ -105,15 +118,14 @@ df_not_vaccination = pd.read_pickle(no_vaccination_sol_path)
 df_constant_vaccination = pd.read_pickle(constant_vaccination_path)
 border_color_pallet = px.colors.sequential.ice
 fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
-########################################################################
-# Solution without vaccination
-########################################################################
+#
 fig02 = make_subplots(
-    rows=3, cols=2,
+    rows=4, cols=2,
     specs=[
         [{"rowspan": 2}, {"rowspan": 2}],
         [None, None],
-        [{"colspan": 2}, None]
+        [{"rowspan": 2, "colspan": 2}, None],
+        [None, None]
     ],
     subplot_titles=(
         "Coverage",
@@ -123,7 +135,7 @@ fig02 = make_subplots(
     horizontal_spacing=0.17,
     vertical_spacing=0.3,
 )
-n_cdmx = 100000.0 / prm['n_pop']
+n_cdmx = prm['n_pop'] / 100000
 ########################################################################
 # constant_vaccination
 ########################################################################
@@ -138,10 +150,11 @@ trace_constant_vac_coverage = go.Scatter(
     name='(CP) Coverage',
     showlegend=True
 )
-cost_t = constant_vaccination_cost(df_constant_vaccination)
+cost_t = daly_vaccination_cost(df_constant_vaccination)
+optimal_cost_t = daly_vaccination_cost(df_oc)
 trace_constant_vac_cost = go.Scatter(
     x=df_constant_vaccination['time'],
-    y=n_cdmx * cost_t,
+    y=cost_t,
     fill='tonexty',
     fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[16]), 0.7)}",
     line=dict(color=fill_color_pallet[16], width=1.0),
@@ -167,7 +180,7 @@ trace_optimal_vac_coverage = go.Scatter(
 lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
 trace_optimal_vaccination_policy = go.Scatter(
     x=df_oc['time'],
-    y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t),
+    y=prm['n_pop'] * (df_oc['u_V'] + lambda_base_v_t),
     fill='tozeroy',
     fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
     line=dict(color=fill_color_pallet[0], width=0.7),
@@ -177,7 +190,8 @@ trace_optimal_vaccination_policy = go.Scatter(
 )
 trace_optimal_cost = go.Scatter(
     x=df_oc['time'],
-    y=n_cdmx * df_oc['x_zero'],
+    # y=n_cdmx * df_oc['x_zero'],
+    y=optimal_cost_t,
     line=dict(color=fill_color_pallet[16], width=1.0),
     fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
     fill='tozeroy',
@@ -188,7 +202,7 @@ trace_optimal_cost = go.Scatter(
 #
 trace_vaccination_base = go.Scatter(
     x=df_oc['time'],
-    y=n_cdmx * lambda_v_base * np.ones(df_oc["u_V"].shape[0]),
+    y=prm['n_pop'] * lambda_v_base * np.ones(df_oc["u_V"].shape[0]),
     line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
     name='Constant<br>policy',
     showlegend=True
@@ -212,7 +226,7 @@ fig02.add_annotation(
         xref='paper',
         yref='paper',
         x=-0.075,
-        y=.9)
+        y=1.03)
 )
 fig02.update_xaxes(
     title_text="Time (days)",
@@ -264,7 +278,7 @@ fig02.add_annotation(
         xref='paper',
         yref='paper',
         x=-0.15,
-        y=-0.1)
+        y=0.07)
 )
 fig02.update_yaxes(
     tickfont=dict(size=10, family='Arial'),
@@ -272,7 +286,8 @@ fig02.update_yaxes(
 )
 fig02.add_annotation(
     dict(
-        text="Cost per 100,000 inhabitants",
+        # text="Cost per 100,000 inhabitants",
+        text="Cost (DALY)",
         align='left',
         textangle=-90,
         font=dict(family="Arial", size=10),
@@ -280,7 +295,9 @@ fig02.add_annotation(
         xref='paper',
         yref='paper',
         x=0.50,
-        y=0.95)
+        # y=1.05,
+        y=0.95
+    )
 )
 #
 fig02.update_yaxes(tickfont=dict(size=10, family='Arial'),
@@ -295,7 +312,7 @@ data_label = {'eps': prm["epsilon"],
               'delta_v': round(prm["delta_v"], 1),
               'time_unit': 'days'}
 str_vaccination_par = \
-    r'$\epsilon={:1.2f}, \quad \delta_V ^{{-1}}={:1.1f} \ \mathtt{{{' \
+    r'$\epsilon={:1.2f}, \quad 1/\delta_V ={:1.1f} \ \mathtt{{{' \
     r':>5}}}$'.format(
         data_label['eps'],
         data_label['delta_v'],
@@ -390,7 +407,7 @@ fig02.add_annotation(
         xref='paper',
         yref='paper',
         x=-0.032,
-        y=.14,
+        y=.34,
     )
 )
 #
@@ -407,3 +424,4 @@ pio.kaleido.scope.default_height = golden_width / golden_ratio
 pio.kaleido.scope.default_scale = 0.5
 fig02.to_image(format="pdf", engine="kaleido")
 fig02.write_image("images/fig02.pdf")
+# fig02.show()
