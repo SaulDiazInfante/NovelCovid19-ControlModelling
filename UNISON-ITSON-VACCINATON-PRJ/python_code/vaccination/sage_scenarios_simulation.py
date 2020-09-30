@@ -240,7 +240,8 @@ class CovidModels(NumericsCovid19):
         return prm
 
     def read_bocop_parameters_keys(self,
-                                   parameters_prefix_file_name='vaccination_parameters_'):
+                                   parameters_prefix_file_name=
+                                   'vaccination_parameters_'):
         bocop_file_name = self.bocop_solution_file
         star_pointer_block = 0
         end_pointer_block = 0
@@ -323,6 +324,12 @@ class CovidModels(NumericsCovid19):
                           out_put_file_prefix_name=
                           './vaccination_pkl_solutions' + '/bocop'
                           ):
+        """
+
+        Parameters
+        ----------
+        out_put_file_prefix_name : object
+        """
         bocop_file_name = self.bocop_solution_file
         state_keys, control_keys, parameter_keys, boundarycond_keys, \
         constraint_keys, constant_keys = \
@@ -470,7 +477,7 @@ class CovidModels(NumericsCovid19):
         return r_00, r_v_0, opt_r_v_0
 
     def sage_scenarios_plot(self):
-        def hex_to_rgb(hex_color: str) -> tuple:
+        def _hex_to_rgb_(hex_color: str) -> tuple:
             hex_color = hex_color.lstrip("#")
             if len(hex_color) == 3:
                 hex_color = hex_color * 2
@@ -590,7 +597,7 @@ class CovidModels(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=n_cdmx * df_constant_vaccination['i_s'],
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), .7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[2]), .7)}",
             line=dict(color=fill_color_pallet[2], width=1.0),
             showlegend=True,
             legendgroup='Mitigation',
@@ -600,7 +607,7 @@ class CovidModels(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=n_cdmx * df_constant_vaccination['i_a'],
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[2]), 0.7)}",
             line=dict(color=fill_color_pallet[2], width=1.0),
             showlegend=False
         )
@@ -608,7 +615,7 @@ class CovidModels(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=0.25 ** 2 * n_cdmx * df_constant_vaccination['i_s'],
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[6]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[6]), 0.7)}",
             line=dict(color=fill_color_pallet[6], width=0.7),
             legendgroup='Optimized resources',
             name='(CP)',
@@ -618,7 +625,7 @@ class CovidModels(NumericsCovid19):
             go.Scatter(
                 x=df_constant_vaccination['time'],
                 y=n_cdmx * df_constant_vaccination['d'],
-                fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[4]), 0.8)}",
+                fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[4]), 0.8)}",
                 fill='tonexty',
                 line=dict(color=fill_color_pallet[4], width=1.0),
                 legendgroup='Saved lives',
@@ -629,7 +636,7 @@ class CovidModels(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=coverage_t,
             fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[18]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[18]), 0.7)}",
             line=dict(color=fill_color_pallet[18], width=0.7),
             legendgroup='Coverage',
             name='(CP)',
@@ -640,7 +647,7 @@ class CovidModels(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=cost_t,
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[16]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[16]), 0.7)}",
             line=dict(color=fill_color_pallet[16], width=1.0),
             legendgroup='Cost',
             name='(CP)',
@@ -663,7 +670,7 @@ class CovidModels(NumericsCovid19):
             x=df_oc['time'],
             y=n_cdmx * df_oc['i_s'],
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[3]), 0.7)}",
             legendgroup='Mitigation',
             line=dict(color=border_color_pallet[1], width=.7),
             name='(OP)',
@@ -674,7 +681,7 @@ class CovidModels(NumericsCovid19):
             x=df_oc['time'],
             y=0.25 ** 2 * n_cdmx * df_oc['i_s'],
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[7]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[7]), 0.7)}",
             line=dict(color=border_color_pallet[1], width=.7),
             legendgroup='Optimized resources',
             showlegend=True,
@@ -683,7 +690,7 @@ class CovidModels(NumericsCovid19):
         trace_optimal_d = go.Scatter(
             x=df_oc['time'],
             y=n_cdmx * df_oc['d'],
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[5]), 0.4)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[5]), 0.4)}",
             fill='tonexty',
             legendgroup='Saved lives',
             line=dict(color=border_color_pallet[1], width=1),
@@ -694,7 +701,7 @@ class CovidModels(NumericsCovid19):
         trace_optimal_i_a = go.Scatter(
             x=df_oc['time'],
             y=n_cdmx * df_oc['i_a'],
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), 0.7)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[3]), 0.7)}",
             fill='tonexty',
             line=dict(color=border_color_pallet[1], width=.7),
             showlegend=False
@@ -704,7 +711,7 @@ class CovidModels(NumericsCovid19):
             y=df_oc['x_vac'],
             line=dict(color=fill_color_pallet[19], width=.7),
             fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[19]), 0.5)}",
             legendgroup='Coverage',
             name="(OP)",
             showlegend=False
@@ -715,7 +722,7 @@ class CovidModels(NumericsCovid19):
             x=df_oc['time'],
             y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t),
             fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[19]), 0.5)}",
             line=dict(color=fill_color_pallet[0], width=0.7),
             name="(OP)",
             legendgroup='Policy',
@@ -725,7 +732,7 @@ class CovidModels(NumericsCovid19):
             x=df_oc['time'],
             y=df_oc['x_zero'],
             line=dict(color=fill_color_pallet[16], width=1.0),
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
+            fillcolor=f"rgba{(*_hex_to_rgb_(fill_color_pallet[17]), 0.4)}",
             fill='tozeroy',
             legendgroup='Cost',
             name='(OP)',
@@ -1460,23 +1467,20 @@ class CovidModels(NumericsCovid19):
         # TODO:  Edit legend respect to groups
         # fig01.show()
 
-    # ------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Figure 02
-    # ------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def sage_plot_fig02(self):
 
         prm = self.parameters
         lambda_v_base = prm["lambda_v"]
         optimal_controlled_sol_path = self.optimal_controlled_solution_path
-        uncontrolled_solution_path = self.uncontrolled_solution_path
         constant_controlled_solution_file = \
             self.constant_controlled_solution_file
         df_oc = pd.read_pickle(optimal_controlled_sol_path)
-        df_not_vaccination = pd.read_pickle(uncontrolled_solution_path)
         df_constant_vaccination = pd.read_pickle(
             constant_controlled_solution_file)
-        # border_color_pallet = px.colors.sequential.ice
         fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
 
         fig02 = make_subplots(
