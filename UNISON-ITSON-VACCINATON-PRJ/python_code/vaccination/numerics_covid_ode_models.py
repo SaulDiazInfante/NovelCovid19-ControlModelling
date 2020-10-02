@@ -13,8 +13,10 @@ bocop_main_scene_data = 'bocop_data/'\
 
 class NumericsCovid19:
     def __init__(self,
-                 uncontrolled_solution_path='not_vaccination_solution.pkl',
-                 optimal_controlled_solution='bocop_solution.pkl',
+                 uncontrolled_solution_path='./vaccination_pkl_solutions' +
+                                            '/not_vaccination_solution.pkl',
+                 optimal_controlled_solution='/vaccination_pkl_solutions' +
+                                             '/bocop_solution.pkl',
                  bocop_parameters_json_file='./bocop_run_parameters/' +
                                             'bocop_run_parameters' +
                                             '.json',
@@ -29,6 +31,7 @@ class NumericsCovid19:
             bocop_prm_ = json.load(json_file)
         with open(vaccination_parameters_json_file) as json_file:
             vaccination_prm_ = json.load(json_file)
+        self.bocop_run_parameters = bocop_prm_
         self.parameters = vaccination_prm_
         self.n_steps = n_steps
         self.time_state_solution_names = ['time', 's', 'e',
@@ -229,6 +232,195 @@ class NumericsCovid19:
             json.dump(data, json_file, indent=4)
         df_record_parameters = pd.DataFrame(data, index=[1])
         return df_record_parameters
+
+    def get_run_bocop_parameters(self,
+                                 prefix_file_name='./bocop_run_parameters/' +
+                                                  'bocop_run_parameters'
+                                 ):
+        bocop_file_name = self.bocop_solution_file
+
+        def check_token(x_str_, x_val_, i_):
+            if x_str_ and x_val_:
+                string_prop_name_ = x_str.group()
+                str_prop_val_ = np.int(x_val[0])
+                names.append(string_prop_name_)
+                values.append(str_prop_val_)
+                print(i_, string_prop_name_, str_prop_val_)
+
+        def check_token_str(x_str_, x_val_, i_):
+            if x_str_ and x_val_:
+                string_prop_name_ = x_str.group()
+                str_prop_val_ = x_val_[0]
+                names.append(string_prop_name_)
+                values.append(str_prop_val_)
+                print(i_, string_prop_name_, str_prop_val_)
+
+        path = bocop_file_name
+        names = []
+        values = []
+        with open(path) as f:
+            all_lines = f.readlines()
+        i = 1
+        # ----------------------------------------------------------------------
+        # Regular expressions for pattern search
+        # ----------------------------------------------------------------------
+        # time regular expressions
+        pattern_str = re.compile(r'time\.([a-z]*)')
+        # pattern_str_none = re.compile(r'none')
+        pattern_str_free = re.compile(r'final')
+        pattern_int_value = re.compile(r'\d+')
+        # Dimension re
+        pattern_str_state_dimension = re.compile(r'state.dimension')
+        pattern_str_control = re.compile(r'control.dimension')
+        pattern_str_algebraic = re.compile(r'algebraic.dimension')
+        pattern_str_parameter = re.compile(r'parameter.dimension')
+        pattern_str_constant = re.compile(r'constant.dimension')
+        pattern_str_boundarycond = re.compile(r'boundarycond.dimension')
+        pattern_str_constraint = re.compile(r'constraint.dimension')
+        pattern_int_value = re.compile(r'\d+')
+        # Discretization re:
+        pattern_str_steps = re.compile(r'discretization.steps')
+        pattern_str_method = re.compile(r'discretization.method')
+        pattern_value_str_method = \
+            re.compile(r'discretization.method string\s+(\S+)')
+        pattern_str_opt_type = re.compile(r'optimization.type')
+        pattern_value_str_opt_type = \
+            re.compile(r'optimization.type string\s+(\S+)')
+        # pattern_str_opt_batch_type = re.compile(r'batch.type')
+        pattern_str_opt_batch_index = re.compile(r'batch.index')
+        pattern_str_opt_batch_nrange = re.compile(r'batch.nrange')
+        pattern_str_opt_batch_lowerbound = re.compile(r'batch.lowerbound')
+        pattern_str_opt_batch_upperbound = re.compile(r'batch.upperbound')
+        pattern_str_opt_batch_directory = re.compile(r'batch.directory')
+        pattern_value_str_opt_directory = \
+            re.compile(r'batch.directory string\s+(\S+)')
+        # solution file name
+        pattern_str_solution_file = re.compile(r'solution.file')
+        pattern_value_str_solution_file = \
+            re.compile(r'solution.file string\s+(\S+)')
+        # Optimized parameters: final_time
+        pattern_str_optimized_time = re.compile(r'Parameters')
+        # Search according to above patterns
+        pattern_sci_float = re.compile(
+            '[-+]?[\d]+\.?[\d]*[Ee](?:[-+]?[\d]+)?')
+        #
+        pattern_value = re.compile(r'\d+\.\d+|\d+')
+        i = 0
+        j = 0
+        final_time = 1.0
+        value = 0.0
+        for line in all_lines:
+            x_str = pattern_str.search(line)
+            x_val = pattern_int_value.findall(line)
+            x_str_final = pattern_str_free.findall(line)
+            # x_str_none = pattern_str_free.findall(line)
+            if x_str and x_val:
+                string_prop_name = 'time.' + x_str.group(1)
+                str_prop_val = np.int(x_val[0])
+                names.append(string_prop_name)
+                values.append(str_prop_val)
+                print(i, string_prop_name, str_prop_val)
+            elif x_str and x_str_final:
+                string_prop_name = 'time.' + 'free'
+                str_prop_val = x_str_final[0]
+                names.append(string_prop_name)
+                values.append(str_prop_val)
+                print(i, string_prop_name, str_prop_val)
+            # state
+            x_str = pattern_str_state_dimension.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # control
+            x_str = pattern_str_control.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # algebraic
+            x_str = pattern_str_algebraic.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # parameter
+            x_str = pattern_str_parameter.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # constants
+            x_str = pattern_str_constant.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # boundarycond
+            x_str = pattern_str_boundarycond.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            x_str = pattern_str_constraint.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            #
+            x_str = pattern_str_steps.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            #
+            x_str = pattern_str_method.search(line)
+            x_val = pattern_value_str_method.findall(line)
+            check_token_str(x_str, x_val, i)
+            #
+            # Optimization:
+            #
+            # type
+            x_str = pattern_str_opt_type.search(line)
+            x_val = pattern_value_str_opt_type.findall(line)
+            check_token_str(x_str, x_val, i)
+            # index
+            x_str = pattern_str_opt_batch_index.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # nrange
+            x_str = pattern_str_opt_batch_nrange.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # lowerbound
+            x_str = pattern_str_opt_batch_lowerbound.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # upperbound
+            x_str = pattern_str_opt_batch_upperbound.search(line)
+            x_val = pattern_int_value.findall(line)
+            check_token(x_str, x_val, i)
+            # directory
+            x_str = pattern_str_opt_batch_directory.search(line)
+            x_val = pattern_value_str_opt_directory.findall(line)
+            check_token_str(x_str, x_val, i)
+            x_str = pattern_str_solution_file.search(line)
+            x_val = pattern_value_str_solution_file.findall(line)
+            check_token_str(x_str, x_val, i)
+            x_str_optimized_time_header = pattern_str_optimized_time.search(
+                line)
+            if x_str_optimized_time_header:
+                pointer = i
+                final_time = all_lines[pointer + 1]
+                x_val_sci = pattern_sci_float.search(final_time)
+                x_val = pattern_value.search(final_time)
+                if x_val_sci:
+                    print(j + 1, x_val_sci.string)
+                    value = x_val_sci.group()
+                elif x_val:
+                    print(j + 1, x_val.string)
+                    value = x_val.group()
+                final_time = np.float(value)
+                names.append('final_time')
+                values.append(final_time)
+            i = i + 1
+        time_now = datetime.now()
+        dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
+        path_json = prefix_file_name + '_' + dt_string + '.json'
+        #
+        bocop_data = dict(zip(names, values))
+        bocop_data_df = pd.DataFrame(bocop_data, index=[1])
+        bocop_data_df.to_json(path_json)
+        print(json.dumps(bocop_data, indent=4))
+        with open(path_json, 'w') as json_file:
+            json.dump(bocop_data, json_file, indent=4)
+        with open(prefix_file_name + '.json', 'w') as json_file:
+            json.dump(bocop_data, json_file, indent=4)
+        return bocop_data_df
 
     def data_solution_save(self, file_name_prefix='vaccination_data_solution'):
         """

@@ -17,5 +17,6 @@
     "batch.lowerbound": 0,
     "batch.upperbound": 0,
     "batch.directory": "Folder_epsilon",
-    "solution.file": "Folder_epsilon/epsilon-7.000000e-01.sol"
+    "solution.file": "Folder_epsilon/epsilon-7.000000e-01.sol",
+    "final_time": 300.001185777488
 }
