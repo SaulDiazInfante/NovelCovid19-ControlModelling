@@ -1,0 +1,131 @@
+\begin{thebibliography}{10}
+
+\bibitem{Bar-on}
+Yinon~M Bar-on, Ron Sender, Avi~I Flamholz, Rob Phillips, and Ron Milo.
+\newblock {A quantitative compendium of COVID-19 epidemiology}.
+\newblock pages 1--51.
+
+\bibitem{Buonomo2020}
+Bruno Buonomo.
+\newblock {Effects of information-dependent vaccination behavior on coronavirus
+  outbreak: insights from a SIRI model}.
+\newblock {\em Ricerche di Matematica}, 2020.
+
+\bibitem{Chatzilena2019}
+Anastasia Chatzilena, Edwin van Leeuwen, Oliver Ratmann, Marc Baguelin, and
+  Nikolaos Demiris.
+\newblock {Contemporary statistical inference for infectious disease models
+  using Stan}.
+\newblock {\em Epidemics}, 29(February):100367, 2019.
+
+\bibitem{Davies2020}
+Nicholas~G Davies, Adam~J Kucharski, Rosalind~M Eggo, Amy Gimma, CMMID
+  COVID-19~Working Group, and W.~John Edmunds.
+\newblock {The effect of non-pharmaceutical interventions on COVID-19 cases,
+  deaths and demand for hospital services in the UK: a modelling study}.
+\newblock {\em medRxiv}, page 2020.04.01.20049908, 2020.
+
+\bibitem{DiDomenico2020}
+Laura {Di Domenico}, Giulia Pullano, Chiara~E Sabbatini, Pierre-Yves
+  Bo{\"{e}}lle, and Vittoria Colizza.
+\newblock {Currently under screening at medRxiv Expected impact of lockdown in
+  {\^{I}}le-de-France and possible exit strategies}.
+\newblock 2020.
+
+\bibitem{Ding2010a}
+Wandi Ding and Suzanne Lenhart.
+\newblock {Introduction to optimal control for discrete time models with an
+  application to disease modeling}.
+\newblock In {\em Modeling paradigms and analysis of disease transmission
+  models}, volume~75, pages 109--119. Amer. Math. Soc., Providence, RI, oct
+  2010.
+
+\bibitem{Djidjou-Demasse2020}
+Ramses Djidjou-Demasse, Yannis Michalakis, Marc Choisy, Micea~T. Sofonea, and
+  Samuel Alizon.
+\newblock {Optimal COVID-19 epidemic control until vaccine deployment}.
+\newblock {\em medRxiv}, page 2020.04.02.20049189, 2020.
+
+\bibitem{Ferguson2020}
+Neil~M Ferguson, Daniel Laydon, Gemma Nedjati-gilani, Natsuko Imai, Kylie
+  Ainslie, Marc Baguelin, Sangeeta Bhatia, Adhiratha Boonyasiri, Zulma
+  Cucunub{\'{a}}, Gina Cuomo-dannenburg, Amy Dighe, Han Fu, Katy Gaythorpe,
+  Will Green, Arran Hamlet, Wes Hinsley, Lucy~C Okell, Sabine Van, Hayley
+  Thompson, Robert Verity, Erik Volz, Haowei Wang, Yuanrong Wang, Patrick G~T
+  Walker, Caroline Walters, Peter Winskill, Charles Whittaker, Christl~A
+  Donnelly, Steven Riley, and Azra~C Ghani.
+\newblock {Impact of non-pharmaceutical interventions ( NPIs ) to reduce COVID-
+  19 mortality and healthcare demand}.
+\newblock (March), 2020.
+
+\bibitem{Biswas2014}
+M.~{H. A. Biswas}, L.~{T. Paiva}, and MdR de~Pinho.
+\newblock {A SEIR model for control of infectious diseases with constraints}.
+\newblock {\em Mathematical Biosciences and Engineering}, 11(4):761--784, 2014.
+
+\bibitem{Team2020}
+IHME COVID-19 health service utilization~forecasting Team and Christopher~JL
+  Murray.
+\newblock {Forecasting COVID-19 impact on hospital bed-days, ICU-days,
+  ventilator-days and deaths by US state in the next 4 months}.
+\newblock {\em medRxiv}, page 2020.03.27.20043752, mar 2020.
+
+\bibitem{Huang2010}
+Gang Huang, Yasuhiro Takeuchi, Wanbiao Ma, and Daijun Wei.
+\newblock {Global Stability for Delay SIR and SEIR Epidemic Models with
+  Nonlinear Incidence Rate}.
+\newblock {\em Bulletin of Mathematical Biology}, 72(5):1192--1207, 2010.
+
+\bibitem{Jia2020}
+Jiwei Jia, Jian Ding, Siyu Liu, Guidong Liao, Jingzhi Li, B.~E.N. Duan, Guoqing
+  Wang, and R.~A.N. Zhang.
+\newblock {Modeling the control of COVID-19: Impact of policy interventions and
+  meteorological factors}.
+\newblock {\em Electronic Journal of Differential Equations}, 2020:1--21, 2020.
+
+\bibitem{Kaddar2011}
+Abdelilah Kaddar, Abdelhadi Abta, and Hamad~Talibi Alaoui.
+\newblock {A comparison of delayed SIR and SEIR epidemic models}.
+\newblock {\em Nonlinear Analysis: Modelling and Control}, 16(2):181--190, apr
+  2011.
+
+\bibitem{Li2020}
+Qian Li, Biao Tang, Nicola~Luigi Bragazzi, Yanni Xiao, and Jianhong Wu.
+\newblock {Modeling the impact of mass influenza vaccination and public health
+  interventions on COVID-19 epidemics with limited detection capability}.
+\newblock {\em Mathematical Biosciences}, 325(May):108378, jul 2020.
+
+\bibitem{Libotte2020}
+Gustavo~Barbosa Libotte, Fran~S{\'{e}}rgio Lobato, Gustavo~Mendes Platt, and
+  Ant{\^{o}}nio Jos{\'{e}} da~Silva Neto.
+\newblock {Determination of an Optimal Control Strategy for Vaccine
+  Administration in COVID-19 Pandemic Treatment}.
+\newblock (November 2019), apr 2020.
+
+\bibitem{Mandal2020}
+Manotosh Mandal, Soovoojeet Jana, Swapan~Kumar Nandi, Anupam Khatua, Sayani
+  Adak, and T.K. Kar.
+\newblock {A model based study on the dynamics of COVID-19: Prediction and
+  control}.
+\newblock {\em Chaos, Solitons {\&} Fractals}, 136:109889, jul 2020.
+
+\bibitem{Nguyen2018}
+Van~Kinh Nguyen and Esteban~A. Hernandez-Vargas.
+\newblock {Parameter Estimation in Mathematical Models of Viral Infections
+  Using R}.
+\newblock volume 1836, pages 531--549. 2018.
+
+\bibitem{Williams2009}
+Jorge Nocedal, Andreas W{\"{a}}chter, and Richard~A. Waltz.
+\newblock {Adaptive Barrier Update Strategies for Nonlinear Interior Methods}.
+\newblock {\em SIAM Journal on Optimization}, 19(4):1674--1693, jan 2009.
+
+\bibitem{Wang2019a}
+Xinwei Wang, Haijun Peng, Boyang Shi, Dianheng Jiang, Sheng Zhang, and Biaosong
+  Chen.
+\newblock {Optimal vaccination strategy of a constrained time-varying SEIR
+  epidemic model}.
+\newblock {\em Communications in Nonlinear Science and Numerical Simulation},
+  67:37--48, 2019.
+
+\end{thebibliography}

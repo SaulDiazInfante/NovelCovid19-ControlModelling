@@ -23,13 +23,11 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         self.reported_incidence = np.zeros(300)
         self.sampler_time = np.zeros(300)
 
-    def incidence_quadrature(self, df_solution, t_0, t_f):
+    def incidence_quadrature(self, df_solution):
         """
 
         Parameters
         ----------
-        t_f: Final integration time
-        t_0: Initial integration time
         df_solution: Pandas data frame COVID19 model solution.
 
         Returns
@@ -42,12 +40,9 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         delta_e = prm["delta_e"]
         t = df_solution['time']
         e = df_solution['e']
-        initial_index = np.argmin(np.abs(t - t_0))
-        final_index = np.argmin(np.abs(t - t_f))
-        time_slice = t[initial_index: final_index]
-        e_data_slice = e[initial_index: final_index]
-        f_incidence = p * delta_e * e_data_slice
-        quad = integrate.simps(y=f_incidence, x=time_slice)
+        f_incidence = p * delta_e * e
+        initial_incidence = 0
+        quad = integrate.cumtrapz(f_incidence, initial=initial_incidence)
         return quad
 
     def incidence_computing(self, df_solution):
@@ -64,21 +59,16 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         prm = self.parameters
         t = df_solution['time']
         i_s = df_solution['i_s']
-        t_f = t.iloc[-1]
-        resolution_time_step = t[1]
         operation_time_step_multiple = np.argmin(np.abs(1.0 - t))
         sampler_time = t[0:-1:operation_time_step_multiple]
         self.sampler_time = sampler_time
         incidence = np.zeros(sampler_time.shape[0])
         incidence_increments = np.zeros(sampler_time.shape[0])
-        incidence[0] = i_s[0]
-        for i in np.arange(sampler_time.shape[0] - 1):
-            incidence[i + 1] = incidence[i] + \
-                self.incidence_quadrature(df_solution,
-                                          sampler_time.iloc[i],
-                                          sampler_time.iloc[i + 1])
-        incidence_increments[1:] = np.ediff1d(incidence)
-        self.cumulatively_reported_incidence = incidence
+        cumulative_incidence_t = self.incidence_quadrature(df_solution)
+        cumulative_incidence_per_day = \
+            cumulative_incidence_t[0:-1:operation_time_step_multiple]
+        incidence_increments[1:] = np.ediff1d(cumulative_incidence_per_day)
+        self.cumulatively_reported_incidence = cumulative_incidence_per_day
         self.reported_incidence = incidence_increments
         return incidence
 

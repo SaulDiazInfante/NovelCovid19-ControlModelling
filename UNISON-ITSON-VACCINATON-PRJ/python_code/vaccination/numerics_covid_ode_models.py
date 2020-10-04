@@ -2,13 +2,13 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import json
 import re
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime
 
-bocop_main_scene_data = 'bocop_data/'\
-                  + 'deltaR_05_Coverage_50_TH_10M_14M/delta_V_05_years/' \
-                  + 'epsilon-7.000000e-01.sol'
+bocop_main_scene_data = 'bocop_data/' \
+                        + 'deltaR_05_Coverage_50_TH_10M_14M/delta_V_05_years/' \
+                        + 'epsilon-7.000000e-01.sol'
 
 
 class NumericsCovid19:
@@ -20,8 +20,8 @@ class NumericsCovid19:
                  bocop_parameters_json_file='./bocop_run_parameters/' +
                                             'bocop_run_parameters' +
                                             '.json',
-                 vaccination_parameters_json_file='./vaccination_model_'+
-                                                    'parameters'
+                 vaccination_parameters_json_file='./vaccination_model_' +
+                                                  'parameters'
                                                   + '/vaccination_parameters' +
                                                   '.json',
                  bocop_solution_file=bocop_main_scene_data,
@@ -37,7 +37,7 @@ class NumericsCovid19:
         self.time_state_solution_names = ['time', 's', 'e',
                                           'i_s', 'i_a',
                                           'r', 'd', 'v',
-                                          'x_vac']
+                                          'x_vac', 'cum_i_s', 'x_super_zero']
 
         # TODO: 'cost'
         self.state_dim = self.time_state_solution_names.__len__()
@@ -51,6 +51,8 @@ class NumericsCovid19:
         self.u_v = np.zeros([self.state_dim, 1])
         self.vaccination_parameters_json_file = vaccination_parameters_json_file
         self.bocop_solution_file = bocop_solution_file
+        self.uncontrolled_solution_path = uncontrolled_solution_path
+        self.optimal_controlled_solution = optimal_controlled_solution
         self.state_keys = []
         self.control_keys = []
         self.parameter_keys = []
@@ -69,9 +71,9 @@ class NumericsCovid19:
         constraint_keys = []
         constant_keys = []
         path = self.vaccination_parameters_json_file
-        time_now = datetime.now()
-        dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
-        path_json = parameters_prefix_file_name + dt_string + '.json'
+        # time_now = datetime.now()
+        # dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
+        # path_json = parameters_prefix_file_name + dt_string + '.json'
         with open(path) as f:
             all_lines = f.readlines()
         i = 0
@@ -454,6 +456,9 @@ class NumericsCovid19:
 
     def get_lsoda_solution(self, constant_control=False):
         self.constant_control = constant_control
+        prm = self.parameters
+        a_d = prm['a_D'] * 42 * 365 / 2.0
+        a_e = prm['a_S'] * prm['alpha_s'] ** (-1.0) * 0.28425
 
         def rhs_vaccination(t, y_, beta_s, beta_a, epsilon,
                             delta_e, delta_v, delta_r,
@@ -491,7 +496,7 @@ class NumericsCovid19:
             ----------
             constant_control
             """
-            s, e, i_s, i_a, r, d, v, x_vaccine_counter = y_
+            s, e, i_s, i_a, r, d, v, x_vaccine_counter, cum_i_s, x_zero = y_
             #
             if not constant_control:
                 lambda_v = 0
@@ -511,11 +516,14 @@ class NumericsCovid19:
                     (1.0 - epsilon) * force_infection * v - \
                     (mu + (delta_v ** (-1.0))) * v
             rhs_x_vaccine_counter = (lambda_v + u_v) * (s + e + i_a + r)
+            rhs_cum_i_s = p * delta_e * e
+            rhs_x_zero = a_d * alpha_s * i_s + a_e * p * delta_e * e + \
+                         0.5 * u_v ** 2
             rhs = np.array([rhs_s, rhs_e,
                             rhs_i_s, rhs_i_a,
                             rhs_r, rhs_d,
                             constant_control_ * rhs_v,
-                            rhs_x_vaccine_counter])
+                            rhs_x_vaccine_counter, rhs_cum_i_s, rhs_x_zero])
             return rhs
 
         prm = self.parameters
@@ -529,6 +537,9 @@ class NumericsCovid19:
         d_zero = prm["D_0"]
         v_zero = prm["V_0"]
         x_vaccination_zero = prm["X_0"]
+        cum_i_s_0 = prm["cum_i_s_0"]
+        x_zero_0 = prm["xZero_0"]
+#
         args = (prm["beta_s"], prm["beta_a"], prm["epsilon"],
                 prm["delta_e"], prm["delta_v"], prm["delta_r"],
                 prm["p"],
@@ -542,7 +553,9 @@ class NumericsCovid19:
                         r_zero,
                         d_zero,
                         v_zero,
-                        x_vaccination_zero
+                        x_vaccination_zero,
+                        cum_i_s_0,
+                        x_zero_0
                         ])
         sol_not_v = solve_ivp(rhs_vaccination,
                               [0.0, T],
