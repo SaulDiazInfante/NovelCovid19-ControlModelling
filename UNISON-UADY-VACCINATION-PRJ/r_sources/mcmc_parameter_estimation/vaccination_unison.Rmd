@@ -1,0 +1,277 @@
+---
+ title: "Vaccination estimation CULIACAN"
+ output:
+  html_document:
+    df_print: paged
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Starting Model
+=================================
+\begin{align}
+    S'(t) &=
+        \mu \bar{N}
+        -\frac{\beta_S I_S + \beta_AI_A}{\bar{N}} S
+        -\mu S
+    \\
+    E'(t) &=
+        \frac{\beta_S I_S
+        + \beta_A I_A}{\bar{N}} S
+        - (\mu+\delta_E) E \nonumber
+    \\
+    I'_S(t) & =
+        p \delta_E E
+        -(\mu + \alpha_S) I_S
+    \\
+    I'_A(t) & =
+        (1-p) \delta_E E
+        - (\mu + \alpha_A) I_A
+    \\
+    R'(t) & =
+        \alpha_S I_S
+        + \alpha_A I_A
+        - \mu R
+    \\
+    \bar{N}(t) &=
+        S(t) + E(t) + I_S(t) + I_A(t) + R(t)
+\end{align}
+
+Stan ODE notation beginning model
+=================================
+
+|state                  |Stan| Initial Condition       |Stan     |Postulated |
+|-----------------------|----|-------------------------|---------|-----------|
+|$S$                    |y[1]| $S_0$                   |y_init[1]|$N -
+                                                                  (I_{S_0} + 
+                                                                  I_{A_0} 
+                                                                  + E_0)$    |
+|$E$                    |y[2]| $E_0$                   |y_init[2]|Unif(0, 10)|
+|$I_s$                  |y[3]| $I_{s_0}$               |y_init[3]|Unif(0, 3) |
+|$I_a$                  |y[4]| $I_{a_0}$               |y_init[4]|Unif(0, 10)|
+|$R$                    |y[5]| $R_0$                   |y_init[5]|0          |
+|$I_s^{[cumulative]}$   |y[6]| $I_{s_0}^{[cumulative]}$|y_init[6]|$I_{s_0}$  |
+
+
+Observation Model
+=================
+\begin{align}
+    Y_t &
+        \sim \text{Poisson}(\lambda_t), \qquad
+    \\
+    \lambda_t &
+        =  \int_0^t \rho \delta_e E
+    \\
+    & \rho \sim \text{Uniform(0. 0.5)}
+    \\
+    & \delta_e: \text{fixed, I'm not sure!!}
+\end{align}
+
+March 01 -- March 23 parameters estimation
+==========================================
+
+|stan notation| symbol     |Prior          | Fixed      |
+|-------------|---------   |---------------|------------|
+|theta[1]     |$\beta_A$   | Normal(1, 0.3)|            |
+|theta[2]     |$\beta_S$   | Normal(1, 0.3)|            |
+|theta[3]     |$p$         | Unif(0.3, 0.8)|            |
+|theta[4]     |$\alpha_S$  | Gamma(10, 100)|            |
+|theta[5]     |$\alpha_A$  | Gamma(10, 50) |            |
+|---------    |$\mu$       | --------      |3.913894e-05|
+|---------    |$E_0$       | Unif(0, 10)   |            |
+|---------    |$I_S$       | Unif(0, 3)    |            |
+|---------    |$I_A$       | Unif(0, 10)   |            |
+
+Vaccination Model
+==========================
+\begin{align}
+    S'(t) &=
+        \mu \bar{N}
+        -\frac{\beta_S I_S+\beta_AI_A}{\bar{N}}S
+        -(\mu+\lambda_V)S +\delta_V V
+    \\
+    E'(t) &=
+        \frac{\beta_S I_S
+        + \beta_A I_A}{\bar{N}} S
+        + \epsilon \frac{\beta_S I_S + \beta_A I_A}{\bar{N}}V
+        - (\mu+\delta_E) E \nonumber
+    \\
+    I'_S(t) & =
+        p \delta_E E
+        -(\mu + \mu_S + \alpha_S + \lambda_T) I_S
+        +(1 - q) \alpha_T T
+    \\
+    I'_A(t) & =
+        (1-p) \delta_E E
+        - (\mu + \mu_A + \alpha_A) I_A
+    \\
+    R'(t) & =
+        \alpha_S I_S
+        + \alpha_A I_A
+        + q \alpha_T T
+        - \mu R
+    \\
+    D'(t)& =
+        \mu_S I_S
+        + \mu_A I_A
+    \\
+    V'(t)& =
+        \lambda_V S
+        - \epsilon
+        \frac{\beta_S I_S + \beta_A I_A}{\bar{N}} V
+        - (\mu + \delta_V) V
+    \\
+    T'(t) &=
+        \lambda_T I_S
+        -(\mu + \alpha_T) T
+    \\
+    \bar{N}(t) &=
+        S(t) + E(t) + I_S(t) + I_A(t) + R(t) + V(t) + T(t)
+\end{align}
+
+Model from March 24 July 14
+===========================
+
+|state                  |Stan | Initial Condition       |Stan      |Postulated |
+|-----------------------|-----|-------------------------|----------|-----------|
+|$S$                    |y[1] | $S_0$                   | y_init[1]|$N -
+                                                    (I_{S_0} + I_{A_0} + E_0)$|
+|$E$                    |y[2] | $E_0$                   | y_init[2]|Unif(0, 10)|
+|$I_s$                  |y[3] | $I_{s_0}$               | y_init[3]|Unif(0, 3) |
+|$I_a$                  |y[4] | $I_{a_0}$               | y_init[4]|Unif(0, 10)|
+|$R$                    |y[5] | $R_0$                   | y_init[5]|Estimated  |
+|$T$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$V$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$I_s^{[cumulative]}$   |y[6] | $I_{s_0}^{[cumulative]}$| y_init[6]|$I_{s_0}$  |
+
+```{r}
+library(knitr)
+library(kableExtra)
+```
+
+```{r}
+seirvt_mod = function(t, state, parameters){
+    with(as.list(c(state, parameters)), {
+    ####
+    n_bar <- s + e + i_s + i_a + r + v + treat
+    force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
+    rhs_s = mu * n_bar - force_infection * s - (mu + lambda_v) * s + delta_v * v
+    rhs_e = force_infection * (epsilon * v + s) - (mu + delta_e) * e
+    rhs_i_s = p * delta_e * e - (mu + mu_s + alpha_s + lambda_t) * i_s -
+        (1.0 - q) * alpha_t * treat
+    rhs_i_a = (1 - p) * delta_e * e - (mu + mu_a + alpha_a) * i_a
+    rhs_r = alpha_s * i_s + alpha_a * i_a + q * alpha_t * treat - mu * r
+    rhs_d = mu_s * i_s + mu_a * i_a
+    rhs_v = lambda_v * s - epsilon * force_infection * v - (mu + delta_v) * v
+    rhs_treat = lambda_t * i_s - (mu + alpha_t) * treat
+    rhs = c(rhs_s, rhs_e, rhs_i_s, rhs_i_a, rhs_r, rhs_d, rhs_v, rhs_treat)
+    return(list(rhs))
+    })
+}
+```
+
+March 24 --Jun 01 parameters estimation
+=======================================
+
+|stan notation | symbol     |Prior            | Fixed      |
+|--------------|---------   |---------------  |------------|
+|theta[1]      |$\beta_A$   | Normal(1, 0.3)  |            |
+|theta[2]      |$\beta_S$   | Normal(1, 0.3)  |            |
+|theta[3]      |$p$         | Unif(.3, 0.8)   |            |
+|theta[3]      |$q$         | Unif(0.4, 0.7)  |            |
+|theta[4]      |$\epsilon$  |                 |0.0         |
+|theta[5]      |$\alpha_S$  | Gamma(10, 100)  |            |
+|theta[6]      |$\alpha_A$  | Gamma(10, 50)   |            |
+|theta[7]      |$\alpha_T$  |                 |0.0         |
+|theta[8]      |$\lambda_V$ |                 |0.0         |
+|theta[9]      |$\lambda_T$ |                 |0.0         |
+|theta[10]     |$\mu_S$     |                 |            |
+|---------     |$\mu_A$     |                 |0.0         |
+|---------     |$\mu$       | --------        |3.913894e-05|
+|theta[11]     |$\delta_V$  |                 |0.0         |
+|theta[12]     |$\delta_E$  | Gamma(10, 50)   |0.1960784   |
+|---------     |$E_0$       | Unif(0, 10)     |            |
+|---------     |$I_A$       | Unif(0, 10)     |            |
+|---------     |$I_S$       | Unif(0, 10)     |            |
+|---------     |$I_A$       | Unif(0, 10)     |            |
+
+Stan ODE notation
+==========================
+|variable               | Stan| Initial Condition       |Stan      |           |
+|--------               |-----|------------------       | ---------|------     |
+|$S$                    |y[1] | $S_0$                   | y_init[1]|$N -
+                                                                     (I{s_0} +
+                                                                     I_{a_0} +
+                                                                     E_0)$     |
+|$E$                    |y[2] | $E_0$                   | y_init[2]|Unif(0, 10)|
+|$I_s$                  |y[3] | $I_{s_0}$               | y_init[3]|Unif(0, 3) |
+|$I_a$                  |y[4] | $I_{a_0}$               | y_init[4]|Unif(0, 10)|
+|$R$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$D$                    |y[6] | $D_0$                   | y_init[6]|0          |
+|$V$                    |y[7] | $V_0$                   | y_init[7]|0          |
+|$T$                    |y[8] | $V_0$                   | y_init[8]|0          |
+|$I_s^{[cumulative]}$   |y[9] | $I_{s_0}^{[cumulative]}$| y_init[9]|$I_{s_0}$  |
+
+```{r}
+OdeSystem <- function(Time, State, Pars)
+{
+  with(as.list(c(State, Pars)), {
+    delta_e <- 1/5.1
+    mu_s    <- 1/8
+    alpha_a <- 1/8
+    ##
+    N_star <- S + E + Is + Ia + R
+    ##
+    dS   <- -(exp(Logbeta_a) * Ia + exp(Logbeta_s) * Is) * (S / N_star)
+    dE   <-  (exp(Logbeta_a) * Ia + exp(Logbeta_s) * Is) * (S / N_star)
+              - delta_e*E
+    dIs  <-   rho*delta_e * E - (exp(Logalpha_s) + mu_s) * Is
+    dIa  <-  (1 - rho) * delta_e * E - alpha_a * Ia
+    dR   <-   alpha_a * Ia + exp(Logalpha_s) * Is
+    dD   <-   mu_s * Is
+    dCIs <-   rho * delta_e * E
+    #
+    #print(Pars)
+    list(c(dS, dE, dIs, dIa, dR, dD, dCIs)) })
+}
+```
+
+Observation Model
+=================
+\begin{align}
+    Y_t &
+        \sim \text{Poisson}(\lambda_t), \qquad
+    \\
+    \lambda_t &
+        =  \int_0^t \rho \delta_e E
+    \\
+    & \rho \sim \text{Uniform(0. 0.5)}
+    \\
+    & \delta_e: \text{fixed, I'm not sure!!}
+\end{align}
+
+Parameters
+============
+
+|stan notation | symbol     |Prior               | Fixed      |
+|--------------|---------   |-----------------   |------------|
+|theta[1]      |$\beta_A$   | Normal(1, 0.3)     |            |
+|theta[2]      |$\beta_S$   | Normal(1, 0.3)     |            |
+|theta[3]      |$p$         | Unif(.3, 0.8)      |            |
+|theta[3]      |$q$         | Unif(0.8, 0.95)    |            |
+|theta[4]      |$\epsilon$  | Normal(0.01, 0.003)|            |
+|theta[5]      |$\alpha_S$  | Gamma(10, 100)     |            |
+|theta[6]      |$\alpha_A$  | Gamma(10, 50)      |            |
+|theta[7]      |$\alpha_T$  | Gamma(10, 50)      |            |
+|theta[8]      |$\lambda_V$ | Gamma(10, 50)      |            |
+|theta[9]      |$\lambda_T$ | Gamma(10, 50)      |            |
+|theta[10]     |$\mu_S$     | Gamma(10, 15)      |            |
+|---------     |$\mu_A$     |   ?                |0.125       |
+|---------     |$\mu$       | --------           |3.913894e-05|
+|theta[11]     |$\delta_V$  | Gamma(10, 50)      |            |
+|theta[12]     |$\delta_E$  | Gamma(10, 50)      |0.1960784   |
+|---------     |$E_0$       | Unif(0, 10)        |            |
+|---------     |$I_A$       | Unif(0, 10)        |            |
+|---------     |$I_S$       | Unif(0, 10)        |            |
+|---------     |$I_A$       | Unif(0, 10)        |            |

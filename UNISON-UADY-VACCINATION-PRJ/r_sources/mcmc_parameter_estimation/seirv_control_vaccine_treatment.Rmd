@@ -1,0 +1,344 @@
+---
+ title: "Vaccination estimation Ciudad de Mexico"
+ date: "`r Sys.Date()`"
+ author: DIVS, DGS, FPA, GASV
+ output:
+     rmdformats::material:
+        self_contained: true
+        thumbnails: true
+        lightbox: true
+        gallery: false
+        highlight: tango
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Starting Model
+=================================
+\begin{align}
+    S' & =
+        \mu N^\star - \lambda S - \mu S
+    \\
+    E' & =
+        \lambda S - \kappa E - \mu E
+    \\
+    I_S' & =
+        p \kappa E - (\gamma_S + \mu_{I_S} + \delta_H) I_S
+        - \mu I_S
+    \\
+    I_A' &=
+        (1 - p) \kappa E - \gamma_A I_A - \mu I_A
+    \\
+    H' &=
+        \delta_H I_S - (\gamma_H + \mu_H) H - \mu H
+    \\
+    R' & =
+        \gamma_S I_S + \gamma_A I_A + \gamma_H H - \mu R
+    \\
+    D' &=
+        \mu_{I_S} I_S + \mu_H H
+    \\
+    \lambda &:=
+        \frac{\beta_A I_A + \beta_S I_S}{N^{\star}}
+    \\
+    N^{\star}(t) &=
+        S + E + I_S + I_A +
+        H + R
+\end{align}
+
+Stan ODE notation beginning model
+=================================
+
+|state                  |Stan| Initial Condition       |Stan     |Postulated |
+|-----------------------|----|-------------------------|---------|-----------|
+|$S$                    |y[1]| $S_0$                   |y_init[1]|$N -
+                                                                  (I_{S_0} + 
+                                                                  I_{A_0} 
+                                                                  + E_0)$    |
+|$E$                  |y[2]| $E_0$                   |y_init[2]|Unif(74, 2100)|
+|$I_S$                |y[3]| $I_{s_0}$               |y_init[3]|22 (cdmx data)|
+|$I_A$                |y[4]| $I_{a_0}$               |y_init[4]|Unif(74, 2100)|
+|$H$                  |y[5]| $H_0$                   |y_init[5]|0          |
+|$R$                  |y[6]| $R_0$                   |y_init[6]|0          |
+|$D$                  |y[7]| $D_0$                   |y_init[7]|0          |
+|$I_s^{[cumulative]}$ |y[8]| $I_{s_0}^{[cumulative]}$|y_init[8]|74 (cdmx data)|
+
+
+Observation Model
+=================
+\begin{align}
+    Y_t &
+        \sim \text{Poisson}(\lambda_t), \qquad
+    \\
+    \lambda_t &
+        =  \int_0^t \rho \delta_e E
+    \\
+    & p \sim \text{Uniform(0.3 0.8)}
+    \\
+    & \kappa: \sim \text{Gamma(10,50)}
+\end{align}
+
+March 10 -- March 30 parameters estimation
+==========================================
+
+|stan notation| symbol     |Prior          | Fixed      |
+|-------------|---------   |---------------|------------|
+|theta[1]     |$\beta_S$   | Normal(1, 0.3)|            |
+|theta[2]     |$\beta_A$   | Normal(1, 0.3)|            |
+|theta[3]     |$\kappa$    | Gamma(10, 100)|            |
+|theta[4]     |$p$         | Unif(0.3, 0.8)|            |
+|theta[5]     |$\delta_H$  | Gamma(10, 40) |            |
+|theta[6]     |$\mu_{I_S}$ | Gamma(10, 80) |            |
+|theta[7]     |$\mu_H$     | Gamma(10, 350)|            |
+|theta[8]     |$\gamma_S$  | Gamma(10, 350)|            |
+|theta[9]     |$\gamma_A$  | Gamma(10, 350)|            |
+|theta[10]    |$\gamma_H$  | Gamma(10, 350)|            |
+|y_init[2]    |$E_0$       | Unif(74, 2100)|            |
+|y_init[3]    |$I_S$       | -----------   |22          |
+|y_init[4]    |$I_A$       | Unif(74, 2100)|            |
+
+
+Postulated densities
+=====================
+```{r, include=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(plotly)
+library(rstan)
+mu_ <- function(lambda, ylabel= "mu_h"){
+    # We suppose mu_. as a exponential r.v.
+    x <- seq(from = 0, to = 1, by=.001)
+    mu_h_ <- dexp(x, rate = lambda)
+    df <- data.frame(x=x, mu_h = mu_h_)
+    mean_ <- 1/lambda
+    mean_time <- 1/mean_ 
+    text <- paste(mean_time,"days")
+        p <- ggplot(data=df,
+                aes(x = x,
+                    y = mu_h)) + 
+        xlab("x")+
+        ylab(ylabel) +
+        geom_line(colour = "#000000") +
+        geom_area(alpha = 0.6, fill = "lightgray") + 
+        geom_vline(xintercept = mean_, linetype="dotted", 
+                color = "red", size=0.5)+
+        annotate(geom = "text", x = 1.30 * mean_, y=0, label = text,
+              color="black")
+    return(p)
+}
+#
+gamma_ <- function(alpha, beta, ylabel="gamma_S"){
+    # We suppose mu_. as a exponential r.v.
+    theta <- 1 / beta 
+    x <- seq(from = 0, to = 1, by=.001)
+    gamma_s_ <- dgamma(x, shape = alpha, 
+                        scale= theta)
+    df <- data.frame(x=x, gamma_s = gamma_s_)
+    mean_ <- alpha * theta
+    mean_time <- 1/mean_ 
+    text <- paste(mean_time,"days")
+    p <- ggplot(data=df,
+                aes(x = x,
+                    y = gamma_s)) + 
+        geom_line(colour = "#000000") +
+        geom_area(alpha = 0.6, fill = "lightgray") +
+        geom_vline(xintercept = mean_, linetype="dotted", 
+                color = "red", size=0.5) + 
+        annotate(geom="text", x=1.30 * mean_, y=0, label = text,
+              color="black")
+        return(p)
+}
+pi_mu_h <- mu_(lambda = 25, ylabel= "mu_h")
+pi_mu_i_s <- mu_(lambda = 35, ylabel= "mu_i_s")
+pi_gamma_s <- gamma_(alpha = 10, beta = 100,  ylabel= "gamma_S")
+pi_gamma_a <- gamma_(alpha = 10, beta = 50,  ylabel= "gamma_A")
+pi_gamma_h <- gamma_(alpha = 10, beta = 250,  ylabel= "gamma_H")
+
+fig6 <- ggplotly(pi_mu_h)
+fig7 <- ggplotly(pi_mu_i_s)
+fig8 <- ggplotly(pi_gamma_s)
+fig9 <- ggplotly(pi_gamma_a)
+fig10 <- ggplotly(pi_gamma_h)
+fig6
+fig7
+fig8
+fig9
+fig10
+
+```
+
+Stan estimation
+===============================
+```{r}
+library(knitr)
+library(kableExtra)
+#
+sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
+sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
+sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/estimation"
+file_name <- "last_est.csv"
+path <- paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+parameters_df <- read.csv(path, header=FALSE,skip = 1)
+parameters_df <- data.frame(parameters_df)
+#
+colnames(parameters_df) <- c("theta",
+                        "mean", 
+                        'se_mean',
+                        'sd',
+                        '2.5%', '25%','50%', '75%' ,'97.5%',
+                        'n_eff',
+                        'Rhat')
+kable(parameters_df)  %>%
+  kable_styling(bootstrap_options = "striped", full_width = T)
+
+```
+
+
+Lockdown-Vaccination-Treatment-Model
+====================================
+\begin{align}
+    S'(t) &=
+        \mu \bar{N}
+        -\frac{\beta_S I_S+\beta_AI_A}{\bar{N}}S
+        -(\mu+\lambda_V)S +\delta_V V
+    \\
+    E'(t) &=
+        \frac{\beta_S I_S
+        + \beta_A I_A}{\bar{N}} S
+        + \epsilon \frac{\beta_S I_S + \beta_A I_A}{\bar{N}}V
+        - (\mu+\delta_E) E \nonumber
+    \\
+    I'_S(t) & =
+        p \delta_E E
+        -(\mu + \mu_S + \alpha_S + \lambda_T) I_S
+        +(1 - q) \alpha_T T
+    \\
+    I'_A(t) & =
+        (1-p) \delta_E E
+        - (\mu + \mu_A + \alpha_A) I_A
+    \\
+    R'(t) & =
+        \alpha_S I_S
+        + \alpha_A I_A
+        + q \alpha_T T
+        - \mu R
+    \\
+    D'(t)& =
+        \mu_S I_S
+        + \mu_A I_A
+    \\
+    V'(t)& =
+        \lambda_V S
+        - \epsilon
+        \frac{\beta_S I_S + \beta_A I_A}{\bar{N}} V
+        - (\mu + \delta_V) V
+    \\
+    T'(t) &=
+        \lambda_T I_S
+        -(\mu + \alpha_T) T
+    \\
+    \bar{N}(t) &=
+        S(t) + E(t) + I_S(t) + I_A(t) + R(t) + V(t) + T(t)
+\end{align}
+
+Model from March 24 July 14
+===========================
+
+|state                  |Stan | Initial Condition       |Stan      |Postulated |
+|-----------------------|-----|-------------------------|----------|-----------|
+|$S$                    |y[1] | $S_0$                   | y_init[1]|$N -
+                                                    (I_{S_0} + I_{A_0} + E_0)$|
+|$E$                    |y[2] | $E_0$                   | y_init[2]|Unif(0, 10)|
+|$I_s$                  |y[3] | $I_{s_0}$               | y_init[3]|Unif(0, 3) |
+|$I_a$                  |y[4] | $I_{a_0}$               | y_init[4]|Unif(0, 10)|
+|$R$                    |y[5] | $R_0$                   | y_init[5]|Estimated  |
+|$T$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$V$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$I_s^{[cumulative]}$   |y[6] | $I_{s_0}^{[cumulative]}$| y_init[6]|$I_{s_0}$  |
+
+
+    
+```{r}
+seirvt_mod = function(t, state, parameters){
+    with(as.list(c(state, parameters)), {
+    ####
+    n_bar <- s + e + i_s + i_a + r + v + treat
+    force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
+    rhs_s = mu * n_bar - force_infection * s - (mu + lambda_v) * s + delta_v * v
+    rhs_e = force_infection * (epsilon * v + s) - (mu + delta_e) * e
+    rhs_i_s = p * delta_e * e - (mu + mu_s + alpha_s + lambda_t) * i_s -
+        (1.0 - q) * alpha_t * treat
+    rhs_i_a = (1 - p) * delta_e * e - (mu + mu_a + alpha_a) * i_a
+    rhs_r = alpha_s * i_s + alpha_a * i_a + q * alpha_t * treat - mu * r
+    rhs_d = mu_s * i_s + mu_a * i_a
+    rhs_v = lambda_v * s - epsilon * force_infection * v - (mu + delta_v) * v
+    rhs_treat = lambda_t * i_s - (mu + alpha_t) * treat
+    rhs = c(rhs_s, rhs_e, rhs_i_s, rhs_i_a, rhs_r, rhs_d, rhs_v, rhs_treat)
+    return(list(rhs))
+    })
+}
+```
+
+March 24 --Jun 01 parameters estimation
+=======================================
+
+|stan notation | symbol     |Prior            | Fixed      |
+|--------------|---------   |---------------  |------------|
+|theta[1]      |$\beta_A$   | Normal(1, 0.3)  |            |
+|theta[2]      |$\beta_S$   | Normal(1, 0.3)  |            |
+|theta[3]      |$p$         | Unif(.3, 0.8)   |            |
+|theta[3]      |$q$         | Unif(0.4, 0.7)  |            |
+|theta[4]      |$\epsilon$  |                 |0.0         |
+|theta[5]      |$\alpha_S$  | Gamma(10, 100)  |            |
+|theta[6]      |$\alpha_A$  | Gamma(10, 50)   |            |
+|theta[7]      |$\alpha_T$  |                 |0.0         |
+|theta[8]      |$\lambda_V$ |                 |0.0         |
+|theta[9]      |$\lambda_T$ |                 |0.0         |
+|theta[10]     |$\mu_S$     |                 |            |
+|---------     |$\mu_A$     |                 |0.0         |
+|---------     |$\mu$       | --------        |3.913894e-05|
+|theta[11]     |$\delta_V$  |                 |0.0         |
+|theta[12]     |$\delta_E$  | Gamma(10, 50)   |0.1960784   |
+|---------     |$E_0$       | Unif(0, 10)     |            |
+|---------     |$I_A$       | Unif(0, 10)     |            |
+|---------     |$I_S$       | Unif(0, 10)     |            |
+|---------     |$I_A$       | Unif(0, 10)     |            |
+
+Stan ODE notation
+==========================
+|variable               | Stan| Initial Condition       |Stan      |           |
+|--------               |-----|------------------       | ---------|------     |
+|$S$                    |y[1] | $S_0$                   | y_init[1]|$N -
+                                                                     (I{s_0} +
+                                                                     I_{a_0} +
+                                                                     E_0)$     |
+|$E$                    |y[2] | $E_0$                   | y_init[2]|Unif(0, 10)|
+|$I_s$                  |y[3] | $I_{s_0}$               | y_init[3]|Unif(0, 3) |
+|$I_a$                  |y[4] | $I_{a_0}$               | y_init[4]|Unif(0, 10)|
+|$R$                    |y[5] | $R_0$                   | y_init[5]|0          |
+|$D$                    |y[6] | $D_0$                   | y_init[6]|0          |
+|$V$                    |y[7] | $V_0$                   | y_init[7]|0          |
+|$T$                    |y[8] | $V_0$                   | y_init[8]|0          |
+|$I_s^{[cumulative]}$   |y[9] | $I_{s_0}^{[cumulative]}$| y_init[9]|$I_{s_0}$  |
+
+Stan MODEL
+===============================
+```{r}
+library(rstan)
+writeLines(readLines("seirh.stan"))
+```
+
+Observation Model
+=================
+\begin{align}
+    Y_t &
+        \sim \text{Poisson}(\lambda_t), \qquad
+    \\
+    \lambda_t &
+        =  \int_0^t p \kappa E
+    \\
+    & p \sim \text{Uniform(0.3 0.8)}
+    \\
+    & \kappa \sim \text{Gamma(10, 52)}
+\end{align}
