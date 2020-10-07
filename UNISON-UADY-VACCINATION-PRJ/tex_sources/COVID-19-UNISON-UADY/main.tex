@@ -8,6 +8,7 @@
 \usepackage{listings}
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage{graphicx}
 \usepackage[numbers, comma, sort&compress]{natbib}
 \usepackage{cleveref}
 \begin{document}
@@ -24,18 +25,22 @@
     \section{Introduction}
     \section{Model Formulation}
         \paragraph{Uncontrolled dynamics}
-        We split the the constant population $N$ in a base SEIR structure
-        with segregation infected classes according with manifestation  of symptoms.
-        We also propouse the extra state $CIs$ to fit data from Mexico city
-        in the exponential grow phase. The dynamics reads
+        We split the the constant population $N$ in a base SEIR 
+        structure
+        with segregation infected classes according with 
+        manifestation  of symptoms.
+        We also postulate the extra state $Y_{I_S}$ to fit commulative 
+        symptomatic cases reported in the databases from Mexico city
+       	during the exponential grow phase. Our dynamics reads
         \begin{equation}
         	\label{eqn:base_dynamics}
             \begin{aligned}
-            	L' & =
+            	L' & = \theta \mu N^{\star}
                 	-\epsilon \lambda L - \delta_L L - \mu L,
             	\\
             	S' & =
-                	\mu N^\star + \delta_L   - (\lambda + \mu) S,
+                	(1 - \theta)\mu N^\star + \delta_L   
+                	- (\lambda + \mu) S,
             	\\
             	E' & =
                 	\lambda (\epsilon L + S) - (\kappa + \mu) E,
@@ -55,7 +60,7 @@
             	D' &=
                 	\mu_{I_S} I_S + \mu_H H,
             	\\
-            	\frac{d}{dt} & C I_S = p \kappa E, 
+            	\frac{dY_{I_S}}{dt} &  = p \kappa E, 
             	\\
             	\lambda &:=
                 	\frac{\beta_A I_A + \beta_S I_S}{N^{\star}},
@@ -67,8 +72,72 @@
             \end{aligned}
         \end{equation}
          See table[*] for notation and values.
-         
-         
+         \begin{table}[h!]
+    \begin{tabular}{>{\centering}p{0.2\textwidth}p{0.6\textwidth}}
+			\toprule
+			Parameter & Description
+      \\
+      \midrule
+			$\mu$ &  
+				Death rate
+			\\
+            $\beta_S$ & 
+            	Infection rate between susceptible and symptomatic infected
+			\\
+            $\beta_A$ & 
+            	Infection rate between susceptible and asymptomatic infected
+			\\
+            $\lambda_V$ & 
+            	Vaccination rate
+			\\
+            $\delta_{V}^{-1}$ & 
+            	Immunity average time by vaccination
+			\\
+            $\varepsilon$ &  
+            	Vaccine efficiency
+			\\
+            $\kappa^{-1}$ & 
+            	Average incubation time   
+            \\
+			$p$ & 
+				New asymptomatic generation proportion  
+			\\			
+		    $\theta$ & 
+            	Proportion of individuals under lockdown 
+            \\ 
+            $\gamma_{S}^{-1}$ &  
+            	Average output time of symptomatic individuals due to recovery
+            \\
+			$\gamma_{A}^{-1}$ & 
+				Recovery average time of asymptomatic individuals  
+			\\
+			$\gamma_{M}^{-1}$ & 
+				Recovery average time by medication
+			\\
+			$\gamma_{H}^{-1}$ & 
+				Recovery average time by hospitalization
+			\\ 					 
+            
+            $\delta_{R}^{-1}$ &  
+            	Immunity average time by disease 
+            \\
+      	\bottomrule
+		\end{tabular}
+  		\caption{
+  			Parameters definition of model in 
+  			\cref{eqn:base_dynamics}.}\label{table1}
+	\end{table}
+
+        \begin{figure}[htb]
+        	\includegraphics[width=\textwidth]{./cdmx_CIs_data_begining_fit}
+        	\caption{%
+        		Fit of diary new cases of Mexico city
+        		during exponential growth.
+        	}
+        \end{figure}
+
+
+
         \paragraph{Hypothesis} We consider that susceptible individuals become
         infected when they are in contact with asymptomatic individuals and
         individuals with symptoms, we will propose that a proportion of
@@ -119,6 +188,87 @@
     
     \paragraph{Controlled Model}
     We model vaccination, treatment and lockdown as a optimal control problem.
+     According to dynamics in equation \eqref{model1}, we modulate the vaccination rate by 
+a time-dependent control signal  $u_V(t)$. We add  compartment $X$ to count all the vaccine
+applications of susceptible, exposed, asymptomatic and
+recovered individuals. This process is modeled by
+\begin{equation}
+    \label{eqn:counter}
+      X'(t) =
+        (\lambda_V + u_V(t))(S + E + I_A + R)
+\end{equation}
+and describes the number of applied vaccines at time $t$.
+ 
+Consider
+  {$${x(t):= (S,E,I_S,I_A,R,D,V,X)^{\top}(t)}$$} and control signal
+  $u_v(\cdot)$. We quantify the cost and reward of a vaccine strategy 
+  policy via the penalization functional
+  \begin{equation}
+    \label{eqn:cost_functional}
+    J(u_V):=
+      \int _0 ^ T
+      a_S I_S + a_d D +
+      \frac{1}{2}
+      %\left(
+        c_V u_v^2
+        % + c_T u_T^2
+      %\right)
+      ds.
+  \end{equation}
+  In other words, we assume in functional $J$ that pandemic cost is proportional to the
+  symptomatic and death reported cases and that a vaccination policy
+  implies quadratic consumption of resources.
+
+  Further, since we aim to simulate vaccination policies at different coverage
+  scenarios, we impose the vaccination counter state's final
+  time condition $X(T)$
+  \begin{equation}
+    \begin{aligned}
+      x(T) &= (\cdot, \cdot, \cdot, \cdot, \cdot, X(T))^{\top},
+      \in \Omega
+      \\
+      X(T)
+        &= x_{cover age},
+      \\
+      x_{coverage}
+        & \in
+        \left \{
+          \text{Low(0.2)},\text{Mid(0.5)}, \text{High(0.8)}
+        \right \} .
+    \end{aligned}
+  \end{equation}
+  Thus, given the time horizon $T$, we impose that the last fraction of
+  vaccinated populations corresponds to 20\%, 50\% or 80\%, and
+  the rest of final states as free. We also impose the path constraint
+  \begin{equation}
+    \label{eqn:path_constrain}
+    \Phi(x,t):= \kappa I_S(t) \leq B,
+    \qquad \forall t \in [0, T],
+  \end{equation}
+  to ensure that healthcare services will not be overloaded. Here $\kappa$
+  denotes hospitalization rate, and $B$ is the load capacity of a
+  health system.
+
+Given a fixed time horizon and vaccine efficiency, 
+we estimate the constant vaccination rate as the solution of
+\begin{equation}
+    x_{coverage} = 1 - \exp(-\lambda_v T).
+\end{equation}
+ That is, $\lambda_v$ denotes the constant rate
+to cover  a fraction $x_{coverage}$ in time horizon $T$. 
+Thus, according to this vaccination rate, we postulate a policy $u_v$ that 
+modulates vaccination rate according to $\lambda_V$ as a baseline. That is,
+optimal vaccination amplifies or attenuates the estimated baseline 
+$\lambda_V$ in a interval $[\lambda_v^{\min}, \lambda_v^{\max}]$ 
+to optimize functional $J(\cdot)$\textemdash minimizing 
+symptomatic, death reported cases and optimizing resources.
+
+    Our objective is minimize the cost functional
+  \eqref{eqn:cost_functional}\textemdash over an appropriated functional
+  space\textemdash subject to the dynamics in equations \eqref{model1} and \eqref{eqn:counter},
+  boundary conditions, and the path constrain in \eqref{eqn:path_constrain}.
+  That is, we search for vaccination policies $u_V(\cdot)$, which
+  solve the following optimal control problem (OCP)
 
     \section{SEIR version}
        Here we propose a SEIR structure which considers hospitalized
@@ -127,58 +277,83 @@
     \begin{equation}
         \label{eqn:vital_dynamics}
         \begin{aligned}
-            \min_{u \in \mathcal{U}} &=
+            \min_{u \in \mathcal{U}} J(u) & :=
             \int_{0}^T
-                \left(
+                % \left(
                     a_{I_S} I_S
                     + a_{H} H
                     + a_{D} D
-                    +
-                    \frac{a_{L}}{2}  u_L ^ 2
-                    +
-                    \frac{a_{V}}{2} u_V ^ 2
-                    +
-                    \frac{a_{H}}{2} u_H ^ 2
-                    +
-                    \frac{a_{M}}{2} u_M ^ 2
-                \right)
+                  %  +
+                  %  \frac{a_{L}}{2}  u_L ^ 2
+                  %  +
+                  % \frac{a_{V}}{2} u_V ^ 2
+                  %  +
+                  %  \frac{a_{H}}{2} u_H ^ 2
+                  %  +
+                  %  \frac{a_{M}}{2} u_M ^ 2
+                %\right)
                 dt
             \\
-            \text{s. t.}
+            \text{s. t.} &
             \\
-            L' & =
+            L' & =  \theta \mu N^{\star}
                 -\epsilon \lambda L - u_L(t) L - \mu L
             \\
-            S' & =
-                \mu N^\star + u_L(t) L + (1 - \widehat{q}) \gamma_V V
-                - \lambda S - u_V(t) S - \mu S
+            S' & = 
+                (1 - \theta) \mu N^\star 
+                + u_L(t) L 
+                + (1 - \widehat{q}) \gamma_V V 
+                + \delta_v V 
+                + \delta_R R
             \\
-            E' & =
-                \lambda (\epsilon L + S) - \kappa E - \mu E
+                & \qquad - 
+                \left[
+                	\lambda + (\lambda_V + u_V(t)) + \mu
+                \right] S 
             \\
-            I_S' & =
-                p \kappa E - (\gamma_S + \mu_{I_S} + \delta_H) I_S
-                - u_M(t) I_S + (1 - q) \gamma_M M(t)
-                - \mu I_S
+            E' &= 
+                \lambda (\epsilon L + (1-\varepsilon) V + S) 
+                - (\kappa + \mu) E
             \\
-            I_A' &=
-                (1 - p) \kappa E - \gamma_A I_A - \mu I_A
+            I_S' &= 
+                p \kappa E 
+                + (1 - q) \gamma_M M(t)
+                - (\gamma_S + \mu_{I_S} + \delta_H + u_M(t) + \mu) I_S
             \\
-            M' &=
-                u_M(t) I_S - \gamma_M M - \mu M
+            I_A' &= 
+                (1 - p) \kappa E - (\gamma_A + \mu) I_A
             \\
-            H' &=
-                \delta_H I_S - (\gamma_H + \mu_H) H  - \mu H
+            M' &= 
+                u_M(t) I_S - (\gamma_M + \mu ) M
             \\
-            R' & =
+            H' &= 
+                \delta_H I_S - (\gamma_H + \mu_H + \mu) H 
+            \\
+            R'  &= 
                 \gamma_S I_S + \gamma_A I_A + \gamma_H H + q \gamma_M M
-                + \widehat{q} \gamma_V V - \mu R
+                - (\delta_R + \mu) R
             \\
-            D' &=
+            D' &= 
                 \mu_{I_S} I_S + \mu_H H
             \\
-            V' &=
-                \delta_ S  - \gamma_V  V  - \mu V
+            V' &= 
+                (\lambda_V + u_V(t)) S  
+                - \left[
+                	(1 - \varepsilon) \lambda
+                	+ \delta_V
+                	+ \mu
+                \right ] V
+            \\
+            \\
+            \frac{dX_{vac}}{dt}
+            	&=
+            	(u_V(t) + \lambda_V)
+            	\left[
+            		S + E + I_A + R - (\gamma_S I_S + \gamma_H H)  
+            	\right]
+            \\
+            \frac{d Y_{I_S}}{dt}
+            	& = p \kappa E
             \\
             \lambda &:=
                 \frac{\beta_A I_A + \beta_S I_S}{N^{\star}}

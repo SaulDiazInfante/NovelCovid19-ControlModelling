@@ -174,12 +174,21 @@ Stan estimation
 library(knitr)
 library(kableExtra)
 #
+#
 sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/estimation"
+sub_path_2 <- "NovelCovid19-ControlModelling"
+sub_path_3 <- "NovelCovid19-ControlModellingGitHub"
+sub_path_4 <- "UNISON-UADY-VACCINATION-PRJ/r_sources"
+sub_path_5 <- "mcmc_parameter_estimation/estimation"
 file_name <- "last_est.csv"
-path <- paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
-parameters_df <- read.csv(path, header=FALSE,skip = 1)
+path <- paste(sub_path_1, 
+                sub_path_2, 
+                sub_path_3, 
+                sub_path_4,
+                sub_path_5,
+                file_name, 
+                sep = "/")
+parameters_df <- read.csv(path, header=FALSE, skip = 1)
 parameters_df <- data.frame(parameters_df)
 #
 colnames(parameters_df) <- c("theta",
