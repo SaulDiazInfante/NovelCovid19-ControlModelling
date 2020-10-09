@@ -6,9 +6,6 @@ import json
 from get_key_string_model_parameters import *
 
 
-# import matplotlib.pyplot as plt
-
-
 def get_solution_data(bocop_parameters_file,
                       col_names,
                       bocop_file_name='bocop_data/'
@@ -129,12 +126,13 @@ def get_solution_data(bocop_parameters_file,
 
 col_names_ = ['time', 's', 'e',
               'i_s', 'i_a', 'r', 'd', 'v',
-              'x_vac', 'x_zero',
+              'x_vac', 'y_inc(t)', 'x_zero',
               'u_V']
-bocop_parameters_file_ = 'bocop_run_parameters.json'
-bocop_main_scene_data = 'bocop_data/'\
-                  + 'deltaR_05_Coverage_50_TH_10M_14M/delta_V_05_years/' \
-                  + 'epsilon-7.000000e-01.sol'
+base_path = '../' + 'bocop_run_parameters/'
+bocop_parameters_file_ = base_path + 'bocop_run_parameters.json'
+bocop_main_scene_data = '../bocop_data/'\
+                  + 'delta_V_0.5/' \
+                  + 'solution_epsilon_085_cV_10.sol'
 df = get_solution_data(bocop_parameters_file=bocop_parameters_file_,
                        col_names=col_names_,
                        bocop_file_name=bocop_main_scene_data)

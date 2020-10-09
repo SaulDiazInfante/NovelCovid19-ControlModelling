@@ -86,20 +86,16 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
             self.constant_controlled_solution_file
         df_oc = pd.read_pickle(optimal_controlled_sol_path)
         df_not_vaccination = pd.read_pickle(uncontrolled_solution_path)
-        df_constant_vaccination = pd.read_pickle(
-            constant_controlled_solution_file)
-        optimal_controlled_sol_path = self.optimal_controlled_solution_path
-        uncontrolled_solution_path = self.uncontrolled_solution_path
-        constant_controlled_solution_file = \
-            self.constant_controlled_solution_file
-        df_oc = pd.read_pickle(optimal_controlled_sol_path)
-        df_not_vaccination = pd.read_pickle(uncontrolled_solution_path)
-        df_constant_vaccination = pd.read_pickle(
-            constant_controlled_solution_file)
-        optimal_i_s_incidence = self.incidence_computing(df_oc)
-        not_vaccination_incidence = self.incidence_computing(df_not_vaccination)
-        constant_i_s_incidence = \
-            self.incidence_computing(df_constant_vaccination)
+        df_constant_vaccination = \
+            pd.read_pickle(constant_controlled_solution_file)
+        # optimal_i_s_incidence = self.incidence_computing(df_oc)
+        # not_vaccination_incidence =
+        # self.incidence_computing(df_not_vaccination)
+        # constant_i_s_incidence = \
+        #    self.incidence_computing(df_constant_vaccination)
+        optimal_i_s_incidence = df_oc["y_inc(t)"]
+        not_vaccination_incidence = df_not_vaccination["cum_i_s"]
+        constant_i_s_incidence = df_constant_vaccination["cum_i_s"]
         border_color_pallet = px.colors.sequential.ice
         fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
         incidence_fig = make_subplots(
@@ -115,8 +111,8 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         n_cdmx = prm["n_pop"] / 100000
         incidence_fig.add_trace(
             go.Scatter(
-                x=self.sampler_time,
-                y=n_cdmx * not_vaccination_incidence,
+                x=df_not_vaccination['time'],
+                y=n_cdmx * df_not_vaccination["cum_i_s"],
                 line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
                 legendgroup='Incidence_line',
                 name='Without<br>vaccination',
@@ -125,8 +121,8 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
             row=1, col=1
         )
         trace_optimal_incidence_line = go.Scatter(
-            x=self.sampler_time,
-            y=n_cdmx * optimal_i_s_incidence,
+            x=df_oc['time'],
+            y=n_cdmx * df_oc["y_inc(t)"],
             line=dict(color=border_color_pallet[1],
                       width=.7,
                       dash='solid'),
@@ -149,8 +145,8 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # constant_vaccination
         # ----------------------------------------------------------------------
         trace_constant_vac_i_s_incidence = go.Scatter(
-            x=self.sampler_time,
-            y=n_cdmx * constant_i_s_incidence,
+            x=df_constant_vaccination["time"],
+            y=n_cdmx * df_constant_vaccination["cum_i_s"],
             fill='tonexty',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), .7)}",
             line=dict(color=fill_color_pallet[2], width=.7),
@@ -172,8 +168,8 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # Optimal solution trace
         #######################################################################
         trace_optimal_incidence_line_fill = go.Scatter(
-            x=self.sampler_time,
-            y=n_cdmx * optimal_i_s_incidence,
+            x=df_oc["time"],
+            y=n_cdmx * df_oc["y_inc(t)"],
             fill='tonexty',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), .7)}",
             line=dict(color=border_color_pallet[1],
@@ -268,7 +264,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                 xref='paper',
                 yref='paper',
                 x=1.21,
-                y=0.78)
+                y=0.82)
         )
         # ----------------------------------------------------------------------
         # Saved Beds
@@ -283,7 +279,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                 xref='paper',
                 yref='paper',
                 x=1.23,
-                y=0.57
+                y=0.67
             )
         )
 #
@@ -322,8 +318,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                           size=12),
                 showarrow=False,
                 xref='paper',
-                yref=''
-                     'paper',
+                yref='paper',
                 x=1.295,
                 y=0.05
             )
@@ -382,11 +377,6 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # incidence_fig.write_image("images/incidence_fig1.pdf")
         golden_width = 718  # width in px
         golden_ratio = 1.618
-        pio.kaleido.scope.default_format = "eps"
-        pio.kaleido.scope.default_width = golden_width
-        pio.kaleido.scope.default_height = golden_width / golden_ratio
-        pio.kaleido.scope.default_scale = .50
-        incidence_fig.to_image(format="pdf", engine="kaleido")
-        incidence_fig.write_image("images/incidence_fig.pdf")
+        pio.write_image(incidence_fig, "images/incidence_fig.pdf")
         # TODO:  Edit legend respect to groups
         # incidence_fig.show()

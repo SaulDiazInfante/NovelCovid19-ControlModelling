@@ -97,9 +97,9 @@ def read_bocop_parameters_values(bocop_file_name='solution_deltav_0.sol',
     return df_record_parameters
 
 
-bocop_main_scene_data = 'bocop_data/'\
-                  + 'deltaR_05_Coverage_50_TH_10M_14M/delta_V_05_years/' \
-                  + 'epsilon-7.000000e-01.sol'
+bocop_main_scene_data = '../bocop_data/'\
+                  + 'delta_V_0.5/' \
+                  + 'solution_epsilon_085_cV_10.sol'
 
 parameters = \
     read_bocop_parameters_values(

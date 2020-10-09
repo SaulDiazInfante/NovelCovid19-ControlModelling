@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 def read_bocop_parameters_keys(bocop_file_name='solution_deltav_0.sol',
-                               parameters_prefix_file_name= \
+                               parameters_prefix_file_name=\
                                        'vaccination_parameters_'
                                ):
     # TODO: Recover parameters key from bocop_run_parameters.json
@@ -58,35 +58,34 @@ def read_bocop_parameters_keys(bocop_file_name='solution_deltav_0.sol',
         x_str_constant = pattern_constant_token.search(x_identifier)
         if x_str_state:
             str_state = x_str[3]
-#            print('\t', str_state, '\t\tat line:', j)
+            #            print('\t', str_state, '\t\tat line:', j)
             state_keys.append(str_state)
         if x_str_control:
             str_control = x_str[3]
-#            print('\t', str_control, '\t\tat line:', j)
+            #            print('\t', str_control, '\t\tat line:', j)
             control_keys.append(str_control)
         if x_str_parameter:
             str_parameter = x_str[3]
-#            print('\t', str_parameter, '\t\tat line:', j)
+            #            print('\t', str_parameter, '\t\tat line:', j)
             parameter_keys.append(str_parameter)
         if x_str_boundarycond:
             str_boundarycond = x_str[3]
-#            print('\t', str_boundarycond, '\t\tat line:', j)
+            #            print('\t', str_boundarycond, '\t\tat line:', j)
             boundarycond_keys.append(str_boundarycond)
         if x_str_constraint:
             str_constraint = x_str[3]
-#            print('\t', str_constraint, '\t\tat line:', j)
+            #            print('\t', str_constraint, '\t\tat line:', j)
             constraint_keys.append(str_constraint)
         if x_str_constant:
             str_constant = x_str[3]
-#            print('\t', str_constant, '\t\tat line:', j)
+            #            print('\t', str_constant, '\t\tat line:', j)
             constant_keys.append(str_constant)
 
     return (state_keys, control_keys, parameter_keys, boundarycond_keys,
             constraint_keys, constant_keys)
 
 
-state_keys_, control_keys_, parameter_keys_, \
-boundarycond_keys_, constraint_keys_, constant_keys_ = \
-    read_bocop_parameters_keys(bocop_file_name='solution_deltav_0.sol',
-        parameters_prefix_file_name='vaccination_parameters_')
-
+# state_keys_, control_keys_, parameter_keys_, \
+# boundarycond_keys_, constraint_keys_, constant_keys_ = \
+#    read_bocop_parameters_keys(bocop_file_name='solution_deltav_0.sol',
+#                               parameters_prefix_file_name='vaccination_parameters_')

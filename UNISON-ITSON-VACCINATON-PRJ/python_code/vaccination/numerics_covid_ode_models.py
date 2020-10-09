@@ -6,9 +6,9 @@ import re
 import pandas as pd
 from datetime import datetime
 
-bocop_main_scene_data = 'bocop_data/' \
-                        + 'deltaR_05_Coverage_50_TH_10M_14M/delta_V_05_years/' \
-                        + 'epsilon-7.000000e-01.sol'
+bocop_main_scene_data = './bocop_data/'\
+                  + 'delta_V_0.5/' \
+                  + 'solution_epsilon_085_cV_10.sol'
 
 
 class NumericsCovid19:
@@ -444,8 +444,11 @@ class NumericsCovid19:
         df.columns = self.time_state_solution_names
         pkl_data_folder = './vaccination_pkl_solutions/'
         file_name = pkl_data_folder + file_name_prefix + dt_string + ".pkl"
+        file_name_csv = pkl_data_folder + file_name_prefix + dt_string + ".csv"
         df.to_pickle(file_name)
+        df.to_csv(file_name_csv)
         df.to_pickle(pkl_data_folder + file_name_prefix + '.pkl')
+        df.to_csv(pkl_data_folder + file_name_prefix + '.csv')
         return
 
     def vaccination_constant_control(self, t):
@@ -457,8 +460,8 @@ class NumericsCovid19:
     def get_lsoda_solution(self, constant_control=False):
         self.constant_control = constant_control
         prm = self.parameters
-        a_d = prm['a_D'] * 42 * 365 / 2.0
-        a_e = prm['a_S'] * prm['alpha_s'] ** (-1.0) * 0.28425
+        a_d = prm['a_D']
+        a_e = prm['a_E']
 
         def rhs_vaccination(t, y_, beta_s, beta_a, epsilon,
                             delta_e, delta_v, delta_r,
@@ -503,9 +506,13 @@ class NumericsCovid19:
             u_v = self.vaccination_constant_control(t)
             n_bar = s + e + i_s + i_a + r + v
             force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
+            if delta_v == 0:
+                delta_v_indicator = 0.0
+            else:
+                delta_v_indicator = 1.0 / delta_v
             rhs_s = mu * n_bar - force_infection * s - (
                     mu + (lambda_v + u_v)) * s \
-                    + (delta_v ** (-1.0)) * v + delta_r * r
+                    + delta_v_indicator * v + delta_r * r
             rhs_e = force_infection * ((1.0 - epsilon) * v + s) - (
                     mu + delta_e) * e
             rhs_i_s = p * delta_e * e - (mu + alpha_s) * i_s
@@ -514,7 +521,7 @@ class NumericsCovid19:
             rhs_d = (1 - theta) * alpha_s * i_s
             rhs_v = (lambda_v + u_v) * s - \
                     (1.0 - epsilon) * force_infection * v - \
-                    (mu + (delta_v ** (-1.0))) * v
+                    (mu + delta_v_indicator) * v
             rhs_x_vaccine_counter = (lambda_v + u_v) * (s + e + i_a + r)
             rhs_cum_i_s = p * delta_e * e
             rhs_x_zero = a_d * alpha_s * i_s + a_e * p * delta_e * e + \
@@ -537,7 +544,7 @@ class NumericsCovid19:
         d_zero = prm["D_0"]
         v_zero = prm["V_0"]
         x_vaccination_zero = prm["X_0"]
-        cum_i_s_0 = prm["cum_i_s_0"]
+        cum_i_s_0 = prm["Y_inc_0"]
         x_zero_0 = prm["xZero_0"]
 #
         args = (prm["beta_s"], prm["beta_a"], prm["epsilon"],

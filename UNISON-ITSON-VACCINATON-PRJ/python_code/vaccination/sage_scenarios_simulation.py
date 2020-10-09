@@ -2,18 +2,15 @@ import decimal
 import json
 import os
 import re
-from datetime import datetime
-
 import bokeh.palettes as bokeh_palettes
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-# from IPython.display import Image
 import plotly.io as pio
 from plotly.subplots import make_subplots
 from scipy import integrate
-
+from datetime import datetime
 from numerics_covid_ode_models import NumericsCovid19
 
 
@@ -53,12 +50,10 @@ class CovidNumericalModel(NumericsCovid19):
         self.df_uncontrolled_sol = pd.read_pickle(uncontrolled_solution_path)
         self.df_controlled_sol = pd.read_pickle(optimal_controlled_solution)
         self.bocop_solution_file = bocop_solution_file
-        self.bocop_parameters_json_file = bocop_parameters_json_file
         self.constant_controlled_solution_file = constant_controlled_solution
         self.uncontrolled_solution_path = uncontrolled_solution_path
         self.optimal_controlled_solution_path = optimal_controlled_solution
-
-        # self.df_constant_vaccination_solution = pd.
+        self.bocop_parameters_json_file = bocop_parameters_json_file
 
     def load_parameters(self,
                         file_name='vaccination_parameters.json'):
@@ -281,7 +276,7 @@ class CovidNumericalModel(NumericsCovid19):
         path_pkl = out_put_file_prefix_name + '_' + dt_string + '.pkl'
         col_names = ['time', 's', 'e',
                      'i_s', 'i_a', 'r', 'd', 'v',
-                     'x_vac', 'x_zero',
+                      'x_vac', 'y_inc(t)', 'x_zero',
                      'u_V']
         df_bocop_data = pd.DataFrame(data=data, columns=col_names)
         file_name = out_put_file_prefix_name + 'solution.pkl'
@@ -297,7 +292,10 @@ class CovidNumericalModel(NumericsCovid19):
         alpha_a = self.parameters['alpha_a']
         lambda_v = self.parameters['lambda_v']
         epsilon = self.parameters['epsilon']
-        delta_v = 1.0 / self.parameters['delta_v']
+        if self.parameters['delta_v'] == 0:
+            delta_v = 0.0
+        else:
+            delta_v = 1.0 / self.parameters['delta_v']
         mu = self.parameters['mu']
         p = self.parameters['p']
 
@@ -984,14 +982,14 @@ class CovidNumericalModel(NumericsCovid19):
         delta_e = prm['delta_e']
         alpha_s = prm['alpha_s']
         mu_s = prm['mu_s']
-        # a_D = prm['a_D']
-        # a_S = prm['a_S']
+        a_D = prm['a_D']
+        a_E = prm['a_E']
         c_V = prm['c_V']
         u_V = prm['lambda_v']
         t = df_solution['time']
         i_s = df_solution['i_s']
         d = df_solution['d']
-        life_expectancy = mu ** (-1.0)
+        life_expectancy = mu ** (-1.0) / 365.0
         disability_weight = 0.5
         case_average_duration = delta_e ** (-1.0) + \
                                 alpha_s ** (-1.0) + \
@@ -1000,7 +998,7 @@ class CovidNumericalModel(NumericsCovid19):
         years_of_life_disability = disability_weight * \
                                    case_average_duration * i_s
         daly = years_of_life_lost + years_of_life_disability
-        f = daly + 0.5 * c_V * u_V ** 2
+        f = daly    # + 0.5 * c_V * u_V ** 2
         cost_t_ = integrate.cumtrapz(f, t, initial=0)
         return cost_t_
 
@@ -1158,7 +1156,6 @@ class CovidNumericalModel(NumericsCovid19):
             tickfont=dict(size=10, family='Arial'),
             row=1, col=2
         )
-
         #
         #
         #
@@ -1182,7 +1179,7 @@ class CovidNumericalModel(NumericsCovid19):
                 xref='paper',
                 yref='paper',
                 x=1.21,
-                y=0.78)
+                y=0.82)
         )
         # ----------------------------------------------------------------------
         # Saved Beds
@@ -1197,7 +1194,7 @@ class CovidNumericalModel(NumericsCovid19):
                 xref='paper',
                 yref='paper',
                 x=1.23,
-                y=0.57
+                y=0.67
             )
         )
 
@@ -1236,8 +1233,7 @@ class CovidNumericalModel(NumericsCovid19):
                           size=12),
                 showarrow=False,
                 xref='paper',
-                yref=''
-                     'paper',
+                yref='paper',
                 x=1.295,
                 y=0.05
             )
@@ -1296,15 +1292,15 @@ class CovidNumericalModel(NumericsCovid19):
         # prevalence_fig.write_image("images/prevalence_fig1.pdf")
         golden_width = 718  # width in px
         golden_ratio = 1.618
-        pio.kaleido.scope.default_format = "eps"
-        pio.kaleido.scope.default_width = golden_width
-        pio.kaleido.scope.default_height = golden_width / golden_ratio
-        pio.kaleido.scope.default_scale = .50
-        prevalence_fig.to_image(format="pdf", engine="kaleido")
-        prevalence_fig.write_image("images/prevalence_fig.pdf")
+        # pio.kaleido.scope.default_format = "pdf"
+        # pio.kaleido.scope.default_width = golden_width
+        # pio.kaleido.scope.default_height = golden_width / golden_ratio
+        # pio.kaleido.scope.default_scale = .50
+        # prevalence_fig.to_image(format="pdf", engine="kaleido")
+        # prevalence_fig.write_image("images/prevalence_fig.pdf")
         # TODO:  Edit legend respect to groups
-        prevalence_fig.show()
-
+        pio.write_image(prevalence_fig, "images/prevalence_fig.pdf")
+        # prevalence_fig.show()
     # --------------------------------------------------------------------------
     # Figure 02
     # --------------------------------------------------------------------------
@@ -1620,10 +1616,11 @@ class CovidNumericalModel(NumericsCovid19):
         # optimal_signal_fig.write_image("images/optimal_signal_fig1.pdf")
         golden_width = 718  # width in px
         golden_ratio = 1.618
-        pio.kaleido.scope.default_format = "eps"
-        pio.kaleido.scope.default_width = golden_width
-        pio.kaleido.scope.default_height = golden_width / golden_ratio
-        pio.kaleido.scope.default_scale = 0.5
-        optimal_signal_fig.to_image(format="pdf", engine="kaleido")
-        optimal_signal_fig.write_image("images/optimal_signal_fig.pdf")
+        # pio.kaleido.scope.default_format = "eps"
+        # pio.kaleido.scope.default_width = golden_width
+        # pio.kaleido.scope.default_height = golden_width / golden_ratio
+        # pio.kaleido.scope.default_scale = 0.5
+        # optimal_signal_fig.to_image(format="pdf", engine="kaleido")
+        # optimal_signal_fig.write_image("images/optimal_signal_fig.pdf")
         # optimal_signal_fig.show()
+        pio.write_image(optimal_signal_fig, "images/optimal_signal_fig.pdf")
