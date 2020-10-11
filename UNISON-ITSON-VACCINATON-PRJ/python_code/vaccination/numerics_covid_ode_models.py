@@ -6,13 +6,10 @@ import re
 import pandas as pd
 from datetime import datetime
 
-bocop_main_scene_data = './bocop_data/'\
-                  + 'delta_V_0.5/' \
-                  + 'solution_epsilon_085_cV_10.sol'
-
 
 class NumericsCovid19:
     def __init__(self,
+                 bocop_solution_file,
                  uncontrolled_solution_path='./vaccination_pkl_solutions' +
                                             '/not_vaccination_solution.pkl',
                  optimal_controlled_solution='/vaccination_pkl_solutions' +
@@ -23,34 +20,34 @@ class NumericsCovid19:
                  vaccination_parameters_json_file='./vaccination_model_' +
                                                   'parameters'
                                                   + '/vaccination_parameters' +
-                                                  '.json',
-                 bocop_solution_file=bocop_main_scene_data,
-                 n_steps=2000):
+                                                  '.json'):
         self.constant_control = False
+        self.bocop_solution_file = bocop_solution_file
+        self.read_bocop_parameters_values()
         with open(bocop_parameters_json_file) as json_file:
             bocop_prm_ = json.load(json_file)
         with open(vaccination_parameters_json_file) as json_file:
             vaccination_prm_ = json.load(json_file)
         self.bocop_run_parameters = bocop_prm_
         self.parameters = vaccination_prm_
-        self.n_steps = n_steps
         self.time_state_solution_names = ['time', 's', 'e',
                                           'i_s', 'i_a',
                                           'r', 'd', 'v',
-                                          'x_vac', 'cum_i_s', 'x_super_zero']
+                                          'x_vac', 'y_inc', 'x_super_zero']
 
         # TODO: 'cost'
+        n_steps = self.bocop_run_parameters['discretization.steps']
         self.state_dim = self.time_state_solution_names.__len__()
-        self.t_eval = np.linspace(0, self.parameters['T'],
-                                  num=self.n_steps,
-                                  endpoint=True)
-        self.x_sol_vaccine = np.zeros([self.n_steps, self.state_dim])
-        self.x_sol_not_vaccine = np.zeros([self.n_steps, self.state_dim])
+        self.t_eval = \
+            np.linspace(0, self.parameters['T'],
+                        num=n_steps,
+                        endpoint=True)
+        self.x_sol_vaccine = np.zeros([n_steps, self.state_dim])
+        self.x_sol_not_vaccine = np.zeros([n_steps, self.state_dim])
         self.df_sol_cte_vaccine = pd.DataFrame(self.x_sol_vaccine)
         self.df_sol_not_vaccine = pd.DataFrame(self.x_sol_not_vaccine)
         self.u_v = np.zeros([self.state_dim, 1])
         self.vaccination_parameters_json_file = vaccination_parameters_json_file
-        self.bocop_solution_file = bocop_solution_file
         self.uncontrolled_solution_path = uncontrolled_solution_path
         self.optimal_controlled_solution = optimal_controlled_solution
         self.state_keys = []
@@ -94,9 +91,9 @@ class NumericsCovid19:
             str_footer_names = pattern_str_end_block.search(line)
             if str_headers_names:
                 star_pointer_block = i + 1
-                print(str_headers_names.string, i)
+                # print(str_headers_names.string, i)
             if str_footer_names:
-                print(str_footer_names.string, i)
+                # print(str_footer_names.string, i)
                 end_pointer_block = i - 6
             i = i + 1
         for j in np.arange(np.int(star_pointer_block),
@@ -111,27 +108,27 @@ class NumericsCovid19:
             x_str_constant = pattern_constant_token.search(x_identifier)
             if x_str_state:
                 str_state = x_str[3]
-                #            print('\t', str_state, '\t\tat line:', j)
+                #            # print('\t', str_state, '\t\tat line:', j)
                 state_keys.append(str_state)
             if x_str_control:
                 str_control = x_str[3]
-                #            print('\t', str_control, '\t\tat line:', j)
+                #            # print('\t', str_control, '\t\tat line:', j)
                 control_keys.append(str_control)
             if x_str_parameter:
                 str_parameter = x_str[3]
-                #            print('\t', str_parameter, '\t\tat line:', j)
+                #            # print('\t', str_parameter, '\t\tat line:', j)
                 parameter_keys.append(str_parameter)
             if x_str_boundarycond:
                 str_boundarycond = x_str[3]
-                #            print('\t', str_boundarycond, '\t\tat line:', j)
+                #            # print('\t', str_boundarycond, '\t\tat line:', j)
                 boundarycond_keys.append(str_boundarycond)
             if x_str_constraint:
                 str_constraint = x_str[3]
-                #            print('\t', str_constraint, '\t\tat line:', j)
+                #            # print('\t', str_constraint, '\t\tat line:', j)
                 constraint_keys.append(str_constraint)
             if x_str_constant:
                 str_constant = x_str[3]
-                #            print('\t', str_constant, '\t\tat line:', j)
+                #            # print('\t', str_constant, '\t\tat line:', j)
                 constant_keys.append(str_constant)
 
         self.state_keys = state_keys
@@ -180,44 +177,44 @@ class NumericsCovid19:
             str_header_bounds = pattern_str_bounds_label.search(line)
             str_header_optimal_time = pattern_str_optimal_time.search(line)
             if str_header_bounds:
-                print(i, str_header_bounds.string)
+                # print(i, str_header_bounds.string)
                 pointer = i + 11
                 for j in np.arange(pointer, pointer + boundary_cond_dim):
                     x_val_sci = pattern_sci_float.search(all_lines[j])
                     x_val = pattern_value.search(all_lines[j])
                     if x_val_sci:
-                        print(j + 1, x_val_sci.string)
+                        # print(j + 1, x_val_sci.string)
                         value = x_val_sci.group()
                     elif x_val:
-                        print(j + 1, x_val.string)
+                        # print(j + 1, x_val.string)
                         value = x_val.group()
                     boundarycond_values.append(np.float(value))
             #
             if str_header_constants:
-                print(str_header_constants.string, i)
+                # print(str_header_constants.string, i)
                 pointer = i + 8
                 for j in np.arange(pointer, pointer + constant_dim):
                     x_val_sci = pattern_sci_float.search(all_lines[j])
                     x_val = pattern_value.search(all_lines[j])
                     if x_val_sci:
-                        print(j + 1, x_val_sci.string)
+                        # print(j + 1, x_val_sci.string)
                         value = x_val_sci.group()
                     elif x_val:
-                        print(j + 1, x_val.string)
+                        # print(j + 1, x_val.string)
                         value = x_val.group()
                     constants_values.append(np.float(value))
             #
             if str_header_optimal_time:
-                print(str_header_optimal_time.string, i)
+                # print(str_header_optimal_time.string, i)
                 pointer = i + 1
                 x_val_sci = pattern_sci_float.search(all_lines[pointer])
                 x_val = pattern_value.search(all_lines[pointer])
                 if x_val_sci:
-                    print(pointer, x_val_sci.string)
+                    # print(pointer, x_val_sci.string)
                     value = x_val_sci.group()
-                    print(value)
+                    # print(value)
                 elif x_val:
-                    print(pointer, x_val.string)
+                    # print(pointer, x_val.string)
                     value = x_val.group()
                 constants_values.append(np.float(value))
                 constant_keys.append('T')
@@ -227,7 +224,7 @@ class NumericsCovid19:
         data = data_constants
         data.update(data_boundarycond)
         data_json = json.dumps(data)
-        print(json.dumps(data, indent=4))
+        # print(json.dumps(data, indent=4))
         with open(path_json, 'w') as json_file:
             json.dump(data, json_file, indent=4)
         with open(parameters_prefix_file_name + '.json', 'w') as json_file:
@@ -247,7 +244,7 @@ class NumericsCovid19:
                 str_prop_val_ = np.int(x_val[0])
                 names.append(string_prop_name_)
                 values.append(str_prop_val_)
-                print(i_, string_prop_name_, str_prop_val_)
+                # print(i_, string_prop_name_, str_prop_val_)
 
         def check_token_str(x_str_, x_val_, i_):
             if x_str_ and x_val_:
@@ -255,7 +252,7 @@ class NumericsCovid19:
                 str_prop_val_ = x_val_[0]
                 names.append(string_prop_name_)
                 values.append(str_prop_val_)
-                print(i_, string_prop_name_, str_prop_val_)
+                # print(i_, string_prop_name_, str_prop_val_)
 
         path = bocop_file_name
         names = []
@@ -321,13 +318,13 @@ class NumericsCovid19:
                 str_prop_val = np.int(x_val[0])
                 names.append(string_prop_name)
                 values.append(str_prop_val)
-                print(i, string_prop_name, str_prop_val)
+                # print(i, string_prop_name, str_prop_val)
             elif x_str and x_str_final:
                 string_prop_name = 'time.' + 'free'
                 str_prop_val = x_str_final[0]
                 names.append(string_prop_name)
                 values.append(str_prop_val)
-                print(i, string_prop_name, str_prop_val)
+                # print(i, string_prop_name, str_prop_val)
             # state
             x_str = pattern_str_state_dimension.search(line)
             x_val = pattern_int_value.findall(line)
@@ -401,10 +398,10 @@ class NumericsCovid19:
                 x_val_sci = pattern_sci_float.search(final_time)
                 x_val = pattern_value.search(final_time)
                 if x_val_sci:
-                    print(j + 1, x_val_sci.string)
+                    # print(j + 1, x_val_sci.string)
                     value = x_val_sci.group()
                 elif x_val:
-                    print(j + 1, x_val.string)
+                    # print(j + 1, x_val.string)
                     value = x_val.group()
                 final_time = np.float(value)
                 names.append('final_time')
@@ -417,11 +414,14 @@ class NumericsCovid19:
         bocop_data = dict(zip(names, values))
         bocop_data_df = pd.DataFrame(bocop_data, index=[1])
         bocop_data_df.to_json(path_json)
-        print(json.dumps(bocop_data, indent=4))
+        # print(json.dumps(bocop_data, indent=4))
         with open(path_json, 'w') as json_file:
             json.dump(bocop_data, json_file, indent=4)
         with open(prefix_file_name + '.json', 'w') as json_file:
             json.dump(bocop_data, json_file, indent=4)
+        with open(prefix_file_name + '.json') as json_file:
+            bocop_run_prm_ = json.load(json_file)
+            self.bocop_run_parameters = bocop_run_prm_
         return bocop_data_df
 
     def data_solution_save(self, file_name_prefix='vaccination_data_solution'):
@@ -453,7 +453,7 @@ class NumericsCovid19:
 
     def vaccination_constant_control(self, t):
         lambda_v = self.parameters['lambda_v']
-        u_v_ = 0 * 1.0 * lambda_v
+        u_v_ = 1.0 * lambda_v
         self.u_v = u_v_
         return u_v_
 
@@ -499,11 +499,10 @@ class NumericsCovid19:
             ----------
             constant_control
             """
-            s, e, i_s, i_a, r, d, v, x_vaccine_counter, cum_i_s, x_zero = y_
+            s, e, i_s, i_a, r, d, v, x_vaccine_counter, y_inc, x_zero = y_
             #
             if not constant_control:
                 lambda_v = 0
-            u_v = self.vaccination_constant_control(t)
             n_bar = s + e + i_s + i_a + r + v
             force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
             if delta_v == 0:
@@ -511,26 +510,26 @@ class NumericsCovid19:
             else:
                 delta_v_indicator = 1.0 / delta_v
             rhs_s = mu * n_bar - force_infection * s - (
-                    mu + (lambda_v + u_v)) * s \
+                    mu + lambda_v) * s \
                     + delta_v_indicator * v + delta_r * r
             rhs_e = force_infection * ((1.0 - epsilon) * v + s) - (
                     mu + delta_e) * e
             rhs_i_s = p * delta_e * e - (mu + alpha_s) * i_s
             rhs_i_a = (1 - p) * delta_e * e - (mu + alpha_a) * i_a
-            rhs_r = theta * alpha_s * i_s + alpha_a * i_a - (mu + delta_r) * r
-            rhs_d = (1 - theta) * alpha_s * i_s
-            rhs_v = (lambda_v + u_v) * s - \
+            rhs_r = (1 - theta) * alpha_s * i_s + alpha_a * i_a - (mu + delta_r) * r
+            rhs_d =  theta * alpha_s * i_s
+            rhs_v = lambda_v * s - \
                     (1.0 - epsilon) * force_infection * v - \
                     (mu + delta_v_indicator) * v
-            rhs_x_vaccine_counter = (lambda_v + u_v) * (s + e + i_a + r)
-            rhs_cum_i_s = p * delta_e * e
-            rhs_x_zero = a_d * alpha_s * i_s + a_e * p * delta_e * e + \
-                         0.5 * u_v ** 2
+            rhs_x_vaccine_counter = lambda_v * (s + e + i_a + r)
+            rhs_y_inc = p * delta_e * e
+            rhs_x_zero = 0.0
+
             rhs = np.array([rhs_s, rhs_e,
                             rhs_i_s, rhs_i_a,
                             rhs_r, rhs_d,
                             constant_control_ * rhs_v,
-                            rhs_x_vaccine_counter, rhs_cum_i_s, rhs_x_zero])
+                            rhs_x_vaccine_counter, rhs_y_inc, rhs_x_zero])
             return rhs
 
         prm = self.parameters
@@ -544,7 +543,7 @@ class NumericsCovid19:
         d_zero = prm["D_0"]
         v_zero = prm["V_0"]
         x_vaccination_zero = prm["X_0"]
-        cum_i_s_0 = prm["Y_inc_0"]
+        y_inc_0 = prm["Y_inc_0"]
         x_zero_0 = prm["xZero_0"]
 #
         args = (prm["beta_s"], prm["beta_a"], prm["epsilon"],
@@ -561,7 +560,7 @@ class NumericsCovid19:
                         d_zero,
                         v_zero,
                         x_vaccination_zero,
-                        cum_i_s_0,
+                        y_inc_0,
                         x_zero_0
                         ])
         sol_not_v = solve_ivp(rhs_vaccination,

@@ -2,7 +2,7 @@ import decimal
 import json
 import os
 import re
-from datetime import datetime
+from datetime import *
 import bokeh.palettes as bokeh_palettes
 import numpy as np
 import pandas as pd
@@ -17,11 +17,11 @@ from sage_scenarios_simulation import *
 
 class CovidNumericalModelIncidence(CovidNumericalModel):
 
-    def __init__(self):
-        super().__init__()
-        self.cumulatively_reported_incidence = np.zeros(300)
-        self.reported_incidence = np.zeros(300)
-        self.sampler_time = np.zeros(300)
+    def __init__(self,
+                 bocop_solution_file,
+                 bocop_parameters_json_file):
+        super().__init__(bocop_solution_file,
+                          bocop_parameters_json_file)
 
     def incidence_quadrature(self, df_solution):
         """
@@ -45,34 +45,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         quad = integrate.cumtrapz(f_incidence, initial=initial_incidence)
         return quad
 
-    def incidence_computing(self, df_solution):
-        """
-
-        Returns
-        -------
-            An numpy array with the disease incidence as time
-            function.
-            $$
-                \Pi_I(t_i):= \int_{t \in [t_{i-1}, t_{i}]} p \delta_E E
-            $$
-        """
-        prm = self.parameters
-        t = df_solution['time']
-        i_s = df_solution['i_s']
-        operation_time_step_multiple = np.argmin(np.abs(1.0 - t))
-        sampler_time = t[0:-1:operation_time_step_multiple]
-        self.sampler_time = sampler_time
-        incidence = np.zeros(sampler_time.shape[0])
-        incidence_increments = np.zeros(sampler_time.shape[0])
-        cumulative_incidence_t = self.incidence_quadrature(df_solution)
-        cumulative_incidence_per_day = \
-            cumulative_incidence_t[0:-1:operation_time_step_multiple]
-        incidence_increments[1:] = np.ediff1d(cumulative_incidence_per_day)
-        self.cumulatively_reported_incidence = cumulative_incidence_per_day
-        self.reported_incidence = incidence_increments
-        return incidence
-
-    def sage_plot_incidence(self):
+    def sage_plot_incidence(self, fig_file_name_prefix="incidence_fig_"):
         """
 
         Returns
@@ -80,6 +53,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         Deaths and reported infected incidence plots
         """
         prm = self.parameters
+        self.load_pkl_data()
         optimal_controlled_sol_path = self.optimal_controlled_solution_path
         uncontrolled_solution_path = self.uncontrolled_solution_path
         constant_controlled_solution_file = \
@@ -93,9 +67,9 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # self.incidence_computing(df_not_vaccination)
         # constant_i_s_incidence = \
         #    self.incidence_computing(df_constant_vaccination)
-        optimal_i_s_incidence = df_oc["y_inc(t)"]
-        not_vaccination_incidence = df_not_vaccination["cum_i_s"]
-        constant_i_s_incidence = df_constant_vaccination["cum_i_s"]
+        optimal_i_s_incidence = df_oc["y_inc"]
+        not_vaccination_incidence = df_not_vaccination["y_inc"]
+        constant_i_s_incidence = df_constant_vaccination["y_inc"]
         border_color_pallet = px.colors.sequential.ice
         fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
         incidence_fig = make_subplots(
@@ -108,11 +82,11 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                             ),
             horizontal_spacing=0.17
         )
-        n_cdmx = prm["n_pop"] / 100000
+        n_cdmx = 100000
         incidence_fig.add_trace(
             go.Scatter(
                 x=df_not_vaccination['time'],
-                y=n_cdmx * df_not_vaccination["cum_i_s"],
+                y=n_cdmx * df_not_vaccination["y_inc"],
                 line=dict(color=border_color_pallet[1], width=.7, dash='dot'),
                 legendgroup='Incidence_line',
                 name='Without<br>vaccination',
@@ -122,7 +96,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         )
         trace_optimal_incidence_line = go.Scatter(
             x=df_oc['time'],
-            y=n_cdmx * df_oc["y_inc(t)"],
+            y=n_cdmx * df_oc["y_inc"],
             line=dict(color=border_color_pallet[1],
                       width=.7,
                       dash='solid'),
@@ -146,7 +120,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # ----------------------------------------------------------------------
         trace_constant_vac_i_s_incidence = go.Scatter(
             x=df_constant_vaccination["time"],
-            y=n_cdmx * df_constant_vaccination["cum_i_s"],
+            y=n_cdmx * df_constant_vaccination["y_inc"],
             fill='tonexty',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[2]), .7)}",
             line=dict(color=fill_color_pallet[2], width=.7),
@@ -169,7 +143,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         #######################################################################
         trace_optimal_incidence_line_fill = go.Scatter(
             x=df_oc["time"],
-            y=n_cdmx * df_oc["y_inc(t)"],
+            y=n_cdmx * df_oc["y_inc"],
             fill='tonexty',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[3]), .7)}",
             line=dict(color=border_color_pallet[1],
@@ -283,15 +257,26 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
             )
         )
 #
+        delta_v_label = round(prm["delta_v"], 2)
+        if delta_v_label == 0.0:
+            delta_v_label = 'lifelong'
         data_label = {'eps': prm["epsilon"],
-                      'delta_v': round(prm["delta_v"], 1),
+                      'delta_v': delta_v_label,
                       'time_unit': 'days'}
-        str_vaccination_par = \
-            r'$\epsilon={:1.2f}, \quad \delta_V ^{{-1}}={:1.1f} \ \mathtt{{{' \
-            r':>5}}}$'.format(
-                data_label['eps'],
-                data_label['delta_v'],
-                data_label['time_unit'])
+
+        if delta_v_label == 'lifelong':
+            str_vaccination_par = \
+                r'$\epsilon={:1.2f}, \quad 1 / \delta_V= \mathsf{{{' \
+                r':>9}}}$'.format(
+                    data_label['eps'],
+                    data_label['delta_v'])
+        else:
+            str_vaccination_par = \
+                r'$\epsilon={:1.2f}, \quad 1 / \delta_V={:1.1f} \ \mathsf{{{' \
+                r':>5}}}$'.format(
+                    data_label['eps'],
+                    data_label['delta_v'],
+                    data_label['time_unit'])
         incidence_fig.add_annotation(
             dict(
                 text=str_vaccination_par,
@@ -377,6 +362,16 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         # incidence_fig.write_image("images/incidence_fig1.pdf")
         golden_width = 718  # width in px
         golden_ratio = 1.618
-        pio.write_image(incidence_fig, "images/incidence_fig.pdf")
+        time_now = datetime.now()
+        dt_string = time_now.strftime("%b-%d-%Y_%H_")
+        run_tag = self.run_tag
+        path_fig = fig_file_name_prefix + \
+                   '_' + \
+                   dt_string + \
+                   run_tag + '.pdf'
+        print(path_fig)
+        pio.write_image(incidence_fig, "./images/" + path_fig)
+        pio.write_image(incidence_fig, "./images/incidence_fig.pdf")
+        print(path_fig)
         # TODO:  Edit legend respect to groups
         # incidence_fig.show()
