@@ -313,9 +313,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
             template="simple_white",
             showlegend=True,
             title_text="R0: " + str(round(c_r_0, 6))
-                       + '\t\tRv: ' + str(round(c_r_v_0, 6))
-                       + '\t\tOC-Rv: '
-                       + str(round(c_r_opt_v_0, 6)),
+                       + '\t\tRv: ' + str(round(c_r_v_0, 6)),
             legend=dict(xanchor='left',
                         yanchor='top',
                         x=1.1,
@@ -360,8 +358,9 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         if not os.path.exists("images"):
             os.mkdir("images")
         # incidence_fig.write_image("images/incidence_fig1.pdf")
-        golden_width = 718  # width in px
+        golden_width = 1436  # 718  # width in px
         golden_ratio = 1.618
+        golden_height = golden_width / golden_ratio
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_")
         run_tag = self.run_tag
@@ -369,9 +368,25 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                    '_' + \
                    dt_string + \
                    run_tag + '.pdf'
+        path_fig_png = fig_file_name_prefix + \
+                   '_' + \
+                   dt_string + \
+                   run_tag + '.png'
         print(path_fig)
         pio.write_image(incidence_fig, "./images/" + path_fig)
-        pio.write_image(incidence_fig, "./images/incidence_fig.pdf")
+        pio.write_image(incidence_fig,
+                        file="./images/" + path_fig_png,
+                        width=golden_width,
+                        height=golden_height)
+        pio.write_image(incidence_fig,
+                        file="./images/incidence_fig.pdf",
+                        width=golden_width,
+                        height=golden_height)
+        pio.write_image(incidence_fig,
+                        file="./images/incidence_fig.png",
+                        width=golden_width,
+                        height=golden_height)
+
         print(path_fig)
         # TODO:  Edit legend respect to groups
         # incidence_fig.show()

@@ -516,8 +516,9 @@ class NumericsCovid19:
                     mu + delta_e) * e
             rhs_i_s = p * delta_e * e - (mu + alpha_s) * i_s
             rhs_i_a = (1 - p) * delta_e * e - (mu + alpha_a) * i_a
-            rhs_r = (1 - theta) * alpha_s * i_s + alpha_a * i_a - (mu + delta_r) * r
-            rhs_d =  theta * alpha_s * i_s
+            rhs_r = (1 - theta) * alpha_s * i_s + alpha_a * i_a \
+                    - (mu + delta_r) * r
+            rhs_d = theta * alpha_s * i_s
             rhs_v = lambda_v * s - \
                     (1.0 - epsilon) * force_infection * v - \
                     (mu + delta_v_indicator) * v

@@ -182,7 +182,7 @@ class CovidNumericalModel(NumericsCovid19):
 
         bocop_parameters_file = self.bocop_parameters_json_file
         bocop_prm = self.bocop_run_parameters
-        #pd.read_json(bocop_parameters_file, typ='series')
+        # pd.read_json(bocop_parameters_file, typ='series')
         # self.time_state_solution_names
         offset = bocop_prm["discretization.steps"]
         with open(bocop_file_name) as f:
@@ -213,7 +213,7 @@ class CovidNumericalModel(NumericsCovid19):
                 pointer = i + 13
                 n_time_steps = np.int(1 / np.float(all_lines[pointer + 1]))
                 # # # print(pointer, all_lines[pointer], 'n_time_steps:',
-                      # n_time_steps)
+                # n_time_steps)
                 time_str_block = np.array(all_lines[pointer: pointer +
                                                              n_time_steps + 1])
                 for j in np.arange(time_str_block.shape[0]):
@@ -843,9 +843,7 @@ class CovidNumericalModel(NumericsCovid19):
             template="simple_white",
             showlegend=True,
             title_text="R0: " + str(round(c_r_0, 6))
-                       + '\t\tRv: ' + str(round(c_r_v_0, 6))
-                       + '\t\tOC-Rv: '
-                       + str(round(c_r_opt_v_0, 6)),
+                       + '\t\tRv: ' + str(round(c_r_v_0, 6)),
             legend=dict(xanchor='left',
                         yanchor='top',
                         x=1.1,
@@ -1025,7 +1023,7 @@ class CovidNumericalModel(NumericsCovid19):
         # calculation
         # TODO: fix daly function
         case_average_duration = alpha_s ** (-1.0) / 365
-        years_of_life_lost = a_D * (d -d_0)
+        years_of_life_lost = a_D * (d - d_0)
         years_of_life_disability = a_E * (y_inc - y_inc_0)
         daly = n_cdmx * (years_of_life_lost + years_of_life_disability)
         return daly
@@ -1283,9 +1281,7 @@ class CovidNumericalModel(NumericsCovid19):
             template="simple_white",
             showlegend=True,
             title_text="R0: " + str(round(c_r_0, 6))
-                       + '\t\tRv: ' + str(round(c_r_v_0, 6))
-                       + '\t\tOC-Rv: '
-                       + str(round(c_r_opt_v_0, 6)),
+                       + '\t\tRv: ' + str(round(c_r_v_0, 6)),
             legend=dict(xanchor='left',
                         yanchor='top',
                         x=1.1,
@@ -1361,13 +1357,15 @@ class CovidNumericalModel(NumericsCovid19):
         n_cdmx = 100000
         prm = self.parameters
         lambda_v_base = prm["lambda_v"]
+        uncontrolled_solution_path = self.uncontrolled_solution_path
         optimal_controlled_sol_path = self.optimal_controlled_solution_path
         constant_controlled_solution_file = \
             self.constant_controlled_solution_file
+        df_not_vaccination = pd.read_pickle(uncontrolled_solution_path)
         df_oc = pd.read_pickle(optimal_controlled_sol_path)
         df_constant_vaccination = pd.read_pickle(
             constant_controlled_solution_file)
-        fill_color_pallet = bokeh_palettes.all_palettes['Category20'][20]
+        fill_color_pallet = bokeh_palettes.all_palettes['Category20c'][20]
 
         optimal_signal_fig = make_subplots(
             rows=4, cols=2,
@@ -1393,44 +1391,61 @@ class CovidNumericalModel(NumericsCovid19):
             x=df_constant_vaccination['time'],
             y=coverage_t,
             fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[18]), 0.7)}",
-            line=dict(color=fill_color_pallet[18], width=0.7),
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[13]), 1.0)}",
+            line=dict(color=fill_color_pallet[12], width=0.7),
             legendgroup='Coverage',
             name='(CP) Coverage',
-            showlegend=True
+            showlegend=False
         )
+        trace_optimal_vac_coverage = go.Scatter(
+            x=df_oc['time'],
+            y=df_oc['x_vac'],
+            line=dict(color=fill_color_pallet[16], width=.7),
+            fill='tozeroy',
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.7)}",
+            legendgroup='Coverage',
+            name="(OP) Coverage",
+            showlegend=False
+        )
+        #
+        no_vaccination_cost_t = self.daly_vaccination_cost(df_not_vaccination)
         constant_cost_t = self.daly_vaccination_cost(df_constant_vaccination)
         self.daly_constant_cost = constant_cost_t.values[-1]
         optimal_cost_t = self.daly_vaccination_cost(df_oc)
         self.daly_optimal_cost = optimal_cost_t.values[-1]
+        trace_no_vac_cost = go.Scatter(
+            x=df_not_vaccination['time'],
+            y=no_vaccination_cost_t,
+            fill='tonexty',
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[9]), 0.7)}",
+            line=dict(color=fill_color_pallet[8], width=1.0),
+            legendgroup='Cost',
+            name='No vaccination',
+            showlegend=True
+        )
         trace_constant_vac_cost = go.Scatter(
             x=df_constant_vaccination['time'],
             y=constant_cost_t,
             fill='tonexty',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[16]), 0.7)}",
-            line=dict(color=fill_color_pallet[16], width=1.0),
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[13]), 0.7)}",
+            line=dict(color=fill_color_pallet[12], width=1.0),
             legendgroup='Cost',
-            name='(CP) Cost',
+            name='(CP)',
+            showlegend=True
+        )
+        trace_optimal_cost = go.Scatter(
+            x=df_oc['time'],
+            y=optimal_cost_t,
+            line=dict(color=fill_color_pallet[16], width=1.0),
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 1.0)}",
+            fill='tozeroy',
+            legendgroup='Cost',
+            name='(OP)',
             showlegend=True
         )
         #######################################################################
         # Optimal solution trace
         #######################################################################
-        #
-        trace_optimal_vac_coverage = go.Scatter(
-            x=df_oc['time'],
-            y=df_oc['x_vac'],
-            line=dict(color=fill_color_pallet[19], width=.7),
-            fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
-            legendgroup='Coverage',
-            name="(OP) Coverage",
-            showlegend=True
-        )
-        #
-        #
-        #
-        #
         x_vac_prevalence = df_oc['s'] + df_oc['e'] + df_oc['i_a'] + df_oc['r']
         lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
         trace_optimal_vaccination_policy = go.Scatter(
@@ -1439,16 +1454,6 @@ class CovidNumericalModel(NumericsCovid19):
             fill='tozeroy',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
             line=dict(color=fill_color_pallet[0], width=0.5),
-            name="Optimal<br>vaccination<br>policy",
-            legendgroup='Policy',
-            showlegend=True
-        )
-        trace_optimal_vaccination_action = go.Scatter(
-            x=df_oc['time'],
-            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence,
-            fill='tozeroy',
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
-            line=dict(color=fill_color_pallet[18], width=0.7),
             name="Optimal<br>vaccination<br>policy",
             legendgroup='Policy',
             showlegend=True
@@ -1463,17 +1468,6 @@ class CovidNumericalModel(NumericsCovid19):
             legendgroup='Policy',
             showlegend=True
         )
-
-        trace_optimal_cost = go.Scatter(
-            x=df_oc['time'],
-            y=optimal_cost_t,
-            line=dict(color=fill_color_pallet[16], width=1.0),
-            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[17]), 0.4)}",
-            fill='tozeroy',
-            legendgroup='Cost',
-            name='(OP) Cost',
-            showlegend=True
-        )
         #
         trace_vaccination_base = go.Scatter(
             x=df_oc['time'],
@@ -1482,17 +1476,76 @@ class CovidNumericalModel(NumericsCovid19):
             name='Constant<br>policy',
             showlegend=True
         )
+        trace_optimal_vaccination_action = go.Scatter(
+            x=df_oc['time'],
+            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence,
+            fill='tozeroy',
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
+            line=dict(color=fill_color_pallet[16], width=0.7),
+            name="Optimal<br>vaccination<br>policy",
+            legendgroup='Policy',
+            showlegend=True
+        )
         trace_vaccination_base_action = go.Scatter(
             x=df_oc['time'],
             y=n_cdmx * x_vac_prevalence * lambda_v_base * \
               np.ones(df_oc["u_V"].shape[0]),
             line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
+            fill='tozeroy',
+            fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[0]), 0.2)}",
             name='Constant<br>policy',
             showlegend=True
         )
+        #
+        #
+        #
+        unitary_vaccine_price = 10.0
+        base_vaccine_price = integrate.cumtrapz(
+            x=df_oc['time'],
+            y=n_cdmx * x_vac_prevalence * lambda_v_base * \
+              np.ones(df_oc["u_V"].shape[0]) * unitary_vaccine_price
+        )
+        total_base_vaccination_price = \
+            round(decimal.Decimal(base_vaccine_price[-1]), 0)
+        optimal_signal_fig.add_annotation(
+            dict(
+                text=str(total_base_vaccination_price) + '$',
+                align='left',
+                font=dict(family="Arial",
+                          size=10,
+                          color="LightSeaGreen"
+                          ),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=0.08,
+                y=0.01)
+        )
+        opt_vaccine_price = integrate.cumtrapz(
+            x=df_oc['time'],
+            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence
+        )
+        total_opt_vaccination_price = \
+            round(decimal.Decimal(opt_vaccine_price[-1]), 0)
+        optimal_signal_fig.add_annotation(
+            dict(
+                text=str(total_opt_vaccination_price) + '$',
+                align='left',
+                font=dict(family="Arial",
+                          size=10,
+                          color=fill_color_pallet[16]
+                          ),
+                showarrow=False,
+                xref='paper',
+                yref='paper',
+                x=.3,
+                y=0.2)
+        )
 
+#
         optimal_signal_fig.append_trace(trace_constant_vac_coverage, 1, 1)
         optimal_signal_fig.append_trace(trace_optimal_vac_coverage, 1, 1)
+        optimal_signal_fig.append_trace(trace_no_vac_cost, 1, 2)
         optimal_signal_fig.append_trace(trace_optimal_cost, 1, 2)
         optimal_signal_fig.append_trace(trace_constant_vac_cost, 1, 2)
         optimal_signal_fig.append_trace(trace_vaccination_base_action, 3, 1)
@@ -1512,7 +1565,7 @@ class CovidNumericalModel(NumericsCovid19):
                 showarrow=False,
                 xref='paper',
                 yref='paper',
-                x=-0.082,
+                x=-0.09,
                 y=1.03)
         )
         optimal_signal_fig.update_xaxes(
@@ -1652,9 +1705,7 @@ class CovidNumericalModel(NumericsCovid19):
             template="simple_white",
             showlegend=True,
             title_text="R0: " + str(round(c_r_0, 6))
-                       + '\t\tRv: ' + str(round(c_r_v_0, 6))
-                       + '\t\tOC-Rv: '
-                       + str(round(c_r_opt_v_0, 6)),
+                       + '\t\tRv: ' + str(round(c_r_v_0, 6)),
             legend=dict(xanchor='left',
                         yanchor='top',
                         x=1.1,
