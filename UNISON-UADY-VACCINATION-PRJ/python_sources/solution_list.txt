@@ -1,0 +1,16 @@
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_0.5/epsilon-5.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_0.5/epsilon-7.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_0.5/epsilon-9.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_1/epsilon-7.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_1/epsilon-9.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_NoLimits/epsilon-5.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_NoLimits/epsilon-7.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_20/delta_V_NoLimits/epsilon-9.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_0.5/epsilon-5.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_0.5/epsilon-9.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_1/epsilon-5.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_1/epsilon-7.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_1/epsilon-9.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_NoLimits/epsilon-5.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_NoLimits/epsilon-7.000000e-01.sol
+./bocop_data/Solutions_WHO_Paper_101020/coverage_50/delta_V_NoLimits/epsilon-9.000000e-01.sol
