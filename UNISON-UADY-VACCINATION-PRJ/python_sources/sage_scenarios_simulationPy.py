@@ -11,14 +11,13 @@ while True:
     path_list.append(path.strip())
     # print(path.strip())
 f.close()
-path_list_0 = [path_list[1], path_list[2]]
+path_list_0 = [path_list[1]]
 #
 #
 bocop_parameters_json_file = './vaccination_model_parameters/' + \
     'vaccination_parameters.json'
-for bocop_main_scene_data in path_list:
+for bocop_main_scene_data in path_list_0:
     print(bocop_main_scene_data)
-# path_list_0.pop()
     scm = CovidNumericalModel(
         bocop_solution_file=bocop_main_scene_data,
         bocop_parameters_json_file= bocop_parameters_json_file)
