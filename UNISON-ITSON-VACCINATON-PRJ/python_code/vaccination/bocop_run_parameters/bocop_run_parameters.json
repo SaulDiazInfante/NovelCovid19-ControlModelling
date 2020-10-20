@@ -18,5 +18,5 @@
     "batch.upperbound": 0,
     "batch.directory": "epsilon_0910",
     "solution.file": "epsilon_0910/epsilon-9.000000e-01.sol",
-    "final_time": 300.0
+    "final_time": 660.0
 }

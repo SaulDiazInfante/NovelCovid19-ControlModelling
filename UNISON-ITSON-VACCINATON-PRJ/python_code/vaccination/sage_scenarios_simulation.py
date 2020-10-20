@@ -1353,7 +1353,6 @@ class CovidNumericalModel(NumericsCovid19):
 
     def sage_plot_optimal_signal(self,
                                  fig_file_name_prefix="optimal_signal_fig"):
-
         n_cdmx = 100000
         prm = self.parameters
         lambda_v_base = prm["lambda_v"]
@@ -1366,7 +1365,6 @@ class CovidNumericalModel(NumericsCovid19):
         df_constant_vaccination = pd.read_pickle(
             constant_controlled_solution_file)
         fill_color_pallet = bokeh_palettes.all_palettes['Category20c'][20]
-
         optimal_signal_fig = make_subplots(
             rows=4, cols=2,
             specs=[
@@ -1446,7 +1444,13 @@ class CovidNumericalModel(NumericsCovid19):
         #######################################################################
         # Optimal solution trace
         #######################################################################
-        x_vac_prevalence = df_oc['s'] + df_oc['e'] + df_oc['i_a'] + df_oc['r']
+        opt_x_vac_prevalence = df_oc['s'] + df_oc['e'] \
+                               + df_oc['i_a'] + df_oc['r']
+        cst_x_vac_prevalence = df_constant_vaccination['s'] + \
+                                df_constant_vaccination['e'] + \
+                               df_constant_vaccination['i_a'] + \
+                               df_constant_vaccination['r']
+
         lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
         trace_optimal_vaccination_policy = go.Scatter(
             x=df_oc['time'],
@@ -1478,7 +1482,7 @@ class CovidNumericalModel(NumericsCovid19):
         )
         trace_optimal_vaccination_action = go.Scatter(
             x=df_oc['time'],
-            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence,
+            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * opt_x_vac_prevalence,
             fill='tozeroy',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
             line=dict(color=fill_color_pallet[16], width=0.7),
@@ -1488,8 +1492,7 @@ class CovidNumericalModel(NumericsCovid19):
         )
         trace_vaccination_base_action = go.Scatter(
             x=df_oc['time'],
-            y=n_cdmx * x_vac_prevalence * lambda_v_base * \
-              np.ones(df_oc["u_V"].shape[0]),
+            y=n_cdmx * lambda_v_base * cst_x_vac_prevalence,
             line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
             fill='tozeroy',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[0]), 0.2)}",
@@ -1497,51 +1500,43 @@ class CovidNumericalModel(NumericsCovid19):
             showlegend=True
         )
         #
-        #
-        #
-        unitary_vaccine_price = 10.0
+        unitary_vaccine_price = 6.1942
         base_vaccine_price = integrate.cumtrapz(
             x=df_oc['time'],
-            y=n_cdmx * x_vac_prevalence * lambda_v_base * \
-              np.ones(df_oc["u_V"].shape[0]) * unitary_vaccine_price
+            y=(n_cdmx * lambda_v_base * unitary_vaccine_price) * \
+              cst_x_vac_prevalence
         )
         total_base_vaccination_price = \
             round(decimal.Decimal(base_vaccine_price[-1]), 0)
-        optimal_signal_fig.add_annotation(
-            dict(
-                text=str(total_base_vaccination_price) + '$',
-                align='left',
-                font=dict(family="Arial",
-                          size=10,
-                          color="LightSeaGreen"
-                          ),
-                showarrow=False,
-                xref='paper',
-                yref='paper',
-                x=0.08,
-                y=0.01)
-        )
         opt_vaccine_price = integrate.cumtrapz(
             x=df_oc['time'],
-            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence
+            y=n_cdmx * unitary_vaccine_price * \
+              (df_oc['u_V'] + lambda_base_v_t) * opt_x_vac_prevalence
         )
         total_opt_vaccination_price = \
             round(decimal.Decimal(opt_vaccine_price[-1]), 0)
+        str_prices = '<b>Cost:</b><br>' + \
+                    '(CP): ' + str(total_base_vaccination_price) + \
+                    ' dls<br>' + \
+                    '(OP): ' + str(total_opt_vaccination_price) + \
+                    ' dls<br>' +\
+                    'price/dose: 6.20 dls'
+        #
         optimal_signal_fig.add_annotation(
             dict(
-                text=str(total_opt_vaccination_price) + '$',
+                text=str_prices,
                 align='left',
                 font=dict(family="Arial",
-                          size=10,
+                          size=12,
                           color=fill_color_pallet[16]
                           ),
                 showarrow=False,
                 xref='paper',
                 yref='paper',
-                x=.3,
-                y=0.2)
+                x=1.3,
+                y=0.01)
         )
-
+#
 #
         optimal_signal_fig.append_trace(trace_constant_vac_coverage, 1, 1)
         optimal_signal_fig.append_trace(trace_optimal_vac_coverage, 1, 1)
@@ -1678,13 +1673,11 @@ class CovidNumericalModel(NumericsCovid19):
                           size=12),
                 showarrow=False,
                 xref='paper',
-                yref=''
-                     'paper',
+                yref='paper',
                 x=1.325,
-                y=0.05
+                y=0.25
             )
         )
-
         optimal_signal_fig.add_annotation(
             dict(
                 text=str_vaccination_par,
@@ -1772,6 +1765,11 @@ class CovidNumericalModel(NumericsCovid19):
                    '_' + \
                    dt_string + \
                    run_tag + '.png'
+        path_fig_pdf = fig_file_name_prefix + \
+                   '_' + \
+                   dt_string + \
+                   run_tag + '.pdf'
         pio.write_image(optimal_signal_fig, "images/" + path_fig)
+        pio.write_image(optimal_signal_fig, "images/" + path_fig_pdf)
         pio.write_image(optimal_signal_fig, "images/optimal_signal_fig.pdf")
         pio.write_image(optimal_signal_fig, "images/optimal_signal_fig.png")
