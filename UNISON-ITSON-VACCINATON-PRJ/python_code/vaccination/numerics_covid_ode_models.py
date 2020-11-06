@@ -21,6 +21,7 @@ class NumericsCovid19:
                                                   'parameters'
                                                   + '/vaccination_parameters' +
                                                   '.json'):
+        self.run_tag = 'None'
         self.constant_control = False
         self.bocop_solution_file = bocop_solution_file
         self.read_bocop_parameters_values()
@@ -424,6 +425,22 @@ class NumericsCovid19:
             self.bocop_run_parameters = bocop_run_prm_
         return bocop_data_df
 
+    def simulation_run_tagger(self):
+        prm = self.parameters
+        cov_tag = str(prm['coverage'])
+        time_horizon_tag = str(prm['T'])
+        delta_v_tag = str(prm['delta_v'])
+        delta_r_tag = str(prm['delta_r'])
+        epsilon_tag = str(prm['epsilon'])
+        run_tag = 'run' + \
+                  '_coverage_' + cov_tag + \
+                  '_tHor_' + time_horizon_tag + \
+                  '_delta_r_' + delta_r_tag + \
+                  '_delta_v_' + delta_v_tag + \
+                  '_epsilon_' + epsilon_tag
+        self.run_tag = run_tag
+        return run_tag
+
     def data_solution_save(self, file_name_prefix='vaccination_data_solution'):
         """
         Save scipy.integrate.solve_ivp output as pandas DataFrame
@@ -442,13 +459,17 @@ class NumericsCovid19:
             df = pd.DataFrame(self.x_sol_vaccine)
             file_name_prefix = 'constant_' + file_name_prefix
         df.columns = self.time_state_solution_names
-        pkl_data_folder = './vaccination_pkl_solutions/'
-        file_name = pkl_data_folder + file_name_prefix + dt_string + ".pkl"
-        file_name_csv = pkl_data_folder + file_name_prefix + dt_string + ".csv"
+        pkl_data_folder = './vaccination_pkl_solutions/pkl/'
+        csv_data_folder = './vaccination_pkl_solutions/csv/'
+        run_tag = self.simulation_run_tagger()
+        file_name = pkl_data_folder + file_name_prefix + \
+                    run_tag + dt_string + ".pkl"
+        file_name_csv = csv_data_folder + file_name_prefix + \
+                        run_tag + dt_string + ".csv"
         df.to_pickle(file_name)
         df.to_csv(file_name_csv)
         df.to_pickle(pkl_data_folder + file_name_prefix + '.pkl')
-        df.to_csv(pkl_data_folder + file_name_prefix + '.csv')
+        df.to_csv(csv_data_folder + file_name_prefix + '.csv')
         return
 
     def vaccination_constant_control(self, t):

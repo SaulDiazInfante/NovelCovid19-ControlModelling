@@ -1,32 +1,56 @@
-\documentclass[preprint, sort&compress]{elsarticle}
+\documentclass[3p, sort&compress]{elsarticle}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amsbsy}
 \usepackage{amstext}
-\usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{amsthm}
 \usepackage{amstext}
 \usepackage{mathrsfs}
 \usepackage{graphpap}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{subcaption}
 \usepackage{graphics,graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{subcaption}
 \usepackage{multicol}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{siunitx}
-\usepackage{abstract}
 \usepackage{hyperref}
-\usepackage{siunitx}
+\usepackage[section]{placeins}
+\usepackage{xargs}
+\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\graphicspath{{./plotly_chart_studio_figures/}}
+\graphicspath{{./figures/}}
+%
+%
+\newcommandx{\unsure}[2][1=]{%
+    \todo[
+        linecolor=red,
+        backgroundcolor=red!25,
+        bordercolor=red, #1]{#2}
+}%
+\newcommandx{\change}[2][1=]{%
+    \todo[
+        linecolor=blue,
+        backgroundcolor=blue!25,
+        bordercolor=blue, #1]{#2}
+}
+\newcommandx{\info}[2][1=]{%
+    \todo[
+        linecolor=OliveGreen,
+        backgroundcolor=OliveGreen!25,
+        bordercolor=OliveGreen, #1]{#2}
+}
+\newcommandx{\improvement}[2][1=]{
+    \todo[linecolor=Plum,
+        backgroundcolor=Plum!25,
+        bordercolor=Plum,#1]{#2}
+}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \hypersetup{colorlinks = true, allcolors = blue}
 \usepackage[nameinlink,noabbrev]{cleveref}
-\renewcommand{\abstractname}{}
-\renewcommand{\absnamepos}{empty}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\e}{\varepsilon}
 \newcommand{\f}{\mathfrak{F}}
@@ -34,94 +58,139 @@
 \newcommand{\N}{\mathbb{N}}
 \newtheorem{teor}{Theorem}
 \newtheorem{lemma}{Lemma}
+\usepackage[toc,page]{appendix}
 %
-\makeatletter \def
-\ps@pprintTitle{
-     \let\@oddhead\@empty \let\@evenhead\@empty
-    \let\@oddfoot\@empty
-    \let\@evenfoot\@oddfoot
-}
-\makeatother
-\makeatletter
-\def\ps@pprintTitle{
-    \let\@oddhead\@empty
-    \let\@evenhead\@empty
-    \let\@oddfoot\@empty
-    \let\@evenfoot\@oddfoot
-}
-\makeatother
 %
 \begin{document}
     \begin{frontmatter}
         \title{
             Optimal vaccination preventive policies for COVID-19\\
-            \large{Research Report (WHO-SAGE)}
         }
-        \author{%
-            Grupo ITSON-CONACyT-UNISON\\
-            September 18, 2020
+        \author[add:conacyt_unison]{%
+            Sa\'ul D\'iaz-Infante%
+            \corref{corresponding_author}%
         }%
-	%	\author[add:conacyt_unison]{%
-	%		Sa\'ul D\'iaz-Infante%
-	%		\corref{corresponding_author}%
-	%	}%
-	%	\ead{saul.diazinfante@unison.mx}
-	%	\address[add:conacyt_unison]{
-	%	    CONACYT-Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, M\'exico, C.P. 83000.
-	%	}
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%	\author[add:unison]%
-	%	{Manuel Adrian Acu\~na-Zegarra}
-	%	\ead{adrian.acuna@unison.mx}
-	%	\address[add:unison]{
-	%	    Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, M\'exico, C.P. 83000.
-	%	}
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%	\author[add:itson]%
-	%	    {David Baca-Carrasco}
-	%	    \ead{david.baca@itson.edu.mx}
-	%	\address[add:itson]{
-	%	        Departamento de Matem\'aticas, Instituto Tecnol\'ogico de Sonora,
-	%	    	5 de Febrero 818 Sur, Colonia Centro, Ciudad Obregón, Sonora, M\'exico, C.P. 85000.
-	%	}
-	%	\ead{davidbaca@correo.mx}
-	%	\author[add:unison]%
-	%	{Daniel Olmos-Liceaga}
-	%	\ead{daniel.olmos@unison.mx}
-		%\address[add:unison]%{
-		    %Departamento de Matem\'aticas, Universidad de Sonora, Blvd. Luis Encinas y Rosales S/N, Hermosillo, Sonora, C.P. 83000, M\'exico.
-		%}
+        \ead{saul.diazinfante@unison.mx}
+        \address[add:conacyt_unison]{
+            CONACYT-Universidad de Sonora, Departamento de Matem\'aticas,
+            Blvd. Luis Encinas y Rosales S/N,
+            Hermosillo, Sonora, M\'exico, C.P. 83000.
+        }
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \author[add:unison]%
+        {Manuel Adrian Acu\~na-Zegarra}
+        \ead{adrian.acuna@unison.mx}
+        \address[add:unison]{
+            Departamento de Matem\'aticas, Universidad de Sonora,
+            Blvd. Luis Encinas y Rosales S/N,
+            Hermosillo, Sonora, M\'exico, C.P. 83000.
+        }
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \author[add:itson]%
+            {David Baca-Carrasco}
+            \ead{david.baca@itson.edu.mx}
+        \address[add:itson]{
+                Departamento de Matem\'aticas, Instituto Tecnol\'ogico de
+                Sonora, 5 de Febrero 818 Sur, Colonia Centro, Ciudad
+                Obregón,
+                Sonora, M\'exico, C.P. 85000.
+        }
+        \author[add:unison]%
+        {Daniel Olmos-Liceaga}
+        \ead{daniel.olmos@unison.mx}
+    \cortext[corresponding_author]{Corresponding author}
+    \begin{keyword}
+        Optimal Control, COVAX
+        Vaccination, COVID-19.
+    \end{keyword}
+    \begin{abstract}
+        BACKGROUND
+        At the date, Europe and North America experiments the second wave of
+        COVID-19 causing more than \num{1200000} deaths worldwide.
+        Humanity lacks of successful treatment and the only plausible solution
+        is an effective vaccine. Currently,four are in final phase three trials.
+        If third stage trial results favorable, Pharmaceutics firms
+        estimate big scale production of its vaccine candidates around
+        first 2021  quarter.
+        However, determine the vaccine efficacy, induced immunity response
+        among other essential parameters still are under study and subject to
+        uncertainty. In fact, is possible that
+        first  vaccines will not be fully protective.
+        Instead they may reduce the severity of illness, reducing
+        hospitalization and death cases.
+        Further, logistic supply, economical and political implications
+        impose a set of great challenges to develop vaccination policies.
+        PROBEM SETUP
+        For this reason, health decision makers requires tools to evaluate
+        hypothetical scenarios.
+        FINDINGS
+        Our contribution partially answers
+        important modeling questions regarding to WHO Strategic
+        Advisory Group of Experts (SAGE) on
+        Immunization Working Group on COVID-19 Vaccines.
 
-	%	\cortext[corresponding_author]{Corresponding author}
-		%\begin{abstract}
-		%	Abstract
-		%\end{abstract}
-		%\begin{keyword}
-		%	Optimal Control,
-		%	Vaccination,
-		%	COVID-19.
-		%\end{keyword}
-	\end{frontmatter}
+        Our results suggest that optimal control theory could be an option
+        tool to develop  vaccination policies that satisfies important
+        constrains as coverage horizon time supply restriction. We also report
+        here simulation of vaccination polices with vaccine parameters reported
+        by the most promising alternatives.
 
-	\section{Introduction}
-		\input{introduction}
-	\section{Mathematical model formulation}%{Preventive vaccination and treatment mathematical model}
-	    %\textbf{[David, Daniel, Adrian]}
-		\input{model_formulation}
-	\section{Parameter fitting}%calibration}
-	    %\textbf{[Adrian, Daniel]}
-	    \input{parameter_fitting}
-	\section{Vaccination Model Analysis}
-		%\textbf{[David]}
-		\input{analysis}
-	\section{Optimal Vaccine policies}
-		\input{optimal_controll_modeling}
-	\section{Numerical experiments}
-		\input{numerical_experiments}
-	\section{Conclusions}
-		\input{conclusions}
-	\bibliographystyle{ieeetr}%{plain}%{abbrvnat}%{unsrt}
+        COVID-19, which includes vaccination dynamics. We apply optimal control
+        theory to propose optimal vaccine strategies that minimize DALYs.
+        Additionally, we analyze the vaccination reproductive number around the
+        basic reproductive number and the vaccination profile (coverage,
+        efficacy,
+        horizon time, and vaccination rate). Due to the uncertainty about the
+        profile vaccine, our results explore some scenarios regarding efficacy,
+        coverage, induced immunity by vaccination, and natural immunity. Here,
+        we
+        observe that: i) there are strategies that reduce DALYs and cumulative
+        deaths at the horizon time compare to its counterpart with constant
+        vaccination; ii) it is necessary information about vaccine efficacy to
+        design optimal strategies, and iii) ...
+    \end{abstract}
+    \journal{Mathematical Biosciences}
+\end{frontmatter}
+%
+    \section{Introduction}
+        \input{introduction}
+    \section{Mathematical model formulation}
+        \input{model_formulation}
+    \section{Model Analysis}
+        %\textbf{[David]}
+        \input{analysis}
+    \section{Optimal Vaccination
+    policies}
+        \input{optimal_controll_modeling}
+    \section{Numerical experiments}
+        \input{numerical_experiments}
+    \section{Conclusions and Discussions}
+        \input{conclusions}
+    \section*{Acknowledgement}
+    The authors acknowledge support
+    from grant DGAPA-PAPIIT IV100220
+    and the Laboratorio Nacional de
+    Visualización Científica UNAM.
+    MAAZ acknowledges support from
+    PRODEP Programme (No.
+    511-6/2019-8291). DBC
+    acknowledges support from PRODEP
+    Programme (). We thank Jorge
+    X. Velasco-Hernandez for its usefol comments and feedback.
+    \section*{Author contributions}
+    MAAZ .
+    SDIV designed the study, provided oversight for all
+    aspects of the study, developed the controlled modeling
+    framework, developed simulation code for the BOCOP optimization,
+    developed R-scripts for parameters calibration with Stan-R interface and
+    wrote
+    Sections 4 and 5 of the manuscript.
+    DBC
+    DOL
+    \bibliographystyle{elsarticle-num-names}
     \bibliography{Vaccination_Bibliography}
-		%\textbf{[Adrian]}
-		%\input{bibliography}
+    \begin{appendices}
+        \section{Parameter estimation}
+        \input{first_appendix}
+    \end{appendices}
 \end{document}
