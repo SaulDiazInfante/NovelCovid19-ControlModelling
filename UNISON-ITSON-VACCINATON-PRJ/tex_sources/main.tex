@@ -19,12 +19,14 @@
 \usepackage{hyperref}
 \usepackage[section]{placeins}
 \usepackage{xargs}
+\usepackage{dirtytalk}
 \usepackage[pdftex,dvipsnames]{xcolor}
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \graphicspath{{./plotly_chart_studio_figures/}}
 \graphicspath{{./figures/}}
 %
 %
+\def\appendixname{}
 \newcommandx{\unsure}[2][1=]{%
     \todo[
         linecolor=red,
@@ -58,9 +60,8 @@
 \newcommand{\N}{\mathbb{N}}
 \newtheorem{teor}{Theorem}
 \newtheorem{lemma}{Lemma}
-\usepackage[toc,page]{appendix}
-%
-%
+\newcommand{\az}{\color{red}\em }
+\newcommand{\za}{\rm \color{black}}
 \begin{document}
     \begin{frontmatter}
         \title{
@@ -72,7 +73,8 @@
         }%
         \ead{saul.diazinfante@unison.mx}
         \address[add:conacyt_unison]{
-            CONACYT-Universidad de Sonora, Departamento de Matem\'aticas,
+            CONACYT-Universidad de Sonora,
+            Departamento de Matem\'aticas,
             Blvd. Luis Encinas y Rosales S/N,
             Hermosillo, Sonora, M\'exico, C.P. 83000.
         }
@@ -103,52 +105,7 @@
         Optimal Control, COVAX
         Vaccination, COVID-19.
     \end{keyword}
-    \begin{abstract}
-        BACKGROUND
-        At the date, Europe and North America experiments the second wave of
-        COVID-19 causing more than \num{1200000} deaths worldwide.
-        Humanity lacks of successful treatment and the only plausible solution
-        is an effective vaccine. Currently,four are in final phase three trials.
-        If third stage trial results favorable, Pharmaceutics firms
-        estimate big scale production of its vaccine candidates around
-        first 2021  quarter.
-        However, determine the vaccine efficacy, induced immunity response
-        among other essential parameters still are under study and subject to
-        uncertainty. In fact, is possible that
-        first  vaccines will not be fully protective.
-        Instead they may reduce the severity of illness, reducing
-        hospitalization and death cases.
-        Further, logistic supply, economical and political implications
-        impose a set of great challenges to develop vaccination policies.
-        PROBEM SETUP
-        For this reason, health decision makers requires tools to evaluate
-        hypothetical scenarios.
-        FINDINGS
-        Our contribution partially answers
-        important modeling questions regarding to WHO Strategic
-        Advisory Group of Experts (SAGE) on
-        Immunization Working Group on COVID-19 Vaccines.
-
-        Our results suggest that optimal control theory could be an option
-        tool to develop  vaccination policies that satisfies important
-        constrains as coverage horizon time supply restriction. We also report
-        here simulation of vaccination polices with vaccine parameters reported
-        by the most promising alternatives.
-
-        COVID-19, which includes vaccination dynamics. We apply optimal control
-        theory to propose optimal vaccine strategies that minimize DALYs.
-        Additionally, we analyze the vaccination reproductive number around the
-        basic reproductive number and the vaccination profile (coverage,
-        efficacy,
-        horizon time, and vaccination rate). Due to the uncertainty about the
-        profile vaccine, our results explore some scenarios regarding efficacy,
-        coverage, induced immunity by vaccination, and natural immunity. Here,
-        we
-        observe that: i) there are strategies that reduce DALYs and cumulative
-        deaths at the horizon time compare to its counterpart with constant
-        vaccination; ii) it is necessary information about vaccine efficacy to
-        design optimal strategies, and iii) ...
-    \end{abstract}
+    \input{abstract}
     \journal{Mathematical Biosciences}
 \end{frontmatter}
 %
@@ -159,38 +116,22 @@
     \section{Model Analysis}
         %\textbf{[David]}
         \input{analysis}
-    \section{Optimal Vaccination
-    policies}
+    \section{Optimal Vaccination policies}
         \input{optimal_controll_modeling}
     \section{Numerical experiments}
         \input{numerical_experiments}
     \section{Conclusions and Discussions}
         \input{conclusions}
-    \section*{Acknowledgement}
-    The authors acknowledge support
-    from grant DGAPA-PAPIIT IV100220
-    and the Laboratorio Nacional de
-    Visualización Científica UNAM.
-    MAAZ acknowledges support from
-    PRODEP Programme (No.
-    511-6/2019-8291). DBC
-    acknowledges support from PRODEP
-    Programme (). We thank Jorge
-    X. Velasco-Hernandez for its usefol comments and feedback.
-    \section*{Author contributions}
-    MAAZ .
-    SDIV designed the study, provided oversight for all
-    aspects of the study, developed the controlled modeling
-    framework, developed simulation code for the BOCOP optimization,
-    developed R-scripts for parameters calibration with Stan-R interface and
-    wrote
-    Sections 4 and 5 of the manuscript.
-    DBC
-    DOL
+    \section*{Data availability}
+        \input{repo_info}
+    \section*{Authors’ contributions}
+        \input{author_contributions}
+    \section*{Acknowledgments}
+        \input{acknowledgments}
     \bibliographystyle{elsarticle-num-names}
     \bibliography{Vaccination_Bibliography}
-    \begin{appendices}
-        \section{Parameter estimation}
+    \appendix
+    \section{Parameter estimation}
+    \label{apx:positivity_invariace}
         \input{first_appendix}
-    \end{appendices}
 \end{document}

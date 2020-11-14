@@ -1,19 +1,13 @@
-In late December 2019, a new virus's appearance is reported in Wuhan City,
+    In late December 2019, a new virus's appearance is reported in Wuhan City,
 Hubei Province, China. Called SARS-CoV2, it is the virus that causes the 2019
-corona virus disease (COVID-19) and that, very quickly since its appearance,
-has spread throughout much of the world, causing severe problems to health
-systems of all the countries in which it is present \cite{Who12020}. On March
-11, 2020, the World Health Organization declared the epidemic by COVID-19 as a
-pandemic when there were around 118,000 cases distributed in 114 countries, and
-approximately 4,291 deaths \cite{Who512020}. In Latin America, the first
-detected case of COVID-19 occurred in Brazil on February 26, and in Mexico, the
-first case was reported on February 27, quickly spreading throughout the
-country \cite{Ajrm2020,Acuna2020}.
+coronavirus disease (COVID-19) and that, very quickly since its appearance, has
+spread throughout much of the world, causing severe problems to health systems
+of all the countries in which it is present \cite{Who12020}.
 
-Due to the absence of successful treatment and vaccines,
-several non-pharmaceutical interventions (NPIs) have been implemented in all the
+    Due to the absence of successful treatment and vaccines, several
+non-pharmaceutical interventions (NPIs) have been implemented in all the
 countries where the disease is present, with quarantine, isolation, and social
-distancing being the main ones \cite{Wilder2020,Guner2020,Liu2020_2}. Despite
+distancing being the main ones \cite{Wilder2020,Liu2020_2}. Despite
 the measures that different governments have taken to mitigate the epidemic, it
 has not been controlled in most places, which may be due to the relaxation of
 mitigation measures. At the date of writing this work, the upturn or regrowth
@@ -22,44 +16,73 @@ some places, this behavior is referred to as "second wave". On the other hand,
 since the new coronavirus appearance, the international scientific community
 has been working to understand the virus nature. They mainly focus on the
 spreading mechanisms between individuals, and developing vaccines and
-treatments to reduce the number of infections and fatality cases. To get a
-clearer understanding of different vaccination strategies and their
-consequences on the number of infected individuals, mathematical models have
-taken a leading role.
+treatments to reduce the number of infections and fatality cases.
 
-    The use of various mathematical tools such as SIR and SEIR models has
-helped to  describe epidemics properties around the globe. These models have
-been used to estimate the basic reproductive number associated with the disease
-and also different parameters involved in its spread
-\cite{Wang2020,Liu2020,Sarkar2020,Hong2020}. Another use of this kind of model
-has been addressed to propose and evaluate the effect of various control
-measures classified as NPIs
-\cite{Acuna2020,Marimuthu2020,Liu2020,Shaikh2020,DeVisscher2020}.
+    Development of COVID-19 vaccines is a major challenge these days. Some
+research efforts in this direction can be found in \cite{Belete2020,Kaur2020}.
+In Mexico, some of the considered vaccines to be applied to the population are
+Adenovirus Type 5 Vector (Ad5-nCoV) by Cansino Biologics, AZD1222 by AstraZeneca
+and BNT162b2 by Pfizer and BioNTech. At the current date, these and other
+vaccines are on the testing phase (phase 3) and it is believed that their
+distribution will begin at the end of March 2021. However, there are still some
+questions about the efficacy of the vaccines. The U. S. Food and Drugs
+Administration (FDA) requires firm evidence that a vaccine protects at least
+half of those inoculated \cite{Shah2020}. At the date, there are no conclusive
+results about the vaccines' efficacy, nor the immunity time induced by vaccines.
 
-    Currently, vaccine development for COVID-19 is at an advanced stage. It is
-believed that their distribution will begin in early 2021. However, we
-consider that, in addition to the vaccine's existence, it is necessary to
-have a good vaccination strategy. A widely used tool to address this
-question is the optimal control theory. This mathematical tool is useful to
-propose scenarios in which the vaccine's application minimizes the damage
-caused by the disease and its application cost. Some results about it have
-been applied to control other diseases for humans and animals
-\cite{Asano2008,Rodrigues2014,Tchuenche2011,Malik2016,Jaberi2014}. Optimal
-control theory has also been used in COVID-19 studies. Most efforts have
-been invested in finding optimal strategies to evaluate the impact of
-non-pharmaceutical interventions
-\cite{Madubueze2020,Perkins2020,Ullah2020}. Optimal control strategies have
-also being considered in vaccination \cite{Barbosa2020}. In this work, the
-authors took their optimization based on a basic compartmental model for
-COVID-19. In their model, deaths due to disease are not considered and
-vaccination is applied only to susceptible individuals.  \unsure{NO SE VE
-    LA DIFERENCIA RESPECTO A NUESTRO TRABAJO, EL QUE NO CONSIDEREN MUERTE NO LO
-    HACE TAN DIFERENTE. RECUERDO QUE SAÚL MENCIONÓ ALGO SOBRE QUE LA FORMA DE
-    HACER CONTROL ES DISTINTA. O DE PLANO NO HAY? JAJA....Ohh pues...dejame
-    ser! estoy en eso!}
+    To get a clearer understanding of different vaccination strategies and
+their consequences on the number of infected individuals, Kermack--McKendrick
+type models have taken a leading role. This kind of models have been used to
+understand vaccination dynamics on other diseases \cite{Alexander2004}. It is
+important to stress that nowadays Kermack--McKendrick type mathematical models
+has helped to describe COVID-19 epidemics properties around the globe. These
+models have been used to estimate the basic reproductive number associated with
+the disease and also different parameters involved in its spread
+\cite{Liu2020,Sarkar2020}. Another use of this kind of model has been addressed
+to propose and evaluate the effect of various control measures classified as
+NPIs \cite{Acuna2020,Ngonghala2020,Liu2020,Shaikh2020,DeVisscher2020}.
 
-In this work, we present a mathematical model to describe the transmission and some vaccination dynamics of COVID-19. Mainly, we focus on using optimal control theory to obtain vaccination strategies in a homogeneous population. Our main objective is to minimize the disability-adjusted life year (DALY) \cite{WhoDALY}. This quantity is used by the World Health Organization (WHO) to quantify the burden of disease from mortality and morbidity, which is given by the sum of the years of life lost (YLL) and years lost due to disability (YLD). This work's objective is framed within the context of the WHO strategic advisory group of experts (SAGE) on immunization working group on COVID-19 vaccines \cite{sage2020}.
+    On the other hand, vaccines' development for COVID-19 has led to ask which
+are the best vaccination strategies to reduce the disease levels in a
+population. In order to find a good vaccination strategy, a widely used tool is
+the optimal control theory. This mathematical method together with
+Kermack--McKendrick models are useful to propose scenarios in which the
+vaccine's application minimizes the damage caused by the disease and its
+application cost. Some results about it have been applied to control other
+diseases for humans and animals
+\cite{Asano2008,Rodrigues2014,Malik2016,Jaberi2014}. Optimal control theory has
+also been used in COVID-19 studies. Most efforts have been invested in finding
+optimal strategies to evaluate the impact of non-pharmaceutical interventions
+\cite{Madubueze2020,Perkins2020,Ullah2020}. Optimal control strategies have also
+being considered in vaccination strategies \cite{Barbosa2020}. In this work, the
+authors took their optimization based on an extension of the SIR mathematical
+model for COVID-19, which included a vaccinated class. Within their objectives
+was to minimize only the number of infected individuals together with the
+prescribed vaccine concentration during treatment.
 
-Development of COVID-19 vaccines is a major challenge these days. Some research efforts in this direction can be found in \cite{Belete2020,Kaur2020}. In Mexico, some of the considered vaccines to be applied to the population are Adenovirus Type 5 Vector (Ad5-nCoV) by Cansino Biologics, AZD1222 by AstraZeneca and BNT162b2 by Pfizer and BioNTech. At the current date, these and other vaccines are on the testing phase (phase 3) and there are still some questions about the efficacy of the vaccines. In the United States, an appropriate vaccine to be applied needs to show firm evidence that it protects at least half of those inoculated \cite{Shah2020}. At this stage, there are no conclusive results about the efficacy of the vaccines. Also, current work is the immunity time the vaccines will provide to people.
+    In this work, we present a mathematical model to describe the transmission
+and some vaccination dynamics of COVID-19. The aim is to implement optimal
+control theory to obtain vaccination strategies in a homogeneous population.
+Such strategies are aligned to the policies of the WHO strategic advisory group
+of experts (SAGE) on COVID-19 vaccination \cite{sage2020}. In this sense we look
+to minimize the disability-adjusted life year (DALY) \cite{WhoDALY}. This
+quantity is used by WHO to quantify the burden of disease from mortality and
+morbidity, which is given by the sum of the years of life lost (YLL) and years
+lost due to disability (YLD). Motivated by this, we arrive to a different
+optimal control problem as the one studied in \cite{Barbosa2020}. In particular,
+we focus on vaccination efficacy, natural immunity and a given coverage for a
+particular horizon time, to find an optimal daily vaccination rates strategy. By
+following this idea, we can (i) find strategies such that hospitals are not
+surpassed in their capacity, (ii) value a strategy by obtaining estimates of the
+number of infected and deceased individuals and (iii) make comparisons between a
+constant vaccination policy versus the optimal vaccination policy.
 
-Our work is divided into the following sections. In Section 2, we present our mathematical model, which includes preventive vaccine dynamics. Section 3 includes an analysis of the vaccination reproductive number. Section 4 presents our numerical results regarding optimal vaccination policies. It is important to stress that, with the objective of study COVID-19 dynamics in a specific city and have a set of baseline parameters values, we used the Mexico City plus Mexico state COVID-19 data to estimate some proposed model parameters. We end this work with a conclusions and discussions section.
+    In order to present our results, this manuscript is divided into the
+following sections. In \Cref{Sec:MathematicalModelFormulation}, we present our
+mathematical model, which includes preventive vaccine dynamics.
+\Cref{Sec:Rv_Analysis} includes an analysis of the vaccination reproductive
+number. In \Cref{Sec:OptimalVaccinePolicies}, we define our optimal control
+problem when modulating the vaccination rate by a time-dependent control signal
+$u_V(t)$. \Cref{Sec:NumericalExperiment} presents our numerical results
+regarding optimal vaccination policies. We end this work with a conclusions and
+discussions section.
