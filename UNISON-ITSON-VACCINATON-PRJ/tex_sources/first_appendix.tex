@@ -1,40 +1,41 @@
-
+\label{App:Parameter_Est}
 Mathematical models for COVID-19 have shown that the
-parameters' values are not necessarily the same in each country. We use
-COVID-19 data from Mexico City and Mexico state to follow the epidemic
-curve's initial growth in this work. Consequently, we estimate some
-parameter values of system~\eqref{model1}. To obtain the baseline
-parameter values, we consider two-stages: i) before and ii) after
-mitigation measures were implemented. For both stages, we use
-model~\eqref{model1} with no vaccination dynamics ($\lambda_V = 0$ and
-$V(0) = 0$), and STAN R-package. This package is used for statistical
-inference by the Bayesian approach. For the code implementation of our
-system, we follow the ideas of \cite{Chatzilena2019}, and it is made
-freely available at... For this section, our estimations are focused on
+parameters' values are not necessarily the same in each country. We
+use COVID-19 data from Mexico City plus Mexico state to follow the
+epidemic curve's initial growth in this work. Consequently, we
+estimate some parameter values of system in \Cref{model1}
+\cite{DataMX}. To obtain the baseline parameter values, we consider
+two-stages: i) before and ii) after mitigation measures were
+implemented. For both stages, we use model in \Cref{model1} with no
+vaccination dynamics ($\lambda_V = 0$ and $V(0) = 0$), and STAN
+R-package. This package is used for statistical inference by the
+Bayesian approach. For the code implementation of our system, we
+follow ideas of \cite{Chatzilena2019}, and it is made freely available
+at \cite{gitHub}. For this section, our estimations are focused on
 three parameters: $\beta_A$, $\beta_S$ and $p$. Other parameter values
-are given in Table~\eqref{table_fixparam}.
+are given in \Cref{table_fixparam}.
 \begin{table}[h!]
 \begin{center}
-    \begin{tabular}{ccc}
-    \toprule
-        Parameter & Value & References
-        \\
-        \midrule
-        $\delta_{E}^{-1}$ & $5.1\ \text{days}$   &  \cite{Tian2020}
-        \\
-        $\alpha_{S}^{1}$  & $5.97\ \text{days}$  &  \cite{Acuna2020}
-        \\
-        $\alpha_{A}^{-1}$ & $10.81\ \text{days}$ & \cite{Acuna2020}
-        \\
-        $\delta_{R}^{-1}$ & $365\ \text{days}$     &
-        \\
-        $\mu^{-1}$        & $70\ \text{years}$   &
-        \\
-        \bottomrule
-    \end{tabular}
-        \caption{Fixed parameters values of
-    system~\eqref{model1}.}\label{table_fixparam}
-    \end{center}
+	\begin{tabular}{ccc}
+		\toprule
+		Parameter & Value & References
+		\\
+		\midrule
+		$\delta_{E}^{-1}$ & $5.1\ \text{days}$   &  \cite{Tian2020}
+		\\
+		$\alpha_{S}^{-1}$  & $5.97\ \text{days}$  &  \cite{Acuna2020}
+		\\
+		$\alpha_{A}^{-1}$ & $10.81\ \text{days}$ & \cite{Acuna2020}
+		\\
+		$\delta_{R}^{-1}$ & $365\ \text{days}$     &
+		\\
+		$\mu^{-1}$        & $70\ \text{years}$   &
+		\\
+		\bottomrule
+		\end{tabular}
+		\caption{Fixed parameters values of system in
+		\Cref{model1}.}\label{table_fixparam}
+	\end{center}
 \end{table}
 
 For the first stage, the following system is considered:
@@ -50,28 +51,28 @@ For the first stage, the following system is considered:
 	D'(t)&= \theta \alpha_S I_S
   \end{aligned}
 \end{equation}
-where $\bar{N}(t)=S(t)+E(t)+I_S(t)+I_A(t)+R(t)$ and $N=\bar{N}+D$. Here,
-we consider COVID-19 data from the first day of symptoms onset reported
-(February 19) until March 23, 2020. We also assume that $\theta = 0$
-because the first reported death was on March 18, and there were three
-reported deaths until March 23. The initial values of recovered and dead
-people are set to zero. Symptomatic class initial value was fixed in one
-individual, while $E(0)$ and $I_{A}(0)$ were estimated. Thus, $S(0) = N -
-(E(0) + I_{A}(0) + 1)$, where $N = 26446435$ \cite{conavi2020}. For the
-STAN implementation, we employ a negative-binomial model as the
-likelihood function with the mean parameter given by incidence solution
-per day (FALTA). In addition to the above, we assign prior probability
-distributions to each parameter and the exposed and asymptomatic classes'
-initial conditions. Thus, we propose that $\hat{\beta}_A$ and
-$\hat{\beta}_S$ follow a normal distribution with parameters $\mu = 1$
-and $\sigma^2 = 0.13$. Then,  $p$ follows a uniform distribution in $(0,
-0.25)$, and $E(0)$ and $I_{A}(0)$ also follow a uniform distribution in
-$(2,20)$ and $(2,10)$, respectively. When employing our STAN
-implementation, we run 5 chains with 100,500 iterations each, discard the
-first 500, and use 10,000 samples to generate estimates of parameters
-$\hat{\beta}_A$, $\hat{\beta}_S$ and $p$. Table~\eqref{table_icparam}
-shows the confidence interval for each parameter and median posterior
-estimated.
+where $\bar{N}(t)=S(t)+E(t)+I_S(t)+I_A(t)+R(t)$ and $N=\bar{N}+D$.
+Here, we consider COVID-19 data from the first day of symptoms onset
+reported (February 19) until March 23, 2020. We also assume that
+$\theta = 0$ because the first reported death was on March 18, and
+there were three reported deaths until March 23. The initial values of
+recovered and dead people are set to zero. Symptomatic class initial
+value was fixed in one individual, while $E(0)$ and $I_{A}(0)$ were
+estimated. Thus, $S(0) = N - (E(0) + I_{A}(0) + 1)$, where $N =
+26446435$ \cite{conavi2020}. For the STAN implementation, we employ a
+negative-binomial model as the likelihood function with the mean
+parameter given by incidence solution per day. In addition to the
+above, we assign prior probability distributions to each parameter and
+the exposed and asymptomatic classes' initial conditions. Thus, we
+propose that $\hat{\beta}_A$ and $\hat{\beta}_S$ follow a normal
+distribution with parameters $\mu = 1$ and $\sigma^2 = 0.13$. Then,
+$p$ follows a uniform distribution in $(0, 0.25)$, and $E(0)$ and
+$I_{A}(0)$ also follow a uniform distribution in $(2,20)$ and
+$(2,10)$, respectively. When employing our STAN implementation, we run
+5 chains with 100,500 iterations each, discard the first 500, and use
+10,000 samples to generate estimates of parameters $\hat{\beta}_A$,
+$\hat{\beta}_S$ and $p$. \Cref{table_icparam} shows the confidence
+interval for each parameter and median posterior estimated.
 \begin{table}[h!]
 \begin{center}
 	\begin{tabular}{ccc}
@@ -86,16 +87,16 @@ estimated.
 			\bottomrule
 	\end{tabular}
   \caption{Confidence interval and median posterior estimated for some
-  parameters of system~\eqref{model_stage1}and basic reproductive number
-  $(R_0)$.}\label{table_icparam}
+  parameters of system in \Cref{model_stage1} and basic reproductive
+  number $(R_0)$.}\label{table_icparam}
 \end{center}
 \end{table}
 
-\noindent For the second stage, we took a complete month starting the day
-when mitigation measures were implemented, that is, from March 23 to
-April 23, 2020. Now, we consider parameter $\xi$ to model the
-implementation of non-pharmaceutical measures. Thus,
-system~\eqref{model_stage1} becomes:
+\noindent For the second stage, we took a complete month starting the
+day when mitigation measures were implemented, that is, from March 23
+to April 23, 2020. Now, we consider parameter $\xi$ to model the
+implementation of non-pharmaceutical measures. Thus, system in
+\Cref{model_stage1} becomes:
 \begin{equation}\label{model_stage2}
   \begin{aligned}
 	S'(t)&=\mu \bar{N}-\frac{\xi\hat{\beta}_S
@@ -109,28 +110,28 @@ system~\eqref{model_stage1} becomes:
   \end{aligned}
 \end{equation}
 where $\bar{N}(t)=S(t)+E(t)+I_S(t)+I_A(t)+R(t)$ and $N=\bar{N}+D$. At
-this stage, we consider that $\theta = 0.11$. Here, our objective is to
-estimate the value of parameter $\xi$. To do this, we use the median
-posterior of all the estimated parameters from the first stage (see
-Table~\eqref{table_icparam}). Other parameter values are given in
-Table~\eqref{table_fixparam}. Almost all initial conditions were obtained
-when solving system~\eqref{model_stage1} with the 10,000 samples
+this stage, we consider that $\theta = 0.11$. Here, our objective is
+to estimate the value of parameter $\xi$. To do this, we use the
+median posterior of all the estimated parameters from the first stage
+(see \Cref{table_icparam}). Other parameter values are given in
+\Cref{table_fixparam}. Almost all initial conditions were obtained
+when solving system in \Cref{model_stage1} with the 10,000 samples
 (obtained in first stage), after which each solution at the final time
 (March 23) is saved. We use the median of the saved values. Thus, for
-system~\eqref{model_stage2}, $E(0) = 6587.585$, $I_S(0) = 553.7035$,
+system in \Cref{model_stage2}, $E(0) = 6587.585$, $I_S(0) = 553.7035$,
 $I_A(0) = 3149.924$, and $R(0) = 3001.547$. For the initial value of
 variable $D$, we consider reported COVID-19 data, then $D(0) = 3$.
-Therefore $S(0) = N - (E(0) + I_S(0) + I_A(0) + R(0) + D(0))$, with $N =
-26446435$. Similar to the first stage, we consider a negative-binomial
-model as the likelihood function with the mean parameter given by
-incidence solution per day (FALTA), while that we postulate a uniform
-distribution in $(0.25,0.75)$ as a prior probability distribution for the
-parameter $\xi$.
-\label{App:Parameter_Est}
+Therefore $S(0) = N - (E(0) + I_S(0) + I_A(0) + R(0) + D(0))$, with $N
+= 26446435$ \cite{conavi2020}. Similar to the first stage, we consider
+a negative-binomial model as the likelihood function with the mean
+parameter given by incidence solution per day, while that we postulate
+a uniform distribution in $(0.25,0.75)$ as a prior probability
+distribution for the parameter $\xi$.
+%\label{App:Parameter_Est}
 For the second stage, we run 5 chains with 100,500 iterations each,
 discard the first 500, and use 10,000 samples to generate estimates of
-parameters $\xi$. Table~\eqref{table_icparam2} shows the confidence
-interval and median posterior estimated for parameter $\xi$.
+parameters $\xi$. \Cref{table_icparam2} shows the confidence interval
+and median posterior estimated for parameter $\xi$.
 \begin{table}[h!]
 \begin{center}
 	\begin{tabular}{ccc}
@@ -143,19 +144,19 @@ interval and median posterior estimated for parameter $\xi$.
 			\bottomrule
 	\end{tabular}
   \caption{Confidence interval and median posterior estimated for
-  parameter $\xi$ of system~\eqref{model_stage2} and basic reproductive
-  number $(R_0)$.}\label{table_icparam2}
+  parameter $\xi$ of system in \Cref{model_stage2} and basic
+  reproductive number $(R_0)$.}\label{table_icparam2}
 \end{center}
 \end{table}
 
 Finally, it is important to mention that our results were implemented
 considering that the effective transmission contact rates
-$(\beta_{\bullet})$ were equal to $\xi\hat{\beta}_{\bullet}$. This last
-means that our scenarios consider the first reduction in the effective
-transmission contact rates by NIPs. Using values in
-Tables~\ref{table_icparam} and~\ref{table_icparam2}, we build confidence
-intervals for $\xi\hat{\beta}_{\bullet}$. These results are shown in
-Table~\eqref{table_icparam3}.
+$(\beta_{\bullet})$ were equal to $\xi\hat{\beta}_{\bullet}$. This
+last means that our scenarios consider the first reduction in the
+effective transmission contact rates by NIPs. Using values in
+\Cref{table_icparam,table_icparam2}, we build confidence intervals for
+$\xi\hat{\beta}_{\bullet}$. These results are shown in
+\Cref{table_icparam3}.
 \begin{table}[h!]
 \begin{center}
 	\begin{tabular}{cc}
@@ -171,49 +172,3 @@ Table~\eqref{table_icparam3}.
   $\beta_{\bullet}$.}\label{table_icparam3}
 \end{center}
 \end{table}
-
-%\section{Parameter setting}
-
-%Parameter setting is done in two stages; in both stages,  we started off
-%the model (\eqref{model1}), which is simplified by adapting it to the
-%stage to be modeled. With the parameters obtained through the
-%adjustment,
-%the value of the basic reproductive number ($ R_0 $) will be obtained,
-%defined as the average number of secondary infections generated by an
-%infectious individual, during their entire period of infectivity, when
-%in
-%contact with a population of fully susceptible individuals.
-
-%For the second stage analyzed, corresponding to the quarantine period in
-%Mexico and which includes from March 23 to May 31, 2020, we used the
-%model (\eqref{model2}) considering one more class, which corresponds to
-%the population of people dying due to disease. Once normalized with
-%respect to the population of living individuals, the model is given by:
-
-%\begin{eqnarray}\label{model2}
-%S'(t)&=&\mu \bar{N} -\frac{\beta_S I_S+\beta_AI_A}{\bar{N}}S-\mu
-%S+\delta_R R %\nonumber \\
-%E'(t)&=&\frac{\beta_S I_S+\beta_AI_A}{\bar{N}}S-(\mu+\delta_E) E
-%\nonumber\\
-%I'_S(t)&=&p \delta_E E-(\mu+\alpha_S) I_S\\
-%I'_A(t)&=&(1-p) \delta_E E-(\mu+\alpha_A) I_A \nonumber\\
-%R'(t)&=& \theta \alpha_S I_S+\alpha_A I_A-(\mu+\delta_R) R  \nonumber\\
-%D'(t)&=&  (1-\theta) \alpha_S  I_S \nonumber
-%\end{eqnarray}
-%where $\bar{\epsilon}$ represents the reduction factor in infection
-%rates due to the quarantine effect.
-
-%For the model, the parameters $ \mu = 0.653 \times 10^{- 6} $ and $
-%\delta_E = 0.196078431 $ were set, which correspond to the reciprocals
-%of
-%the half-life, which is 75 years, and the estimated incubation period in
-%5.1 days \cite{peru2}. Now, using the next generation matrix method, the
-%basic reproductive number for model (\eqref{model2}) is given by:
-
-%\begin{equation}\label{R02}
-%R_{01}=\frac{p\delta_E\beta_S}{(\mu+\alpha_S)(\mu+\delta_E)}+\frac{(1-p)\delta_E\beta_A}{(\mu+\alpha_A)(\mu+\delta_E)},
-%\end{equation}
-
-
-
-%

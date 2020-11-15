@@ -1,56 +1,77 @@
-
-
 \begin{lemma}
-    The set  $\Omega=\{(S,E,I_S,I_A,R,D,V)\in \R^{7}_{+}: S+E+I_S+I_A+R+D+V=N\}$ is a 
-    positively invariant set for the system (\ref{model1}).
+    The set  $\Omega=\{(S,E,I_S,I_A,R,D,V)\in \R^{7}_{+}:
+    S+E+I_S+I_A+R+D+V=N\}$ is a positively invariant set for the system in
+    \Cref{model1}.
 \end{lemma}
 
 \begin{proof}
-To prove the lemma 1, let $\Omega=\{(S,E,I_S,I_A,R,D,V)\in \R^{7}_{+}: S+E+I_S+I_A+R+D+V=N\}$. First, note that for this model we have a closed population, which allows the solutions to be bounded superiorly by the total population. 
+    Let $\Omega=\{(S,E,I_S,I_A,R,D,V)\in \R^{7}_{+}: S+E+I_S+I_A+R+D+V=N\}$.
+    First, note that for this model we have a closed population, which allows
+    the solutions to be bounded superiorly by the total population.
 
-On the other hand, to show the positivity of the solutions with initial conditions $$(S (0), E (0), I_S (0), I_A (0), R (0), D (0), V (0)) \in \R^{7}_{+},$$ we look at the direction of the vector field on the hypercube faces in the direction of each variable in the system. For example, consider a point on the hypercube face where the variable $S = 0$ and look at the behavior of the vector field in the direction of the same variable $S$, to see if the solutions cross the face of the hypercube where we are taking the initial condition. So, notice that if $ S = 0 $, $ S '(t) > 0 $, so the solution points into the hypercube. Similarly, consider an initial condition of the form $ (S, 0, I_S, I_A, R, D, V) $ and note that $ E '(t)> 0 $ for all $ t> 0 $, which implies that the solutions of the system with initial conditions of the form $  (S, 0, I_S, I_A, R, D, V)  $ point towards the interior of the hypercube. Similarly, positivity can be tested for the rest of the variables. With this information, we have the following result.
+    On the other hand, to show the positivity of the solutions with initial
+    conditions $$(S (0), E (0), I_S (0), I_A (0), R (0), D (0), V (0)) \in
+    \R^{7}_{+},$$ we look at the direction of the vector field on the hypercube
+    faces in the direction of each variable in the system. For example,
+    consider a point on the hypercube face where the variable $S = 0$ and look
+    at the behavior of the vector field in the direction of the same variable
+    $S$, to see if the solutions cross the face of the hypercube where we are
+    taking the initial condition. So, notice that if $ S = 0 $, $ S '(t) > 0 $,
+    so the solution points into the hypercube. Similarly, consider an initial
+    condition of the form $ (S, 0, I_S, I_A, R, D, V) $ and note that $ E '(t)>
+    0 $ for all $ t> 0 $, which implies that the solutions of the system with
+    initial conditions of the form $  (S, 0, I_S, I_A, R, D, V)  $ point
+    towards the interior of the hypercube. Similarly, positivity can be tested
+    for the rest of the variables. With this information, we have the following
+    result.
 \end{proof}
 
 
-Now, continuing with the analysis of our model, it is easy to prove that the disease-free equilibrium is given by the point at $ X_0 \in \Omega $ of the form
+Now, continuing with the analysis of our model, it is easy to prove that the
+disease-free equilibrium is given by the point at $ X_0 \in \Omega $ of the form
 $$
-    X_0 =\left(
-            \frac{(\mu+\delta_V)\bar{N}}{\mu+\delta_V+\lambda_V}, 
-            0, 0, 0, 0,
-            \frac{\lambda_V \bar{N}}{\mu+\delta_V+\lambda_V}
-    \right).
+X_0 =\left(
+\frac{(\mu+\delta_V)\bar{N}}{\mu+\delta_V+\lambda_V},
+0, 0, 0, 0,
+\frac{\lambda_V \bar{N}}{\mu+\delta_V+\lambda_V}
+\right).
 $$
-On the other hand, following the ideas in \cite{Diekmann1990, Van2002}, the next generation matrix for this model, evaluated in the disease equilibrium point, is given by
+On the other hand, following ideas of \cite{Van2002}, the next generation
+matrix for this model, evaluated in the disease equilibrium point, is given by
 
 \begin{align}\label{NGM1}
     \begin{split}
-    \textbf{K}=
-    \begin{bmatrix}
-        \frac{\delta_E}{(\mu + \delta_E)}
-        \left(\frac{p\beta_S}{\mu + \alpha_S + \mu_S + \lambda_T} \right) (S^* + \epsilon V^*) 
-        & \frac{\beta_S (S^* + \epsilon V^*)}{(\mu + \alpha_S + \mu_S + \lambda_T)\bar{N}} 
-        & \frac{\beta_A (S^* + \epsilon V^*)}{(\mu + \alpha_A + \mu_A) \bar{N}}
-        \\
-        0 & 0 & 0 \\
-        0 & 0 & 0  \\
-    \end{bmatrix}
-\end{split}
+        \textbf{K}=
+        \begin{bmatrix}
+            \frac{\delta_E}{(\mu + \delta_E)}
+            \left(\frac{p\beta_S}{\mu + \alpha_S + \mu_S + \lambda_T} \right)
+            (S^* + \epsilon V^*)
+            & \frac{\beta_S (S^* + \epsilon V^*)}{(\mu + \alpha_S + \mu_S +
+            \lambda_T)\bar{N}}
+            & \frac{\beta_A (S^* + \epsilon V^*)}{(\mu + \alpha_A + \mu_A)
+            \bar{N}}
+            \\
+            0 & 0 & 0 \\
+            0 & 0 & 0  \\
+        \end{bmatrix}
+    \end{split}
 \end{align}
-where $S^*=\frac{(\mu+\delta_V)\bar{N}}{\mu+\delta_V+\lambda_V}$ 
-and $V^*=\frac{\lambda \bar{N}}{\mu+\delta_V+\lambda_V}$. Then, her spectral ratio is
+where $S^*=\frac{(\mu+\delta_V)\bar{N}}{\mu+\delta_V+\lambda_V}$
+and $V^*=\frac{\lambda \bar{N}}{\mu+\delta_V+\lambda_V}$. Then, the spectral
+radius of \textbf{K} is
 
 \begin{equation*}
     R_{V}=R_S+R_A
 \end{equation*}
 with
-
-\begin{eqnarray*}
-    R_S &=& \frac{p\beta_S\delta_E(\mu+\delta_V+(1-\epsilon)                 
-            \lambda_V)}{(\mu+\delta_E)(\mu+\delta_V+\lambda_V)(\mu+\alpha_S+\mu_S+\lambda_T)}
-    \\ 
-    R_A &=& \frac{(1-p) \beta_A \delta_E (\mu + \delta_V + (1-\epsilon)
-            \lambda_V)}{(\mu+\delta_E)(\mu + \delta_V + \lambda_V)(\mu + \alpha_A + \mu_A)}
-\end{eqnarray*}
+\begin{align*}
+    R_S &= \frac{p\beta_S\delta_E(\mu+\delta_V+(1-\epsilon)
+        \lambda_V)}{(\mu+\delta_E)(\mu+\delta_V+\lambda_V)(\mu+\alpha_S)}
+    \\
+    R_A &= \frac{(1-p) \beta_A \delta_E (\mu + \delta_V + (1-\epsilon)
+        \lambda_V)}{(\mu+\delta_E)(\mu + \delta_V + \lambda_V)(\mu + \alpha_A
+        )}.
+\end{align*}
 
 
 
