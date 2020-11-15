@@ -21,7 +21,11 @@
 \usepackage{xargs}
 \usepackage{dirtytalk}
 \usepackage[pdftex,dvipsnames]{xcolor}
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage[colorinlistoftodos,
+    prependcaption,
+    textsize=tiny]{todonotes}
+\usepackage{mathtools, cuted}
+\usepackage[nameinlink,noabbrev]{cleveref}
 \graphicspath{{./plotly_chart_studio_figures/}}
 \graphicspath{{./figures/}}
 %
@@ -52,7 +56,6 @@
 }
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \hypersetup{colorlinks = true, allcolors = blue}
-\usepackage[nameinlink,noabbrev]{cleveref}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\e}{\varepsilon}
 \newcommand{\f}{\mathfrak{F}}
@@ -65,20 +68,11 @@
 \begin{document}
     \begin{frontmatter}
         \title{
-            Optimal vaccination preventive policies for COVID-19\\
+            COVID-19 optimal vaccination policies:
+            a modeling study on efficacy, natural and
+            vaccine-induced immunity responses
         }
-        \author[add:conacyt_unison]{%
-            Sa\'ul D\'iaz-Infante%
-            \corref{corresponding_author}%
-        }%
-        \ead{saul.diazinfante@unison.mx}
-        \address[add:conacyt_unison]{
-            CONACYT-Universidad de Sonora,
-            Departamento de Matem\'aticas,
-            Blvd. Luis Encinas y Rosales S/N,
-            Hermosillo, Sonora, M\'exico, C.P. 83000.
-        }
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \author[add:unison]%
         {Manuel Adrian Acu\~na-Zegarra}
         \ead{adrian.acuna@unison.mx}
@@ -87,7 +81,18 @@
             Blvd. Luis Encinas y Rosales S/N,
             Hermosillo, Sonora, M\'exico, C.P. 83000.
         }
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \author[add:conacyt_unison]{%
+        Sa\'ul D\'iaz-Infante%
+        \corref{corresponding_author}%
+    }%
+    \ead{saul.diazinfante@unison.mx}
+    \address[add:conacyt_unison]{
+        CONACYT-Universidad de Sonora,
+        Departamento de Matem\'aticas,
+        Blvd. Luis Encinas y Rosales S/N,
+        Hermosillo, Sonora, M\'exico, C.P. 83000.
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \author[add:itson]%
             {David Baca-Carrasco}
             \ead{david.baca@itson.edu.mx}
@@ -112,13 +117,16 @@
     \section{Introduction}
         \input{introduction}
     \section{Mathematical model formulation}
+        \label{Sec:MathematicalModelFormulation}
         \input{model_formulation}
     \section{Model Analysis}
-        %\textbf{[David]}
+        \label{Sec:Rv_Analysis}
         \input{analysis}
     \section{Optimal Vaccination policies}
+        \label{Sec:OptimalVaccinePolicies}
         \input{optimal_controll_modeling}
     \section{Numerical experiments}
+        \label{Sec:NumericalExperiment}
         \input{numerical_experiments}
     \section{Conclusions and Discussions}
         \input{conclusions}
@@ -128,6 +136,8 @@
         \input{author_contributions}
     \section*{Acknowledgments}
         \input{acknowledgments}
+    \section*{Conflicts of interest}
+        The authors have no competing interests.
     \bibliographystyle{elsarticle-num-names}
     \bibliography{Vaccination_Bibliography}
     \appendix
