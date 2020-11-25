@@ -46,13 +46,13 @@ class CovidNumericalModel(NumericsCovid19):
 
     def load_pkl_data(self,
                       uncontrolled_solution_path=
-                      './vaccination_pkl_solutions/' +
+                      './vaccination_pkl_solutions/pkl/' +
                       'no_vaccination_data_solution.pkl',
                       optimal_controlled_solution=
-                      './vaccination_pkl_solutions/' +
+                      './vaccination_pkl_solutions/pkl/' +
                       'bocop_solution.pkl',
                       constant_controlled_solution=
-                      './vaccination_pkl_solutions/' +
+                      './vaccination_pkl_solutions/pkl/' +
                       'constant_vaccination_' +
                       'data_solution.pkl',
                       vaccination_parameters_json_file=
@@ -166,7 +166,7 @@ class CovidNumericalModel(NumericsCovid19):
 
     def get_solution_data(self,
                           out_put_file_prefix_name=
-                          './vaccination_pkl_solutions' + '/bocop'
+                          './vaccination_pkl_solutions/'
                           ):
         """
 
@@ -285,15 +285,20 @@ class CovidNumericalModel(NumericsCovid19):
         data = np.c_[t_s, state_control_data, control]
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_%M")
-        path_pkl = out_put_file_prefix_name + '_' + dt_string + '.pkl'
-        path_csv = out_put_file_prefix_name + '_' + dt_string + '.csv'
+        run_tag = self.simulation_run_tagger()
+        path_pkl = out_put_file_prefix_name + '/pkl/' + 'bocop_solution' + \
+                   '.pkl'
+        path_csv = out_put_file_prefix_name + '/csv/' + 'bocop_solution' + \
+                   '.csv'
         col_names = ['time', 's', 'e',
                      'i_s', 'i_a', 'r', 'd', 'v',
                      'x_vac', 'y_inc', 'x_zero',
                      'u_V']
         df_bocop_data = pd.DataFrame(data=data, columns=col_names)
-        file_name = out_put_file_prefix_name + '_solution.pkl'
-        file_name_csv = out_put_file_prefix_name + '_solution.csv'
+        file_name = out_put_file_prefix_name + '/pkl/' + 'bocop_' + run_tag + \
+                    dt_string + '_solution.pkl'
+        file_name_csv = out_put_file_prefix_name + '/csv/' + 'bocop_' + \
+                        run_tag + '_solution.csv'
         df_bocop_data.to_pickle(file_name)
         df_bocop_data.to_csv(file_name_csv)
         df_bocop_data.to_pickle(path_pkl)
@@ -303,13 +308,18 @@ class CovidNumericalModel(NumericsCovid19):
     def simulation_run_tagger(self):
         prm = self.parameters
         cov_tag = str(prm['coverage'])
+        time_horizon_tag = str(prm['T'])
         delta_v_tag = str(prm['delta_v'])
+        delta_r_tag = str(prm['delta_r'])
         epsilon_tag = str(prm['epsilon'])
-        run_tag = 'run_' + \
-                  'coverage_' + cov_tag + \
-                  'delta_v_' + delta_v_tag + \
-                  'epsilon_' + epsilon_tag
+        run_tag = 'run' + \
+                  '_coverage_' + cov_tag + \
+                  '_tHor_' + time_horizon_tag + \
+                  '_delta_r_' + delta_r_tag + \
+                  '_delta_v_' + delta_v_tag + \
+                  '_epsilon_' + epsilon_tag
         self.run_tag = run_tag
+        return run_tag
 
     def reproductive_number(self):
         beta_s = self.parameters['beta_s']
@@ -528,7 +538,7 @@ class CovidNumericalModel(NumericsCovid19):
                       dash='solid'),
             legendgroup='Prevalence',
             name='vaccination',
-            showlegend=True
+            showlegend=False
         )
         trace_optimal_i_s = go.Scatter(
             x=df_oc['time'],
@@ -1110,7 +1120,7 @@ class CovidNumericalModel(NumericsCovid19):
                       dash='solid'),
             legendgroup='Prevalence',
             name='vaccination',
-            showlegend=True
+            showlegend=False
         )
         trace_optimal_i_s = go.Scatter(
             x=df_oc['time'],
@@ -1207,7 +1217,7 @@ class CovidNumericalModel(NumericsCovid19):
                 yref=''
                      'paper',
                 x=1.23,
-                y=0.82)
+                y=0.87)
         )
         # ----------------------------------------------------------------------
         # Saved Beds
@@ -1222,29 +1232,44 @@ class CovidNumericalModel(NumericsCovid19):
                 xref='paper',
                 yref='paper',
                 x=1.23,
-                y=0.67
+                y=0.7
             )
         )
+        delta_r_label = round(prm["delta_r"], 2)
         delta_v_label = round(prm["delta_v"], 2)
+
         if delta_v_label == 0.0:
             delta_v_label = 'lifelong'
+        if delta_r_label == 0.0:
+            delta_r_label = 0.0
+        else:
+            delta_r_label = delta_r_label ** (-1)
+
         data_label = {'eps': prm["epsilon"],
+                      'delta_r': delta_r_label,
                       'delta_v': delta_v_label,
                       'time_unit': 'days'}
 
         if delta_v_label == 'lifelong':
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V= \mathsf{{{' \
-                r':>9}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \mathsf{{{:>9}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'])
         else:
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V={:1.1f} \ \mathsf{{{' \
-                r':>5}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \ \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \ \mathsf{{{:>5}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'],
-                    data_label['time_unit'])
+                    data_label['time_unit'],
+                )
         prevalence_fig.add_annotation(
             dict(
                 text=str_vaccination_par,
@@ -1324,27 +1349,45 @@ class CovidNumericalModel(NumericsCovid19):
             i['font'] = dict(family="Arial", size=10)
         if not os.path.exists("images"):
             os.mkdir("images")
-        # prevalence_fig.write_image("images/prevalence_fig1.pdf")
-        golden_width = 718  # width in px
+        golden_width = 748  # 718  # width in px
         golden_ratio = 1.618
-        # pio.kaleido.scope.default_format = "pdf"
-        # pio.kaleido.scope.default_width = golden_width
-        # pio.kaleido.scope.default_height = golden_width / golden_ratio
-        # pio.kaleido.scope.default_scale = .50
-        # prevalence_fig.to_image(format="pdf", engine="kaleido")
-        # prevalence_fig.write_image("images/prevalence_fig.pdf")
-        # TODO:  Edit legend respect to groups
+        golden_height = golden_width / golden_ratio
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_")
         run_tag = self.run_tag
-        path_fig = fig_file_name_prefix + \
-                   '_' + \
-                   dt_string + \
-                   run_tag + '.pdf'
+        path_fig_png = fig_file_name_prefix + \
+                       '_' + \
+                       dt_string + \
+                       run_tag + '.png'
+        path_fig_pdf = fig_file_name_prefix + \
+                       '_' + \
+                       dt_string + \
+                       run_tag + '.pdf'
         # # print(path_fig)
-        pio.write_image(prevalence_fig, "./images/" + path_fig)
-        pio.write_image(prevalence_fig, "./images/prevalence_fig.pdf")
-        pio.write_image(prevalence_fig, "./images/prevalence_fig.png")
+        pio.write_image(prevalence_fig,
+                        "./images/png/prevalence/" + path_fig_png,
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )
+        pio.write_image(prevalence_fig,
+                        "./images/pdf/prevalence/" + path_fig_pdf,
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )
+        pio.write_image(prevalence_fig,
+                        "./images/pdf/prevalence/prevalence_fig.pdf",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )
+        pio.write_image(prevalence_fig,
+                        "./images/png/prevalence/prevalence_fig.png",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )
         # prevalence_fig.show()
 
     # --------------------------------------------------------------------------
@@ -1353,7 +1396,6 @@ class CovidNumericalModel(NumericsCovid19):
 
     def sage_plot_optimal_signal(self,
                                  fig_file_name_prefix="optimal_signal_fig"):
-
         n_cdmx = 100000
         prm = self.parameters
         lambda_v_base = prm["lambda_v"]
@@ -1366,7 +1408,6 @@ class CovidNumericalModel(NumericsCovid19):
         df_constant_vaccination = pd.read_pickle(
             constant_controlled_solution_file)
         fill_color_pallet = bokeh_palettes.all_palettes['Category20c'][20]
-
         optimal_signal_fig = make_subplots(
             rows=4, cols=2,
             specs=[
@@ -1446,7 +1487,13 @@ class CovidNumericalModel(NumericsCovid19):
         #######################################################################
         # Optimal solution trace
         #######################################################################
-        x_vac_prevalence = df_oc['s'] + df_oc['e'] + df_oc['i_a'] + df_oc['r']
+        opt_x_vac_prevalence = df_oc['s'] + df_oc['e'] \
+                               + df_oc['i_a'] + df_oc['r']
+        cst_x_vac_prevalence = df_constant_vaccination['s'] + \
+                               df_constant_vaccination['e'] + \
+                               df_constant_vaccination['i_a'] + \
+                               df_constant_vaccination['r']
+
         lambda_base_v_t = lambda_v_base * np.ones(df_oc["u_V"].shape[0])
         trace_optimal_vaccination_policy = go.Scatter(
             x=df_oc['time'],
@@ -1478,7 +1525,7 @@ class CovidNumericalModel(NumericsCovid19):
         )
         trace_optimal_vaccination_action = go.Scatter(
             x=df_oc['time'],
-            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence,
+            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * opt_x_vac_prevalence,
             fill='tozeroy',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[19]), 0.5)}",
             line=dict(color=fill_color_pallet[16], width=0.7),
@@ -1488,8 +1535,7 @@ class CovidNumericalModel(NumericsCovid19):
         )
         trace_vaccination_base_action = go.Scatter(
             x=df_oc['time'],
-            y=n_cdmx * x_vac_prevalence * lambda_v_base * \
-              np.ones(df_oc["u_V"].shape[0]),
+            y=n_cdmx * lambda_v_base * cst_x_vac_prevalence,
             line=dict(color=fill_color_pallet[0], width=0.7, dash='dot'),
             fill='tozeroy',
             fillcolor=f"rgba{(*hex_to_rgb(fill_color_pallet[0]), 0.2)}",
@@ -1497,52 +1543,44 @@ class CovidNumericalModel(NumericsCovid19):
             showlegend=True
         )
         #
-        #
-        #
-        unitary_vaccine_price = 10.0
+        unitary_vaccine_price = 6.1942
         base_vaccine_price = integrate.cumtrapz(
             x=df_oc['time'],
-            y=n_cdmx * x_vac_prevalence * lambda_v_base * \
-              np.ones(df_oc["u_V"].shape[0]) * unitary_vaccine_price
+            y=(n_cdmx * lambda_v_base * unitary_vaccine_price) * \
+              cst_x_vac_prevalence
         )
         total_base_vaccination_price = \
             round(decimal.Decimal(base_vaccine_price[-1]), 0)
-        optimal_signal_fig.add_annotation(
-            dict(
-                text=str(total_base_vaccination_price) + '$',
-                align='left',
-                font=dict(family="Arial",
-                          size=10,
-                          color="LightSeaGreen"
-                          ),
-                showarrow=False,
-                xref='paper',
-                yref='paper',
-                x=0.08,
-                y=0.01)
-        )
         opt_vaccine_price = integrate.cumtrapz(
             x=df_oc['time'],
-            y=n_cdmx * (df_oc['u_V'] + lambda_base_v_t) * x_vac_prevalence
+            y=n_cdmx * unitary_vaccine_price * \
+              (df_oc['u_V'] + lambda_base_v_t) * opt_x_vac_prevalence
         )
         total_opt_vaccination_price = \
             round(decimal.Decimal(opt_vaccine_price[-1]), 0)
+        str_prices = '<b>Cost:</b><br>' + \
+                     '(CP): ' + str(total_base_vaccination_price) + \
+                     ' dls<br>' + \
+                     '(OP): ' + str(total_opt_vaccination_price) + \
+                     ' dls<br>' + \
+                     'price/dose: 6.20 dls'
+        #
         optimal_signal_fig.add_annotation(
             dict(
-                text=str(total_opt_vaccination_price) + '$',
+                text=str_prices,
                 align='left',
                 font=dict(family="Arial",
-                          size=10,
+                          size=12,
                           color=fill_color_pallet[16]
                           ),
                 showarrow=False,
                 xref='paper',
                 yref='paper',
-                x=.3,
-                y=0.2)
+                x=1.3,
+                y=0.01)
         )
-
-#
+        #
+        #
         optimal_signal_fig.append_trace(trace_constant_vac_coverage, 1, 1)
         optimal_signal_fig.append_trace(trace_optimal_vac_coverage, 1, 1)
         optimal_signal_fig.append_trace(trace_no_vac_cost, 1, 2)
@@ -1647,26 +1685,39 @@ class CovidNumericalModel(NumericsCovid19):
         c_r_0 = decimal.Decimal(r_0)
         c_r_v_0 = decimal.Decimal(r_v_0)
         c_r_opt_v_0 = decimal.Decimal(r_opt_v_0)
+        delta_r_label = round(prm["delta_r"], 2)
         delta_v_label = round(prm["delta_v"], 2)
         if delta_v_label == 0.0:
             delta_v_label = 'lifelong'
+        if delta_r_label == 0.0:
+            delta_r_label = 0.0
+        else:
+            delta_r_label = delta_r_label ** (-1)
         data_label = {'eps': prm["epsilon"],
+                      'delta_r': delta_r_label,
                       'delta_v': delta_v_label,
                       'time_unit': 'days'}
 
         if delta_v_label == 'lifelong':
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V= \mathsf{{{' \
-                r':>9}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \ \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \ \mathsf{{{:>9}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'])
         else:
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V={:1.1f} \ \mathsf{{{' \
-                r':>5}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \mathsf{{{:>5}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'],
-                    data_label['time_unit'])
+                    data_label['time_unit'],
+                )
         str_policy_legend = '<b>Vaccination Policy:</b><br>' + \
                             '    Optimal (OP)<br>' + \
                             '    Constant (CP)'
@@ -1678,13 +1729,11 @@ class CovidNumericalModel(NumericsCovid19):
                           size=12),
                 showarrow=False,
                 xref='paper',
-                yref=''
-                     'paper',
+                yref='paper',
                 x=1.325,
-                y=0.05
+                y=0.25
             )
         )
-
         optimal_signal_fig.add_annotation(
             dict(
                 text=str_vaccination_par,
@@ -1694,7 +1743,7 @@ class CovidNumericalModel(NumericsCovid19):
                 showarrow=False,
                 xref='paper',
                 yref='paper',
-                x=1.085,
+                x=.85,
                 y=1.24,
                 bordercolor="Black",
                 borderwidth=1
@@ -1765,13 +1814,39 @@ class CovidNumericalModel(NumericsCovid19):
             os.mkdir("images")
         golden_width = 718  # width in px
         golden_ratio = 1.618
+        golden_width = 748  # 718  # width in px
+        golden_ratio = 1.618
+        golden_height = golden_width / golden_ratio
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_")
         run_tag = self.run_tag
-        path_fig = fig_file_name_prefix + \
-                   '_' + \
-                   dt_string + \
-                   run_tag + '.png'
-        pio.write_image(optimal_signal_fig, "images/" + path_fig)
-        pio.write_image(optimal_signal_fig, "images/optimal_signal_fig.pdf")
-        pio.write_image(optimal_signal_fig, "images/optimal_signal_fig.png")
+        path_fig_png = fig_file_name_prefix + \
+                       '_' + \
+                       dt_string + \
+                       run_tag + '.png'
+        path_fig_pdf = fig_file_name_prefix + \
+                       '_' + \
+                       dt_string + \
+                       run_tag + '.pdf'
+        pio.write_image(optimal_signal_fig,
+                        "images/png/opt_signal/" + path_fig_png,
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10)
+        pio.write_image(optimal_signal_fig,
+                        "images/pdf/opt_signal/" + path_fig_pdf,
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10)
+        pio.write_image(optimal_signal_fig,
+                        "images/pdf/opt_signal/optimal_signal_fig.pdf",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )
+        pio.write_image(optimal_signal_fig,
+                        "images/png/opt_signal/optimal_signal_fig.png",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10
+                        )

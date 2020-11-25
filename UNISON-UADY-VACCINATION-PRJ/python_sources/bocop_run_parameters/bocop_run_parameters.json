@@ -16,7 +16,7 @@
     "batch.nrange": 3,
     "batch.lowerbound": 0,
     "batch.upperbound": 0,
-    "batch.directory": "epsilon_0910",
-    "solution.file": "epsilon_0910/epsilon-7.000000e-01.sol",
-    "final_time": 300.0
+    "batch.directory": "Epsilon_HorizonTime_180",
+    "solution.file": "Epsilon_HorizonTime_180/epsilon-7.000000e-01.sol",
+    "final_time": 180.0
 }

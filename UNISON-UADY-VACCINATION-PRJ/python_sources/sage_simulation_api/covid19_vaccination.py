@@ -241,6 +241,80 @@ def vaccination_population_plot(r_zero,
     return
 
 
+def base_dynamics_plot(data_file_name='base_dynamics.pkl',
+                       fig_file_name='base_model_solution.pdf'):
+    df_not = pd.read_pickle("base_dynamics.pkl")
+    print(data_file_name)
+    plt.figure(0)
+    # plt.ion()
+    ax_l = plt.subplot2grid((3, 3), (0, 0))
+    ax_s = plt.subplot2grid((3, 3), (0, 1))
+    ax_e = plt.subplot2grid((3, 3), (0, 2))
+    #
+    ax_i_s = plt.subplot2grid((3, 3), (1, 0))
+    ax_i_a = plt.subplot2grid((3, 3), (1, 1))
+    ax_h = plt.subplot2grid((3, 3), (1, 2))
+    #
+    ax_r = plt.subplot2grid((3, 3), (2, 0))
+    ax_d = plt.subplot2grid((3, 3), (2, 1))
+    ax_cl = plt.subplot2grid((3, 3), (2, 2))
+    #
+    #
+    # prm = load_parameters("vaccination_parameters.json")
+    n_cdmx_vm = 26446435.0
+   #
+    n_whole = 1.0  # without rescaling population
+    n_whole = n_cdmx_vm
+    t = df_not['time']
+    l = df_not['l']
+    s = df_not['s']
+    e = df_not['e']
+    i_s = df_not['i_s']
+    i_a = df_not['i_a']
+    h = df_not['h']
+    r = df_not['r']
+    d = df_not['d']
+    cl = l + s + e + i_s + i_a + h + r + d
+    ax_l.plot(t, n_whole * df_not['l'], 'k--')
+    ax_l.legend(loc=0)
+    ax_l.title.set_text('Lockdown')
+    #
+    ax_s.plot(t, n_whole * df_not['s'], 'k--')
+    ax_s.legend(loc=0)
+    ax_s.title.set_text('Susceptible')
+    #
+    ax_e.plot(t, n_whole * df_not['e'], 'k--')
+    ax_e.legend(loc=0)
+    ax_e.title.set_text('Exposed')
+    #
+    ax_i_s.plot(t, n_whole * df_not['i_s'], 'k--')
+    ax_i_s.legend(loc=0)
+    ax_i_s.title.set_text('Symptomatic')
+    #
+    ax_i_a.plot(t, n_whole * df_not['i_a'], 'k--')
+    ax_i_a.legend(loc=0)
+    ax_i_a.title.set_text('Asymptomatic')
+    #
+    ax_h.plot(t, n_whole * df_not['h'], 'k--')
+    ax_h.legend(loc=0)
+    ax_h.title.set_text('Hospitalized')
+    #
+    ax_r.plot(t, n_whole * df_not['r'], 'k--')
+    ax_r.legend(loc=0)
+    ax_r.title.set_text('Recovered')
+    #
+    ax_d.plot(t, n_whole * df_not['d'], 'k--')
+    ax_d.legend(loc=0)
+    ax_d.title.set_text('Deaths')
+    #
+    ax_cl.plot(t, cl)
+    ax_cl.legend(loc=0)
+    ax_cl.title.set_text('CL')
+    plt.tight_layout()
+    plt.savefig(fig_file_name)
+    plt.show()
+
+
 def reproductive_number(**kwargs):
     beta_s = kwargs['beta_s']
     beta_a = kwargs['beta_a']
@@ -262,12 +336,47 @@ def reproductive_number(**kwargs):
     return [r_00, r_v0]
 
 
-def rhs_vaccination_treatment(t, y, beta_s, beta_a, epsilon,
-                              delta_e, delta_v, delta_r,
-                              p,
-                              alpha_a, alpha_t, alpha_s,
-                              mu, theta, mu_t,
-                              lambda_v, lambda_t):
+def rhs_base_dynamics(t, y,
+                      beta_s,
+                      beta_a,
+                      kappa,
+                      delta_l,
+                      delta_h,
+                      delta_r,
+                      p,
+                      gamma_a,
+                      gamma_s,
+                      gamma_h,
+                      mu,
+                      mu_i_s,
+                      mu_h,
+                      theta,
+                      var_epsilon
+                      ):
+    #
+    x_l, x_s, x_e, x_i_s, x_i_a, x_h, x_r, x_d = y
+    n_star = x_l + x_s + x_e + x_i_s + x_i_a + x_h + x_r
+    infection_force = (beta_s * x_i_s + beta_a * x_i_a) / n_star
+    f_l = theta * mu * n_star - \
+          (var_epsilon * infection_force + delta_l + mu) * x_l
+    f_s = (1.0 - theta) * mu * n_star + delta_l * x_l + delta_r * x_r - \
+          (infection_force + mu) * x_s
+    f_e = infection_force * (var_epsilon * x_l + x_s) - \
+            (kappa + mu) * x_e
+    f_i_s = p * kappa * x_e - (gamma_s + delta_h + mu) * x_i_s
+    f_i_a = (1.0 - p) * kappa * x_e - (gamma_a + mu) * x_i_a
+    f_h = delta_h * x_i_s - (gamma_h + mu_h + mu) * x_h
+    f_r = gamma_s * x_i_s + gamma_a * x_i_a + gamma_h * x_h - \
+        (delta_r + mu) * x_r
+    f_d = mu_h * x_h
+    f = np.array([f_l, f_s, f_e, f_i_s, f_i_a, f_h, f_r, f_d])
+    return f
+
+
+def rhs_vaccination(t, y, beta_s, beta_a, epsilon,
+                        delta_e, delta_v, delta_r,
+                        p, alpha_a, alpha_t, alpha_s,
+                        mu, theta, mu_t, lambda_v):
     """"
         Version designed in May 22-2020, 
         according to the normalized version and
@@ -296,14 +405,14 @@ def rhs_vaccination_treatment(t, y, beta_s, beta_a, epsilon,
         @param y:
         @type t: object
     """
-    s, e, i_s, i_a, r, d, v, treat, x_vaccine_counter = y
+    s, e, i_s, i_a, h, r, d, v, x_vaccine_counter = y
     #
     a = 1e1
     u_v = 1 / (1 + a * t)
     u_t = 1 / (1 + a * t)
-    n_bar = s + e + i_s + i_a + r + v + treat
+    n_bar = s + e + i_s + i_a + r + h +v
     force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
-    rhs_s = mu * n_bar - force_infection * s - (mu + (lambda_v * u_v)) * s \
+    rhs_s = mu * n_bar - force_infection * s - (mu + (lambda_v + u_v)) * s \
             + delta_v * v + delta_r * r
     rhs_e = force_infection * (epsilon * v + s) - (mu + delta_e) * e
     rhs_i_s = p * delta_e * e - (mu + theta + alpha_s + (lambda_t * u_t)) * i_s

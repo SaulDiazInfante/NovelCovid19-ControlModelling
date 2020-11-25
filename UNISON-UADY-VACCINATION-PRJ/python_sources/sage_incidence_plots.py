@@ -238,7 +238,7 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                 xref='paper',
                 yref='paper',
                 x=1.21,
-                y=0.82)
+                y=0.8)
         )
         # ----------------------------------------------------------------------
         # Saved Beds
@@ -253,30 +253,45 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                 xref='paper',
                 yref='paper',
                 x=1.23,
-                y=0.67
+                y=0.6
             )
         )
 #
+        delta_r_label = round(prm["delta_r"], 2)
         delta_v_label = round(prm["delta_v"], 2)
+
         if delta_v_label == 0.0:
             delta_v_label = 'lifelong'
+        if delta_r_label == 0.0:
+            delta_r_label = 0.0 # 'lifelong'
+        else:
+            delta_r_label = delta_r_label ** (-1)
+#
         data_label = {'eps': prm["epsilon"],
+                      'delta_r': delta_r_label,
                       'delta_v': delta_v_label,
                       'time_unit': 'days'}
-
+#
         if delta_v_label == 'lifelong':
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V= \mathsf{{{' \
-                r':>9}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \mathsf{{{:>9}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'])
         else:
             str_vaccination_par = \
-                r'$\epsilon={:1.2f}, \quad 1 / \delta_V={:1.1f} \ \mathsf{{{' \
-                r':>5}}}$'.format(
+                r'$\epsilon={:1.2f},' \
+                r' \quad 1 / \delta_R={:1.1f} \ \mathsf{{{:>5}}}' \
+                r' \quad 1 / \delta_V={:1.1f} \ \mathsf{{{:>5}}}$'.format(
                     data_label['eps'],
+                    data_label['delta_r'],
+                    data_label['time_unit'],
                     data_label['delta_v'],
-                    data_label['time_unit'])
+                    data_label['time_unit'],
+                )
         incidence_fig.add_annotation(
             dict(
                 text=str_vaccination_par,
@@ -358,13 +373,13 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
         if not os.path.exists("images"):
             os.mkdir("images")
         # incidence_fig.write_image("images/incidence_fig1.pdf")
-        golden_width = 1436  # 718  # width in px
+        golden_width = 748  # 718  # width in px
         golden_ratio = 1.618
         golden_height = golden_width / golden_ratio
         time_now = datetime.now()
         dt_string = time_now.strftime("%b-%d-%Y_%H_")
         run_tag = self.run_tag
-        path_fig = fig_file_name_prefix + \
+        path_fig_pdf = fig_file_name_prefix + \
                    '_' + \
                    dt_string + \
                    run_tag + '.pdf'
@@ -372,21 +387,33 @@ class CovidNumericalModelIncidence(CovidNumericalModel):
                    '_' + \
                    dt_string + \
                    run_tag + '.png'
-        print(path_fig)
-        pio.write_image(incidence_fig, "./images/" + path_fig)
+        # print(path_fig_png)
         pio.write_image(incidence_fig,
-                        file="./images/" + path_fig_png,
+                        "./images/pdf/incidence/" + path_fig_pdf,
                         width=golden_width,
-                        height=golden_height)
+                        height=golden_height,
+                        scale=10)
         pio.write_image(incidence_fig,
-                        file="./images/incidence_fig.pdf",
+                        file="./images/png/incidence/" + path_fig_png,
                         width=golden_width,
-                        height=golden_height)
+                        height=golden_height,
+                        scale=10)
         pio.write_image(incidence_fig,
-                        file="./images/incidence_fig.png",
+                        file="./images/pdf/incidence/incidence_fig.pdf",
                         width=golden_width,
-                        height=golden_height)
-
-        print(path_fig)
+                        height=golden_height,
+                        scale=10)
+        pio.write_image(incidence_fig,
+                        file="./images/png/incidence/incidence_fig.png",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10)
+        pio.write_image(incidence_fig,
+                        file="./images/pdf/incidence/incidence_fig.pdf",
+                        width=golden_width,
+                        height=golden_height,
+                        scale=10)
+        # TODO: Fix  parameters_legend
+        # print(path_fig)
         # TODO:  Edit legend respect to groups
         # incidence_fig.show()

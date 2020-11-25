@@ -1,43 +1,94 @@
-Currently, vaccination is the unique strategy to eradicate COVID-19.
-However, its competence is restricted to several factors such as its
-distribution, stocks, politics, vaccination efforts among others.
-A good distribution or application strategy of these drugs is imperative to
-manage the available resources, especially in developing countries. In order
-to design optimal vaccination strategies, a mathematical model has been
-proposed to describe the transmission dynamics of COVID-19, which also
-includes vaccination dynamics. Our aim is to provide vaccination policies that
-minimize reported deaths and optimize resource consumption.
 
-Similar to other articles with the same approach, our model presents a
-reproductive vaccination number $(\mathcal{R}_{v})$ that depends on
-$\mathcal{R}_{0}$ \cite{Alexander2004}. Here, we can see the importance of the
-parameters related to vaccination dynamics to reduce $\mathcal{R}_{v}$.
-However, according to our simulation parameters setup, to obtain
-$\mathcal{R}_{v} < 1$ we need impractical vaccination rates. This last can be
-improved when implementing NPIs, which can be modeled by transmission contact
-rates reduction.
+At the date of writing this article, humankind lacks strategies to
+eradicate COVID-19.  Although NPIs implemented in most countries prevent
+citizens from being infected, these strategies leave them
+susceptible\textemdash people can not develop immunity to face futures waves.
+Thus, vaccination becomes the primary pharmaceutical measure to recover life's
+style before the pandemic. However, this vaccine has to be effective and well
+implemented in global
+vaccination programs. Thus new challenges as its distribution, stocks,
+politics, vaccination efforts, among others, emerge. A fair distribution and
+application strategy is imperative to manage the available resources,
+especially in developing countries.
 
-To show our scenario of optimal control strategies, we consider Mexico City as
-the study scenario. Using the data reported by the onset of symptoms, some
-parameters were estimated, and others from the literature were set. Our results
-capture the restriction of health care centers that is, do not overcome the
-available number of beds. Given a target coverage at final time $T$, we
-illustrate that an optimal vaccination strategy reduces the number of fatalities
-compared to the application of the constant vaccination one.
+%\paragraph{Statement of principal findings}
+We established an optimal control problem to design vaccination strategies
+where vaccination modulates dynamics susceptibility through an imperfect
+vaccine. We aimed to provide vaccination policies that minimize the lost life
+years due to disability or premature death by COVID-19, determined by
+cumulative deaths and cumulative incidence. Policies' acts in the minimization
+of infected people's prevalence and the number of deaths.
 
-The present work can be extended in different fronts such as i) the evaluation
-of the inclusion of NPIs at the same time vaccination implementation takes
-place; ii) the consequences of applying the vaccination strategies during
-different phases of an outbreak; iii) the effects of using double vaccination
-doses; iv) the application of different vaccines to distinct groups of
-individuals, v) vaccine application with knowledge of the percentage of the
-population that has resulted positive in a seroprevalence study and vi) to
-improve the efficiency of the optimal control strategies by including a
-comorbidity class in the model.
+%\paragraph{Strengths and weaknesses of the study}
+Our simulations suggest a better response with optimal vaccination policies
+than policies with a constant vaccination rate. For example, the optimal policy
+schedule in scenario \textbf{SCN-1} increases the number of doses in the
+scheme's initial stage. This vaccination scheme improves the mitigation of the
+symptomatic prevalence, the incidence of deaths, and in consequence, the years
+of life lost quantified in DALYs.
+%
 
-Can we say something about the immunity period provided by a vaccine? Does a
-better knowledge provides with more elements to establish a better control
-strategy?
+Emerging press releases reported that Pfizer's, Russian Sputnik V,
+and Moderna's coronavirus vaccines reach efficacy over \SI{90}{\percent}
+\cite{cnn_health_2020,reuters2020, cnn_health_2020b}. However,
+this information remains under development. Thus vaccine efficacy scenarios of
+\SI{50}{\percent}, \SI{70}{\percent}, and \SI{90}{\percent} \textbf{(SCN-2)}
+illustrate the effect on optimal vaccination policies' schedule by pointing
+when to intensify the number of doses. According to the time horizon of one
+year and coverage of 50\%, our numerical experiments suggest that
+\SI{90}{\percent} vaccine efficacy reduces around three times the number of
+deaths regarding the dynamics without vaccination. Likewise, these vaccines
+reach a gain of eighteen times in the years of life lost compared to the
+without vaccination scenario.
 
-We need to include a short discussion of the usual way a control is implemented
-and the main difference with the approach in this work.
+
+Our numerical experiments also illustrate vaccine-induced immunity's
+relation between the reproductive vaccination number $R_V$ and vaccination
+policies \textbf{(SCN-3)}. Considering an outbreak with a reproductive number
+$R_0$ of \num{1.794 93}, vaccine-induced immunity of \num{365} or
+\SI{730}{days} implies a reduction of $R_0$\textemdash dropping its value
+respectively to  \num{1.139130} and \num{.86756}.
+Likewise, optimal policies linked to vaccine-induced immunities enhance
+symptomatic prevalence mitigation and the number of saved lives. Moreover,
+according to the initial number of deaths, the scenario without vaccination
+accumulates \num{503} deads compared to \num{211} and \num{206} deads of the
+underlying dynamics with vaccine-induced immunities.
+
+%\paragraph{Strengths and weaknesses about other studies, discussing
+%significant
+%differences in results}
+%
+Barbosa et al. recently report in \cite{Barbosa2020} a simpler model about
+modeling of COVID-19 vaccination with a similar approach. Although they
+establish a less detailed model \textemdash they do not distinguish between
+symptomatic and asymptomatic infected individuals\textemdash its control
+problem return policies according to multi-objective policies. Their optimal
+policy is pragmatic but, in our opinion, not necessarily practical for large
+populations. Further, our model extends the result of \cite{Barbosa2020} by a
+more detailed vaccine profile. Thus we can evaluate how vaccine efficacy,
+vaccine-induced, and natural immunity parameters impact the mitigation of an
+optimal vaccination schedule.
+
+Perkins and España report in \cite{Perkins2020} a vaccination model with
+optimal control, but they approach to optimize the NPIs. The methodology
+presented here is similar, but aim very different. However, we want to stress
+the relevance of also including NPIs effects.
+
+%\paragraph{Meaning of the study: possible explanations and implications for
+%clinicians and policymakers}
+Since any vaccine's efficacy will be subject to uncertainty and immunization
+regarding COVID-19 remains under development, policymakers need better modeling
+tools to design fair vaccination programs. We faced this problem by simulation.
+
+%\paragraph{Unanswered questions and future research}
+According to DALYs definition, segregation as age, comorbidities, and other
+risk groups is imperative to design more realistic vaccination policies.
+Moreover, it is well-known that various vaccines platforms and strategies are
+developing in parallel, and the most recent advance is with vaccines that
+require two doses. From \cite{Perkins2020}, we can deduce that NPIs, together
+with
+vaccination, would constitute a better description of COVID-19 control. We will
+direct our attention to extend this work according to the segregation and
+optimization of NPIs-vaccination controls.
+
+

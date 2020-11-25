@@ -22,8 +22,8 @@
 \usepackage{dirtytalk}
 \usepackage[pdftex,dvipsnames]{xcolor}
 \usepackage[colorinlistoftodos,
-    prependcaption,
-    textsize=tiny]{todonotes}
+prependcaption,
+textsize=tiny]{todonotes}
 \usepackage{mathtools, cuted}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \graphicspath{{./plotly_chart_studio_figures/}}
@@ -33,26 +33,26 @@
 \def\appendixname{}
 \newcommandx{\unsure}[2][1=]{%
     \todo[
-        linecolor=red,
-        backgroundcolor=red!25,
-        bordercolor=red, #1]{#2}
+    linecolor=red,
+    backgroundcolor=red!25,
+    bordercolor=red, #1]{#2}
 }%
 \newcommandx{\change}[2][1=]{%
     \todo[
-        linecolor=blue,
-        backgroundcolor=blue!25,
-        bordercolor=blue, #1]{#2}
+    linecolor=blue,
+    backgroundcolor=blue!25,
+    bordercolor=blue, #1]{#2}
 }
 \newcommandx{\info}[2][1=]{%
     \todo[
-        linecolor=OliveGreen,
-        backgroundcolor=OliveGreen!25,
-        bordercolor=OliveGreen, #1]{#2}
+    linecolor=OliveGreen,
+    backgroundcolor=OliveGreen!25,
+    bordercolor=OliveGreen, #1]{#2}
 }
 \newcommandx{\improvement}[2][1=]{
     \todo[linecolor=Plum,
-        backgroundcolor=Plum!25,
-        bordercolor=Plum,#1]{#2}
+    backgroundcolor=Plum!25,
+    bordercolor=Plum,#1]{#2}
 }
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 \hypersetup{colorlinks = true, allcolors = blue}
@@ -65,6 +65,8 @@
 \newtheorem{lemma}{Lemma}
 \newcommand{\az}{\color{red}\em }
 \newcommand{\za}{\rm \color{black}}
+
+\newdefinition{rmk}{Remark}
 \begin{document}
     \begin{frontmatter}
         \title{
@@ -82,68 +84,68 @@
             Hermosillo, Sonora, M\'exico, C.P. 83000.
         }
         \author[add:conacyt_unison]{%
-        Sa\'ul D\'iaz-Infante%
-        \corref{corresponding_author}%
-    }%
-    \ead{saul.diazinfante@unison.mx}
-    \address[add:conacyt_unison]{
-        CONACYT-Universidad de Sonora,
-        Departamento de Matem\'aticas,
-        Blvd. Luis Encinas y Rosales S/N,
-        Hermosillo, Sonora, M\'exico, C.P. 83000.
-    }
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            Sa\'ul D\'iaz-Infante%
+            \corref{corresponding_author}%
+        }%
+        \ead{saul.diazinfante@unison.mx}
+        \address[add:conacyt_unison]{
+            CONACYT-Universidad de Sonora,
+            Departamento de Matem\'aticas,
+            Blvd. Luis Encinas y Rosales S/N,
+            Hermosillo, Sonora, M\'exico, C.P. 83000.
+        }
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \author[add:itson]%
-            {David Baca-Carrasco}
-            \ead{david.baca@itson.edu.mx}
+        {David Baca-Carrasco}
+        \ead{david.baca@itson.edu.mx}
         \address[add:itson]{
-                Departamento de Matem\'aticas, Instituto Tecnol\'ogico de
-                Sonora, 5 de Febrero 818 Sur, Colonia Centro, Ciudad
-                Obregón,
-                Sonora, M\'exico, C.P. 85000.
+            Departamento de Matem\'aticas, Instituto Tecnol\'ogico de
+            Sonora, 5 de Febrero 818 Sur, Colonia Centro, Ciudad
+            Obregón,
+            Sonora, M\'exico, C.P. 85000.
         }
         \author[add:unison]%
-        {Daniel Olmos-Liceaga}
+        {Daniel Olmos Liceaga}
         \ead{daniel.olmos@unison.mx}
-    \cortext[corresponding_author]{Corresponding author}
-    \begin{keyword}
-        Optimal Control, COVAX
-        Vaccination, COVID-19.
-    \end{keyword}
-    \input{abstract}
-    \journal{Mathematical Biosciences}
-\end{frontmatter}
-%
+        \cortext[corresponding_author]{Corresponding author}
+        \begin{keyword}
+            COVID-19, Optimal Control, COVAX,
+            Vaccination, WHO-SAGE, DALYs.
+        \end{keyword}
+        \input{abstract}
+        \journal{Mathematical Biosciences}
+    \end{frontmatter}
+    %
     \section{Introduction}
-        \input{introduction}
+    \input{introduction}
     \section{Mathematical model formulation}
-        \label{Sec:MathematicalModelFormulation}
-        \input{model_formulation}
+    \label{Sec:MathematicalModelFormulation}
+    \input{model_formulation}
     \section{Model Analysis}
-        \label{Sec:Rv_Analysis}
-        \input{analysis}
+    \label{Sec:Rv_Analysis}
+    \input{analysis}
     \section{Optimal Vaccination policies}
-        \label{Sec:OptimalVaccinePolicies}
-        \input{optimal_controll_modeling}
+    \label{Sec:OptimalVaccinePolicies}
+    \input{optimal_controll_modeling}
     \section{Numerical experiments}
-        \label{Sec:NumericalExperiment}
-        \input{numerical_experiments}
-    \section{Conclusions and Discussions}
-        \input{conclusions}
+    \label{Sec:NumericalExperiment}
+    \input{numerical_experiments}
+    \section{Conclusions}
+    \input{conclusions}
     \section*{Data availability}
-        \input{repo_info}
+    \input{repo_info}
     \section*{Authors’ contributions}
-        \input{author_contributions}
+    \input{author_contributions}
     \section*{Acknowledgments}
-        \input{acknowledgments}
+    \input{acknowledgments}
     \section*{Conflicts of interest}
-        The authors have no competing interests.
+    The authors have no competing interests.
     \bibliographystyle{elsarticle-num-names}
     \bibliography{Vaccination_Bibliography}
     \appendix
     \section{Parameter estimation}
-        \input{first_appendix}
+    \input{first_appendix}
     \section{Positivity and Invariance of the Interest Region}
-        \label{apx:positivity_invariace}
-        \input{second_appendix}
+    \label{apx:positivity_invariace}
+    \input{second_appendix}
 \end{document}
