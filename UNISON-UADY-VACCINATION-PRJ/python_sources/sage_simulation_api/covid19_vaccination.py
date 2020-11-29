@@ -42,205 +42,6 @@ def data_solution_save(sol, column_names,
     return
 
 
-def vaccination_population_plot(r_zero,
-                                data_file_name='vaccination_data_solution.pkl',
-                                fig_file_name='model_solution.pdf'):
-    """
-    Plot the output solution given the pandas data frame
-    output from scipy.integrate.solve_ivp
-    ----------
-    file_name: filename with pandas data frame  output from
-        scipy.integrate.solve_ivp
-
-    Returns
-    -------
-    Shows figures in the default backend and return a pdf figure file
-    """
-    # plt.ion()
-    print(data_file_name)
-    df_not = pd.read_pickle("not_vaccination_solution.pkl")
-    data_file_name = '/home/saul/Insync/saul.diazinfante@unison.mx' + \
-                     '/OneDrive Biz/UNISON/ARTICLES/Covid19/' + \
-                     'COVID19-Sonora/python_code/first_soltuions_set/' + \
-                     'lambda_v-9.736842e-04.sol.csv'
-    print(data_file_name)
-    df_constant = pd.read_pickle("vaccination_solution.pkl")
-    df_oc = pd.read_csv(data_file_name, header=0)
-    plt.figure(0)
-    # plt.ion()
-    ax_s = plt.subplot2grid((4, 3), (0, 0))
-    ax_e = plt.subplot2grid((4, 3), (0, 1))
-    ax_i_s = plt.subplot2grid((4, 3), (0, 2))
-    #
-    ax_i_a = plt.subplot2grid((4, 3), (1, 0))
-    ax_r = plt.subplot2grid((4, 3), (1, 1))
-    ax_d = plt.subplot2grid((4, 3), (1, 2))
-    #
-    ax_v = plt.subplot2grid((4, 3), (2, 0))
-    ax_vc = plt.subplot2grid((4, 3), (2, 1))
-    ax_hz = plt.subplot2grid((4, 3), (2, 2))
-    #
-    ax_cl = plt.subplot2grid((4, 3), (3, 0))
-    ax_uv = plt.subplot2grid((4, 3), (3, 1))
-    ax_oc_v = plt.subplot2grid((4, 3), (3, 2))
-    #
-
-    prm = load_parameters("model_vaccination_parameters.json")
-    n_cdmx_vm = prm['n_whole']
-    # n_cul = 905263
-    n_whole = 1.0  # without rescaling population
-    t = df_constant['time']
-    s = df_constant['s']
-    e = df_constant['e']
-    i_s = df_constant['i_s']
-    i_a = df_constant['i_a']
-    r = df_constant['r']
-    d = df_constant['d']
-    v = df_constant['v']
-    x_vaccine = n_whole * (df_constant['x_vac_counter'])
-    if data_file_name == 'vaccination_treatment_solution.pkl':
-        treat = df_constant['treat']
-        print('treatment')
-        cl = n_whole * (s + e + i_s + i_a + r + d + v + treat)
-    else:
-        treat = np.zeros(df_constant.values.shape[0])
-        cl = n_whole * (s + e + i_s + i_a + r + d + v)
-    #
-    ax_s.plot(t, n_whole * df_not['s'], 'k--')
-    ax_s.plot(t, n_whole * s, alpha=0.7)
-    ax_s.plot(df_oc['time'], n_whole * df_oc['s'],
-              ls=':',
-              lw=2,
-              color='orange')
-    ax_s.legend(loc=0)
-    ax_s.title.set_text('Susceptible')
-    #
-    ax_e.plot(t, n_whole * df_not['e'], 'k--')
-    ax_e.plot(t, n_whole * e, alpha=0.7)
-    ax_e.plot(df_oc['time'], n_whole * df_oc['e'],
-              ls=':',
-              lw=2,
-              color='orange')
-    ax_e.legend(loc=0)
-    ax_e.title.set_text('Exposed')
-    #
-    ax_i_s.plot(t, n_whole * df_not['i_s'], 'k--')
-    ax_i_s.plot(t, n_whole * i_s, label="CC: i_s", alpha=0.7)
-    ax_i_s.plot(df_oc['time'], n_whole * df_oc['i_s'],
-                ls=':',
-                lw=2,
-                color='orange')
-    ax_i_s.legend(loc=0)
-    ax_i_s.title.set_text('Symptomatic')
-    #
-    ax_i_a.plot(t, n_whole * df_not['i_a'], 'k--')
-    ax_i_a.plot(t, n_whole * i_a, alpha=0.7)
-    ax_i_a.plot(df_oc['time'], n_whole * df_oc['i_a'],
-                ls=':',
-                lw=2,
-                color='orange')
-    ax_i_a.legend(loc=0)
-    ax_i_a.title.set_text('Asymptomatic')
-    #
-    ax_r.plot(t, n_whole * df_not['r'], 'k--')
-    ax_r.plot(t, n_whole * r, alpha=0.7)
-    ax_r.plot(df_oc['time'], n_whole * df_oc['r'],
-              ls=':',
-              lw=2,
-              color='orange')
-    ax_r.legend(loc=0)
-    ax_r.title.set_text('Recovered')
-    #
-    ax_d.plot(t, n_whole * df_not['d'], 'k--')
-    ax_d.plot(t, n_whole * d, label="CC: d", alpha=0.7)
-    ax_d.plot(df_oc['time'], n_whole * df_oc['d'],
-              ls=':',
-              lw=2,
-              color='orange')
-    ax_d.fill_between(t,
-                      # n_whole * df_oc['d'],
-                      n_whole * d,
-                      n_whole * df_not['d'],
-                      facecolor='green',
-                      interpolate=True,
-                      alpha=0.5)
-    ax_d.legend(loc=0)
-    ax_d.title.set_text('Deaths')
-    #
-    ax_v.plot(t, n_whole * df_not['v'], 'k--')
-    ax_v.plot(t, n_whole * v, alpha=0.7)
-    ax_v.plot(df_oc['time'], n_whole * df_oc['v'],
-              ls=':',
-              lw=2,
-              color='orange')
-    ax_v.legend(loc=0)
-    ax_v.title.set_text('Effective Vaccinated')
-    #
-    ax_hz.plot(t, n_cdmx_vm * 0.25 * 0.25 * df_not['i_s'], '--k')
-    ax_hz.plot(t, n_cdmx_vm * 0.25 * 0.25 * i_s)
-    ax_hz.plot(df_oc['time'], n_cdmx_vm * 0.016 * df_oc['i_s'],
-               ls=':',
-               lw=2,
-               color='orange')
-
-# https://www.forbes.com.mx/noticias-capacidad-hospitalaria-zona-metropolitana/
-    ax_hz.hlines(8500, -20, t.values[-1],
-                 colors='gray',
-                 linestyles=':',
-                 alpha=0.5,
-                 label='ICU')
-    #
-    ax_hz.hlines(1800, -20, t.values[-1],
-                 colors='red',
-                 linestyles=':',
-                 alpha=0.5,
-                 label='ICU')
-    ax_hz.title.set_text('Hospitalised')
-    #
-    ax_cl.plot(t, cl, label="cl")
-    ax_cl.legend(loc=0)
-    #
-    ax_vc.plot(t, x_vaccine)
-    ax_vc.hlines(0.8 * n_whole, t.values[0], t.values[-1],
-                 colors='gray',
-                 linestyle=':',
-                 alpha=0.5)
-    ax_vc.hlines(0.5 * n_whole, t.values[0], t.values[-1],
-                 colors='gray',
-                 linestyle='--',
-                 alpha=0.5)
-    ax_vc.hlines(0.2 * n_whole, t.values[0], t.values[-1],
-                 colors='gray',
-                 linestyle='-.',
-                 alpha=0.5)
-    ax_vc.plot(df_oc['time'], n_whole * df_oc['x_vac_counter'],
-               ls=':',
-               lw=2,
-               color='orange')
-    ax_vc.legend(loc=0)
-    ax_vc.title.set_text('Coverage')
-    #
-    lambda_v = prm["lambda_v"]
-    u_v = 2 * lambda_v * np.ones(t.values.shape[0])
-    u_t = 0.0 * t
-    ax_uv.plot(t, n_cdmx_vm * u_v, label='$\lambda_v$')
-    ax_uv.plot(t, 2 * n_cdmx_vm * u_v, label='$u_{v_{max}} + \lambda_v$')
-    ax_uv.legend(loc=0)
-    #
-    ax_oc_v.plot(df_oc['time'], n_cdmx_vm * df_oc['control'], label='$u_{oc_v}$')
-    ax_oc_v.plot(df_oc['time'],
-                 n_cdmx_vm * df_oc['control'] +
-                 n_cdmx_vm * lambda_v * np.ones(df_oc['time'].values.shape[0]),
-                 label='$u_{oc_v}$')
-    ax_oc_v.legend(loc=0)
-    #
-    plt.tight_layout()
-    plt.suptitle("R0: " + str(r_zero[0]) + "R_v:" + str(str(r_zero[1])))
-    plt.savefig(fig_file_name)
-    plt.show()
-    return
-
-
 def base_dynamics_plot(data_file_name='base_dynamics.pkl',
                        fig_file_name='base_model_solution.pdf'):
     df_not = pd.read_pickle("base_dynamics.pkl")
@@ -315,6 +116,120 @@ def base_dynamics_plot(data_file_name='base_dynamics.pkl',
     plt.show()
 
 
+def vaccination_dynamics_plot(data_file_name='constant_vac_dynamics.pkl',
+                                fig_file_name='model_solution.pdf'):
+    """
+    Plot the output solution given the pandas data frame
+    output from scipy.integrate.solve_ivp
+    ----------
+    file_name: filename with pandas data frame  output from
+        scipy.integrate.solve_ivp
+
+    Returns
+    -------
+    Shows figures in the default backend and return a pdf figure file
+    """
+    # plt.ion()
+    print(data_file_name)
+    df_not = pd.read_pickle("base_dynamics.pkl")
+    # data_file_name = 'constant_vac_dynamics.pkl'
+    # print(data_file_name)
+    df_constant = pd.read_pickle("constant_vac_dynamics.pkl")
+    # df_oc = pd.read_csv(data_file_name, header=0)
+    plt.figure(0)
+    # plt.ion()
+    ax_l = plt.subplot2grid((4, 3), (0, 0))
+    ax_s = plt.subplot2grid((4, 3), (0, 1))
+    ax_e = plt.subplot2grid((4, 3), (0, 2))
+    #
+    ax_i_s = plt.subplot2grid((4, 3), (1, 0))
+    ax_i_a = plt.subplot2grid((4, 3), (1, 1))
+    ax_h = plt.subplot2grid((4, 3), (1, 2))
+   #
+    ax_r = plt.subplot2grid((4, 3), (2, 0))
+    ax_d = plt.subplot2grid((4, 3), (2, 1))
+    ax_v = plt.subplot2grid((4, 3), (2, 2))
+   #
+    ax_vac = plt.subplot2grid((4, 3), (3, 0))
+    ax_cl = plt.subplot2grid((4, 3), (3, 1))
+    #
+    prm = load_parameters("vaccination_parameters.json")
+    n_cdmx_vm = prm['n_pop']
+    # n_cul = 905263
+    n_whole = 1.0  # without rescaling population
+    t = df_constant['time']
+    l = df_constant['l']
+    s = df_constant['s']
+    e = df_constant['e']
+    i_s = df_constant['i_s']
+    i_a = df_constant['i_a']
+    h = df_constant['h']
+    r = df_constant['r']
+    d = df_constant['d']
+    v = df_constant['v']
+    x_vaccine = n_whole * (df_constant['x_vac'])
+    cl = l + s + e + i_s + i_a + h + r + d + v
+    #
+    ax_l.plot(t, n_whole * df_not['l'], 'k--')
+    ax_l.plot(t, n_whole * l, alpha=0.7)
+    ax_l.legend(loc=0)
+    ax_l.title.set_text('Lockdown')
+    #
+    ax_s.plot(t, n_whole * df_not['s'], 'k--')
+    ax_s.plot(t, n_whole * s, alpha=0.7)
+    ax_s.legend(loc=0)
+    ax_s.title.set_text('Susceptible')
+    #
+    ax_e.plot(t, n_whole * df_not['e'], 'k--')
+    ax_e.plot(t, n_whole * e, alpha=0.7)
+    ax_e.legend(loc=0)
+    ax_e.title.set_text('Exposed')
+    #
+    ax_i_s.plot(t, n_whole * df_not['i_s'], 'k--')
+    ax_i_s.plot(t, n_whole * i_s, label="CC: i_s", alpha=0.7)
+    ax_i_s.legend(loc=0)
+    ax_i_s.title.set_text('Symptomatic')
+    #
+    ax_i_a.plot(t, n_whole * df_not['i_a'], 'k--')
+    ax_i_a.plot(t, n_whole * i_a, alpha=0.7)
+    ax_i_a.legend(loc=0)
+    ax_i_a.title.set_text('Asymptomatic')
+    #
+    ax_h.plot(t, n_whole * df_not['h'], 'k--')
+    ax_h.plot(t, n_whole * h, alpha=0.7)
+    ax_h.legend(loc=0)
+    ax_h.title.set_text('Hospitalized')
+    #
+    ax_r.plot(t, n_whole * df_not['r'], 'k--')
+    ax_r.plot(t, n_whole * r, alpha=0.7)
+    ax_r.legend(loc=0)
+    ax_r.title.set_text('Recovered')
+    #
+    ax_d.plot(t, n_whole * df_not['d'], 'k--')
+    ax_d.plot(t, n_whole * d, label="CC: d", alpha=0.7)
+    ax_d.title.set_text('Deaths')
+    #
+    ax_v.plot(t, n_whole * v, alpha=0.7)
+    ax_v.legend(loc=0)
+    ax_v.title.set_text('Vaccinated')
+    #
+    ax_vac.plot(t, n_whole * x_vaccine)
+    ax_vac.legend(loc=0)
+    ax_vac.title.set_text('Coverage')
+    #
+    # https://www.forbes.com.mx/
+    # noticias-capacidad-hospitalaria-zona-metropolitana/
+    ax_cl.plot(t, cl, label="cl")
+    ax_cl.legend(loc=0)
+    #
+    #
+    lambda_v = prm["lambda_v"]
+    plt.tight_layout()
+    plt.savefig(fig_file_name)
+    plt.show()
+    return
+
+
 def reproductive_number(**kwargs):
     beta_s = kwargs['beta_s']
     beta_a = kwargs['beta_a']
@@ -373,10 +288,10 @@ def rhs_base_dynamics(t, y,
     return f
 
 
-def rhs_vaccination(t, y, beta_s, beta_a, epsilon,
-                        delta_e, delta_v, delta_r,
-                        p, alpha_a, alpha_t, alpha_s,
-                        mu, theta, mu_t, lambda_v):
+def rhs_lockdown_vaccination(t, y, beta_s, beta_a, epsilon, var_epsilon,
+                    delta_l, kappa, delta_h, delta_v, delta_r,
+                    p, gamma_a, gamma_s, gamma_h,
+                    mu, mu_i_s, mu_h, theta, lambda_v):
     """"
         Version designed in May 22-2020, 
         according to the normalized version and
@@ -387,47 +302,46 @@ def rhs_vaccination(t, y, beta_s, beta_a, epsilon,
             rate of asymptomatic contact
         @param epsilon:
             vaccination failure rate
-        @param delta_e:
+        @param kappa:
             the inverse denote  latency time
-        @param delta_v:
-            the inverse denote immunity time
-        @param delta_r:
-            the inverse denote immunity time
+        @param delta_l:
+        @param delta_v: the inverse denote immunity time
+        @param delta_h: hospitalization rate
+        @param delta_r: the inverse denotes natural immunity
         @param p:
-        @param alpha_s:
-        @param alpha_a:
-        @param alpha_t:
+        @param gamma_s:
+        @param gamma_a:
+        @param gamma_h:
         @type mu:
+        @param mu_h:
         @param theta:
-        @param mu_t: 
         @param lambda_v:
-        @param lambda_t:
         @param y:
         @type t: object
     """
-    s, e, i_s, i_a, h, r, d, v, x_vaccine_counter = y
+    l, s, e, i_s, i_a, h, r, d, v, x_vaccine_counter = y
     #
-    a = 1e1
-    u_v = 1 / (1 + a * t)
-    u_t = 1 / (1 + a * t)
-    n_bar = s + e + i_s + i_a + r + h +v
+    n_bar = l + s + e + i_s + i_a + h + r + v
+    delta_v = delta_v
     force_infection = (beta_s * i_s + beta_a * i_a) / n_bar
-    rhs_s = mu * n_bar - force_infection * s - (mu + (lambda_v + u_v)) * s \
-            + delta_v * v + delta_r * r
-    rhs_e = force_infection * (epsilon * v + s) - (mu + delta_e) * e
-    rhs_i_s = p * delta_e * e - (mu + theta + alpha_s + (lambda_t * u_t)) * i_s
-    rhs_i_a = (1 - p) * delta_e * e - (mu + alpha_a) * i_a
-    rhs_r = alpha_s * i_s + alpha_a * i_a + alpha_t * treat - (mu + delta_r) * r
-    rhs_d = theta * i_s + mu_t * treat
-    rhs_v = (lambda_v * u_v) * s - epsilon * force_infection * v - \
-            (mu + delta_v) * v
-    rhs_treat = (lambda_t + u_t) * i_s - (alpha_t + mu_t + mu) * treat
-    rhs_x_vaccine_counter = (lambda_v + u_v) * (s + e + i_a + r)
-    rhs = np.array([rhs_s, rhs_e,
+    rhs_l = theta * mu * n_bar - \
+            (var_epsilon * force_infection + delta_l + mu) * l
+    rhs_s = (1.0 - theta) * mu * n_bar + delta_l * l + delta_v * v + \
+            delta_r * r - (force_infection + lambda_v + mu) * s
+    rhs_e = (var_epsilon * l + (1-epsilon) * v + s) * force_infection - \
+            (kappa + mu) * e
+    rhs_i_s = p * kappa * e - (delta_h + gamma_s + mu_i_s + mu) * i_s
+    rhs_i_a = (1 - p) * kappa * e - (gamma_a + mu) * i_a
+    rhs_h = delta_h * i_s - (gamma_h + mu_h + mu) * h
+    rhs_r = gamma_s * i_s + gamma_a * i_a + gamma_h * h - \
+            (delta_r + mu) * r
+    rhs_d = mu_i_s * i_s + mu_h * h
+    rhs_v = lambda_v * s - ((1-epsilon) * force_infection + delta_v + mu) * v
+    rhs_x_vaccine_counter = lambda_v * (s + e + i_a + r)
+    rhs = np.array([rhs_l, rhs_s, rhs_e,
                     rhs_i_s, rhs_i_a,
-                    rhs_r, rhs_d,
-                    rhs_v, rhs_treat,
-                    rhs_x_vaccine_counter])
+                    rhs_h, rhs_r, rhs_d,
+                    rhs_v,  rhs_x_vaccine_counter])
     return rhs
 
 
