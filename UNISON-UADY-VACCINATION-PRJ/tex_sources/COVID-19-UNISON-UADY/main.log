@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.8.10)  27 NOV 2020 22:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.8.10)  29 NOV 2020 07:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1199,24 +1199,13 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 15.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 (./introduction.tex) (./model_formulation.tex
-
-! Package xkeyval Error: `keppaspectratio' undefined in families `Gin'.
-
-See the xkeyval package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.109 ...spectratio]{./cdmx_CIs_data_begining_fit}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
 <./cdmx_CIs_data_begining_fit.pdf, id=64, 526.96875pt x 276.03125pt>
 File: ./cdmx_CIs_data_begining_fit.pdf Graphic file (type pdf)
 <use ./cdmx_CIs_data_begining_fit.pdf>
 Package pdftex.def Info: ./cdmx_CIs_data_begining_fit.pdf  used on input line 1
 09.
 (pdftex.def)             Requested size: 421.57556pt x 220.82529pt.
+
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
@@ -1245,13 +1234,13 @@ ic
  []
 
 ) [3] [4]
-Overfull \hbox (26.41135pt too wide) in paragraph at lines 231--233
+Overfull \hbox (26.41135pt too wide) in paragraph at lines 236--238
 \OT1/cmr/m/n/10 which, again by As-sump-tion 1, has a unique so-lu-tion $[](\OM
 L/cmm/m/it/10 t\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[]\OT1/cmr/m/n/10 )$
  []
 
 
-Overfull \hbox (72.30122pt too wide) detected at line 233
+Overfull \hbox (72.30122pt too wide) detected at line 238
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 t\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[
 ]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ;  x[] \OT1/cmr/m/n/10 := [](\OML/cmm/m/it/1
 0 t[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/
@@ -1272,19 +1261,19 @@ Underfull \hbox (badness 1354) in paragraph at lines 50--60
 \openout7 = `main.loc'.
 
  [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 248.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 248.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 253.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 253.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 248.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 248.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 253.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 253.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 53F0F87716467E0F4F3A28644B57C697;441.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 248.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 253.
  ) 
 Here is how much of TeX's memory you used:
  33444 strings out of 492623
  655185 string characters out of 6129552
- 700941 words of memory out of 5000000
+ 700940 words of memory out of 5000000
  36860 multiletter control sequences out of 15000+600000
  537456 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1304,7 +1293,7 @@ e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 /2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
 019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/20
 19/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb>
-Output written on main.pdf (5 pages, 227762 bytes).
+Output written on main.pdf (5 pages, 227574 bytes).
 PDF statistics:
  234 PDF objects out of 1000 (max. 8388607)
  192 compressed objects within 2 object streams

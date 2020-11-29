@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1606541106 "main.aux" "main.bbl" "main" 1606541107
+["bibtex main"] 1606541106 "main.aux" "main.bbl" "main" 1606660842
   "/usr/local/texlive/2019/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   "NovelCovid19.bib" 1595461776 40785 a6e21db52948f6ca5943d9330893d34f ""
-  "main.aux" 1606541106 6474 28d5c28578e48179702f1420d7a92956 "pdflatex"
+  "main.aux" 1606660842 6474 28d5c28578e48179702f1420d7a92956 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1606541106 "main.tex" "main.pdf" "main" 1606541107
-  "/dev/null" 1606490379 0 d41d8cd98f00b204e9800998ecf8427e ""
+["pdflatex"] 1606660841 "main.tex" "main.pdf" "main" 1606660842
+  "/dev/null" 1606656044 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -193,18 +193,18 @@
   "cdmx_CIs_data_begining_fit.pdf" 1601915324 6225 592a1d7217fd3d782da833cb0cc18ddc ""
   "cotrolled_version.tex" 1606371806 6147 a0a0dcf0911feea7bd9c2243d1fa1c0a ""
   "introduction.tex" 1606323755 212 1ab266acf559b901490c5e8cd0f47953 ""
-  "main.aux" 1606541106 6474 28d5c28578e48179702f1420d7a92956 "pdflatex"
+  "main.aux" 1606660842 6474 28d5c28578e48179702f1420d7a92956 "pdflatex"
   "main.bbl" 1606541106 5526 5250ac942640cdc1ae7682f4c679afcd "bibtex main"
-  "main.out" 1606541106 441 53f0f87716467e0f4f3a28644b57c697 "pdflatex"
-  "main.spl" 1606541106 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.tex" 1606541048 6977 2e15cdbdfbf2630c309380b29623a409 ""
-  "model_formulation.tex" 1606541104 4484 5946810cca55bd706601f8056b43a3fc ""
+  "main.out" 1606660842 441 53f0f87716467e0f4f3a28644b57c697 "pdflatex"
+  "main.spl" 1606660841 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.tex" 1606660841 7107 8268a938f97062432e91b967497e2135 ""
+  "model_formulation.tex" 1606659234 4483 b7c64becc5947ee013c454185b6ee58b ""
   "vaccination_model.tex" 1606329025 2434 2d36c549e3bc9ed57e734ba1ef0f01ee ""
   (generated)
   "main.loc"
-  "main.soc"
-  "main.spl"
-  "main.out"
-  "main.log"
-  "main.aux"
   "main.pdf"
+  "main.spl"
+  "main.aux"
+  "main.log"
+  "main.out"
+  "main.soc"
