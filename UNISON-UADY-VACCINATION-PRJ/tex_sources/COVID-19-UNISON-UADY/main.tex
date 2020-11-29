@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt, 5p]{elsarticle}
+\documentclass[5p, sort&compress]{elsarticle}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}{}
@@ -13,241 +13,24 @@
 \usepackage{changes}
 \definechangesauthor[color=orange]{SDIV}
 \begin{document}
-    \author{SDIV, FPA, DGS, GASV}
-    \title{Optimal constant picewise vaccination policies for COVID-19}
-    \begin{abstract}
-      
-      BACKGROUND.
-
-      FINDINGS.
-      
-      IMPLICATIONS.
-    \end{abstract}
-    \maketitle
-    \section{Introduction}
-      \input{introduction}
-    \section{Covid-19 spread dynamics}
-      \input{model_formulation}
-    \section{Imperfect-preventive Covid-19 vaccination}
-      \input{vaccination_model}
-    \section{Optimal controlled version}
-       \input{cotrolled_version}
-
-    \paragraph{Bayesian estimation}
-%
-    \section{Parameters}
-      \begin{table*}
-        \centering
-        \begin{tabular}{@{}llr@{}}
-        \toprule
-            Parameter
-            &   \centering{Median}
-            &   Reference
-            \\
-            \midrule
-              $q_r$, $\epsilon$
-                &
-                  \num{.4}, \num{.3}, \num{.1}
-                &
-                  this study
-            \\
-                $\beta_S$
-                & $q_r \times \num{8.690483e-01} $
-                & this study
-            \\
-                $\beta_A$
-                & $q_r \times \num{7.738431e-01}$
-                & this study
-            
-            \\
-                $\kappa$
-                & \num{0.19607843}
-                & $*$
-            \\
-                $p$
-                & \num{0.1213}
-                & $*$
-            \\
-              $\theta$
-              & \num{0.2},
-              & this study
-            \\
-              $\delta_L$
-              & \num{0.04}
-              & postulated
-            \\
-                $\delta_H$
-                &\num{0.2}
-                & $*$
-            \\
-              $\delta_V$
-              &\num{ 0.0027397260273972603}
-              & $\delta_V ^{-1} = \SI{2}{years}$
-            \\
-            &&
-                CanSinoBIO
-            \\
-              $\delta_R$
-              & \num{0.00555556}
-              & $\delta_R^{-1} \approx \SI{180}{days}$           
-            \\
-                $\mu$
-                & \num{ 3.913894e-05}
-                & $**$
-            \\
-                $\mu_{I_S}$
-                & \num{0.0}
-                & 
-            \\
-                $\mu_{H}$
-                & \num{0.01632}
-                & [FENG]
-            \\
-                $\gamma_S$
-                & \num{0.09250694}
-                & $*$
-            \\
-                 $\gamma_A$
-                 & \num{0.16750419}
-                 & $*$
-            \\
-               $\gamma_H$
-                & \num{5.079869e-01}
-                & $*$
-            \\
-              $\lambda_V$
-              &  \num{0.00061135}
-              &
-            \\
-              $\varepsilon$
-              & \num{0.7}, \num{0.80}, \num{0.9}, \num{0.95}
-              & [PRESS RELESASES]
-            \\
-            \midrule
-                $N$
-                 & \num{26446435}
-                 & $**$
-            \\
-                $L_0$
-                & \num{0.26626009702112796}
-            \\
-                $S_0$
-                 & \num{0.463606046009872}
-                 &
-            \\
-                $E_0$
-                 & \num{0.00067033}
-                 & $*$
-            \\
-                $I_{S_0}$
-                & \num{9.283e-05}
-                & $***$
-            \\
-                $I_{A_0}$
-                & \num{0.00120986}
-                & $*$
-            \\
-                $H_0$
-                & \num{1.34157969e-04}
-                & $**$
-            \\
-                $R_0$
-                & \num{2.66125939e-01}
-                &
-            \\
-                $D_0$
-                & \num{0.00190074}
-                & $**$
-            \\
-                $X_{vac}^0$
-                & 0.0
-            \\
-                $V_0$
-                & 0.0
-            \\
-                $Y_{I_S} ^ 0$ &
-                \num{0.12258164}
-            \\
-                $B$
-            &
-                \num{0.0003592166581242425}
-            &
-                $
-                    \displaystyle
-                    \SI{9500}{beds} / {N}
-                $
-            \\
-              $a_{I_S}$
-                & \num{0.0020127755438256486}
-                & DALY def
-            \\
-              $a_{H}$
-                & \num{0.001411888738103725},
-                or
-            \\
-            & $
-                a_H(x):=
-                \num{0.001411888738103725}
-                \log(\frac{1}{B - \kappa I_S})
-            $
-            & DALY def [Jo 2020]
-            \\
-                $a_D$
-                & \num{7.25}
-                & DALY def
-          \\
-            \bottomrule
-        \end{tabular}
-    \end{table*}
-    %
-    \section{Optimal control problem}
-
-    \section{Numerical Results}
-
-    \paragraph{Bayesian}
-
-
-    \section{Appendix}
-
-Consider the following cost functional that we want to minimize
-  \begin{equation}\label{costFunctional}
-  \int_0^T C(t,X(t),u(t)) dt
-  \end{equation}
-subject to the dynamics
-  \begin{equation}\label{dynamics}
-  \dot{X}(t) = f(t,X(t),u(t)),  \qquad    0\leq t \leq T,
-  \end{equation}
-and the initial state $X(0)=x_0$. Let $t_0<t_1<\ldots <t_n$, with $t_0=0$ and $t_n=T$, be a partition of the interval $[0,T]$. We consider {\it piecewise constant controls} $\tilde{u}$ of the form
-         \begin{equation}\label{PieceConstCont}
-  \tilde{u}(t) = a_j\qquad t_j\leq t < t_{j+1}
-         \end{equation}
- for $j=0,\ldots,n-1$.
-
-{\sc Assumption 1}.
-
-
-{\sc Assumption 2}.
-
-By Assumption 1, the system
-    \[    \dot{X}(t) = f(t,X(t),a_0), \quad X(0)=x_0, \qquad    0\leq t \leq t_1,
-  \]
-has a unique solution $\tilde{X}_0(t;x_0,a_0)$ which is continuous in $(x_0,a_0)$.  Next, put $x_1:=\tilde{X}_0(t_1;x_0,a_0)$ and consider the system
-    \[    \dot{X}(t) = f(t,X(t),a_1), \quad X(t_1)=x_1, \qquad    t_1\leq t \leq t_2,
-  \]
-which, again by Assumption 1, has a unique solution $\tilde{X}_1(t;x_1,a_1)$ continuous in $(x_1,a_1)$. By following this procedure, we end up having a recursive solution
-	\[  \tilde{X}_{n-1}(t;x_{n-1},a_{n-1}),\quad   x_{n-1}:=\tilde{X}_{n-2}(t_{n-1};x_{n-2},a_{n-1}),     \qquad    t_{n-1}\leq t \leq T. \]
-
-Thus, for a control $\tilde{u}$ of the form \eqref{PieceConstCont} and the corresponding solution path $\tilde{X}$, we have
-	\[
-	\int_0^T C(t,\tilde{X}(t),\tilde{u}(t)) dt   =     \sum_{j=0}^{n-1}   \int_{t_j}^{t_{j+1}} C(t,\tilde{X}_j(t),a_j) dt.
-	\]
-Notice that each $\tilde{X}_j$ is a continuous function of $(a_0,\ldots,a_j)$	 and $x_0$. Therefore, by Assumption 2, the mapping
-		\[
-		(a_0,\ldots,a_{n-1}) \mapsto  \sum_{j=0}^{n-1}   \int_{t_j}^{t_{j+1}} C(t,\tilde{X}_j(t),a_j) dt
-		\]
-is continuous.
-
-    \nocite{*}
-    \bibliography{NovelCovid19.bib}
-    \bibliographystyle{plain}
+  \input{frontmatter}
+  \section{Introduction}
+    \input{introduction}
+  \section{Covid-19 spread dynamics}
+    \input{model_formulation}
+  \section{Imperfect-preventive Covid-19 vaccination}
+    \input{vaccination_model}
+  \section{Vaccination reproductive number}
+  \section{Optimal controlled version}
+    \input{cotrolled_version}
+  \section{Parameter callibration}
+    \input{parameters_callibration}
+  \section{Optimal control problem}
+  \section{Numerical Results}   
+  \appendix
+  \section{Appendix}
+    \input{appendix}
+  \nocite{*}
+  \bibliography{NovelCovid19.bib}
+  \bibliographystyle{plain}
 \end{document}

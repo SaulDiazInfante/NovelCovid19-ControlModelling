@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.8.10)  29 NOV 2020 07:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.8.10)  29 NOV 2020 09:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -600,6 +600,7 @@ LaTeX Info: Redefining \labelcref on input line 2370.
 LaTeX Info: Redefining \labelcpageref on input line 2370.
 Package cleveref Info: `amsthm' support loaded on input line 3026.
 Package cleveref Info: `listings' support loaded on input line 3131.
+Package cleveref Info: sorting and compressing references on input line 7852.
 )
 (/usr/local/texlive/2019/texmf-dist/tex/latex/changes/changes.sty
 Package: changes 2019/01/26 v3.1.2 changes package
@@ -1073,7 +1074,7 @@ e
 * \headsep=12.0pt
 * \topskip=10.0pt
 * \footskip=18.0pt
-* \marginparwidth=57.0pt
+* \marginparwidth=65.0pt
 * \marginparsep=11.0pt
 * \columnsep=18.0pt
 * \skip\footins=24.0pt plus 2.0pt minus 12.0pt
@@ -1198,8 +1199,9 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 15.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-(./introduction.tex) (./model_formulation.tex
-<./cdmx_CIs_data_begining_fit.pdf, id=64, 526.96875pt x 276.03125pt>
+(./frontmatter.tex (./abstract.tex)) (./introduction.tex)
+(./model_formulation.tex
+<./cdmx_CIs_data_begining_fit.pdf, id=68, 526.96875pt x 276.03125pt>
 File: ./cdmx_CIs_data_begining_fit.pdf Graphic file (type pdf)
 <use ./cdmx_CIs_data_begining_fit.pdf>
 Package pdftex.def Info: ./cdmx_CIs_data_begining_fit.pdf  used on input line 1
@@ -1215,32 +1217,46 @@ Overfull \hbox (0.16292pt too wide) in paragraph at lines 124--130
 a Pois-son dis-tri-bu-tion with mean
  []
 
-) (./vaccination_model.tex
+
 Overfull \hbox (2.22221pt too wide) has occurred while \output is active
 [] 
  []
 
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\<def>-command' on input line 143.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\cnotenum' on input line 143.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\<def>-command' on input line 143.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@corref' on input line 143.
+
 [1{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-]
-Overfull \vbox (167.17409pt too high) has occurred while \output is active []
-
-)
-(./cotrolled_version.tex [2 <./cdmx_CIs_data_begining_fit.pdf>]
+])
+(./vaccination_model.tex [2 <./cdmx_CIs_data_begining_fit.pdf>])
+(./cotrolled_version.tex
 Overfull \hbox (2.94495pt too wide) in paragraph at lines 30--34
 \OT1/cmr/m/n/10 ported cases and that a vac-ci-na-tion pol-icy im-plies quadrat
 ic
  []
 
-) [3] [4]
-Overfull \hbox (26.41135pt too wide) in paragraph at lines 236--238
+[3]) (./parameters_callibration.tex) (./appendix.tex
+Overfull \hbox (26.41135pt too wide) in paragraph at lines 27--31
 \OT1/cmr/m/n/10 which, again by As-sump-tion 1, has a unique so-lu-tion $[](\OM
 L/cmm/m/it/10 t\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[]\OT1/cmr/m/n/10 )$
  []
 
 
-Overfull \hbox (72.30122pt too wide) detected at line 238
+Overfull \hbox (72.30122pt too wide) detected at line 33
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 t\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[
 ]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ;  x[] \OT1/cmr/m/n/10 := [](\OML/cmm/m/it/1
 0 t[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 x[]; a[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/
@@ -1248,36 +1264,38 @@ Overfull \hbox (72.30122pt too wide) detected at line 238
 /m/it/10 T:
  []
 
-(./main.bbl
+) (./main.bbl
 Underfull \hbox (badness 1354) in paragraph at lines 50--60
 \OT1/cmr/m/n/8 suko Imai, Kylie Ainslie, Marc Baguelin, Sangeeta Bha-
  []
 
-)
+[4] [5])
 \Changes@OutFile=\write6
 \openout6 = `main.soc'.
 
 \tf@loc=\write7
 \openout7 = `main.loc'.
 
- [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 253.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 253.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 36.
+ [6
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 36.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 253.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 253.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 36.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 36.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 53F0F87716467E0F4F3A28644B57C697;441.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 253.
+(rerunfilecheck)             Checksum: 0C0E373536A5BF54055E3CF7FF94D3A7;520.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 36.
  ) 
 Here is how much of TeX's memory you used:
- 33444 strings out of 492623
- 655185 string characters out of 6129552
- 700940 words of memory out of 5000000
- 36860 multiletter control sequences out of 15000+600000
- 537456 words of font info for 45 fonts, out of 8000000 for 9000
+ 33493 strings out of 492623
+ 655747 string characters out of 6129552
+ 704381 words of memory out of 5000000
+ 36888 multiletter control sequences out of 15000+600000
+ 541542 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,15n,83p,502b,754s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,15n,83p,502b,905s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 ></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
@@ -1290,13 +1308,16 @@ al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/
 texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
 live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
 e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
-/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
-019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/20
-19/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb>
-Output written on main.pdf (5 pages, 227574 bytes).
+/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2
+019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/201
+9/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2019
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2019/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on main.pdf (6 pages, 254551 bytes).
 PDF statistics:
- 234 PDF objects out of 1000 (max. 8388607)
- 192 compressed objects within 2 object streams
- 65 named destinations out of 1000 (max. 500000)
- 178 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 259 PDF objects out of 1000 (max. 8388607)
+ 212 compressed objects within 3 object streams
+ 70 named destinations out of 1000 (max. 500000)
+ 186 words of extra memory for PDF output out of 10000 (max. 10000000)
 
