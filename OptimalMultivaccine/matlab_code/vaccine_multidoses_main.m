@@ -1,0 +1,16 @@
+% load parameters and initial conditions
+fname = 'vaccine_multidoses_parameters.json';
+fid = fopen(fname);
+raw = fread(fid, inf);
+str = char(raw'); 
+fclose(fid);
+prm = jsondecode(str);
+u_zero = [prm.S_0, prm.E_0, prm.I_S_0, prm.I_A_0, ...
+            prm.H_0, prm.R_S_0, prm.R_A_0, prm.D_0, ...
+            prm.X_S_0, prm.X_E_0, prm.X_I_A_0, prm.X_R_A, ...
+            prm.Y_S_0, prm.Y_E_0, prm.Y_I_A_0, prm.Y_R_A, ...
+            prm.X_VAC_1_A_0, prm.X_VAC_2_A_0];
+
+opts=odeset('reltol',1e-8, 'maxstep', 0.1);
+[t, sol] = ode45(@vaccine_multidoses_rhs, ...
+    0:1:prm.T, u_zero, opts, prm);

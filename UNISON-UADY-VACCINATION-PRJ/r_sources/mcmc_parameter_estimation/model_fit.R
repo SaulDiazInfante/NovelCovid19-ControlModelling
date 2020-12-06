@@ -1,4 +1,5 @@
 library(lubridate)
+librry(ggthemr)
 model_fit <- function(fit = nuts_fit, dates = onset){
     posts <-  rstan::extract(nuts_fit)
     mod_diagnostics  <- rstan::get_sampler_params(nuts_fit)
@@ -12,23 +13,29 @@ model_fit <- function(fit = nuts_fit, dates = onset){
     df_fit_CIS = data.frame(median_I, low_I, high_I, dates)
     #
     sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-    sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-    sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/data"
+    sub_path_2 <- "NovelCovid19-ControlModelling/"
+    sub_path_3 <- "NovelCovid19-ControlModellingGitHub"
+    sub_path_4 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_5 <- "r_sources/mcmc_parameter_estimation/data"
     file_name <- "data.Rda"
     data_path <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4, sub_path_5,
+            file_name, sep = "/")
     save(df_sample_N, file =data_path)
         file_name <- "df_I_det_Poiss.Rda"
     data_path <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4, 
+            file_name, sep = "/")
     save(df_fit_CIS, file = data_path)
     #
+    ggthemr_reset()
+    ggthemr('greyscale')
     plt <- ggplot(df_sample_N,
                     aes(x = as.Date(FECHA_SINTOMAS), y = cum_cases)) +
             geom_ribbon(aes(x = as.Date(FECHA_SINTOMAS),
                             ymin = low_I,
                             ymax = high_I),
-                        fill = "orange",
+                        fill = c_light_highlight,
                         alpha = 0.6) +
             geom_line(data = df_fit_CIS,
                         aes(x = as.Date(FECHA_SINTOMAS),
@@ -38,9 +45,9 @@ model_fit <- function(fit = nuts_fit, dates = onset){
             geom_point(shape = 19,
                         size = 3,
                         (aes(color = "Data"))) +
-            scale_colour_manual(name = '',
+            scale_colour_manual(name = 'dust',
                                 values = c('Data' = 'black',
-                                           'Median' = 'darkorange3')) +
+                                           'Median' = c_dark)) +
             guides(colour = 
                             guide_legend(override.aes = 
                                             list(shape = c(16, NA),
@@ -49,14 +56,16 @@ model_fit <- function(fit = nuts_fit, dates = onset){
                     y = "Cumulative Infected Cases") +
             # scale_x_continuous(limits = c(0, 22)) +
             scale_y_continuous(limits = c(0, 1000),
-                       breaks = seq(from = 0, to = 1000, by = 50)) #+
+                       breaks = seq(from = 0, to = 1000, by = 200)) #+
             #theme_bw() + theme(text = element_text(size = 20))
     #
     sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-    sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-    sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/plots"
+    sub_path_2 <- "NovelCovid19-ControlModelling/NovelCovid19-ControlModellingGitHub"
+    sub_path_3 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_4 <- "r_sources/mcmc_parameter_estimation/plots"
     file_name <- "cdmx_CIs_data_begining_fit.pdf"
     plot_path <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name, sep = "/")
     ggsave(plot_path)
 }

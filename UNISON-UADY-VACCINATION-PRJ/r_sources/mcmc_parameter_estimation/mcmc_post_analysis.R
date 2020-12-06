@@ -54,9 +54,11 @@ mcmcm_post_analysis <- function(nuts_sample = nuts_fit){
     p5 <- stan_dens(nuts_fit, pars = pars, separate_chains = TRUE)
     p6 <- mcmc_intervals(posterior, pars = pars)
     sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-    sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-    sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/plots"
-    file_name_1 <- "trace_posterior.pdf.pdf"
+    sub_path_2 <- "NovelCovid19-ControlModelling/NovelCovid19-ControlModellingGitHub"
+    sub_path_3 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_4 <- "r_sources/mcmc_parameter_estimation/plots"
+    
+    file_name_1 <- "trace_posterior.pdf"
     file_name_2 <- "trace_r_zero.pdf"
     file_name_3 <- "trace_parameters.pdf"
     file_name_4 <- "pairs.pdf"
@@ -64,17 +66,23 @@ mcmcm_post_analysis <- function(nuts_sample = nuts_fit){
     file_name_6 <- "intervals.pdf"
 #    
     plot_path_1 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_1, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_1, sep = "/")
     plot_path_2 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_2, sep = "/")
+                paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_2, sep = "/")
     plot_path_3 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_3, sep = "/")
+                paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_3, sep = "/")
     plot_path_4 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_4, sep = "/")
+                paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_4, sep = "/")
     plot_path_5 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_5, sep = "/")
+                paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_5, sep = "/")
     plot_path_6 <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name_6, sep = "/")
+                paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4,
+            file_name_6, sep = "/")
     ggsave(plot_path_1, plot = p1)
     ggsave(plot_path_2, plot = p2)
     ggsave(plot_path_3 , plot = p3)

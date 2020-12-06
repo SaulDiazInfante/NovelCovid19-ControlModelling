@@ -30,7 +30,7 @@ sample_time <- 1:N
 mdl <- stan_model("seirh.stan")
 #
 #### mcmc parameters ####
-n_chains <- 2
+n_chains <- 10
 n_warmups <- 100
 n_iter <- 50500
 n_thin <- 50
@@ -61,16 +61,17 @@ nuts_fit_summary <- summary(nuts_fit, pars = parameters)$summary
 print(nuts_fit_summary,
     scientific = FALSE,
     digits = 4)
-sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/runs"
+    sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
+    sub_path_2 <- "NovelCovid19-ControlModelling/NovelCovid19-ControlModellingGitHub"
+    sub_path_3 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_4 <- "r_sources/mcmc_parameter_estimation/runs"
 prefix_time <- Sys.time()
 prefix_time <- paste(date(prefix_time),
                     hour(prefix_time),
                     minute(prefix_time), sep="_")
 file_name <- paste("run-", prefix_time,".RData", sep="")
 runs_path <- 
-    paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/") 
+    paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4, file_name, sep = "/") 
 save.image(file=runs_path)
 #
 #### Post analysis ####
@@ -82,5 +83,5 @@ mcmcm_post_analysis(nuts_sample = nuts_fit)
 #
 model_fit()
 #### Divergence analysis ####
-divergence_analysis()
+# divergence_analysis()
 

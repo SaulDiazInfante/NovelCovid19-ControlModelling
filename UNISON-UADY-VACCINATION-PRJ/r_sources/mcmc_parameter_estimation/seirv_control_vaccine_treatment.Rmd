@@ -14,24 +14,23 @@
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Starting Model
+Baseline dynamics
 =================================
 \begin{align}
     S' & =
-        \mu N^\star - \lambda S - \mu S
+        \mu N^\star - (\lambda +  \mu) S
     \\
     E' & =
-        \lambda S - \kappa E - \mu E
+        \lambda S - (\kappa E + \mu E)
     \\
     I_S' & =
-        p \kappa E - (\gamma_S + \mu_{I_S} + \delta_H) I_S
-        - \mu I_S
+        p \kappa E - (\gamma_S +  \delta_H + \mu_{I_S} + \mu) I_S
     \\
     I_A' &=
-        (1 - p) \kappa E - \gamma_A I_A - \mu I_A
+        (1 - p) \kappa E - (\gamma_A + \mu) I_A
     \\
     H' &=
-        \delta_H I_S - (\gamma_H + \mu_H) H - \mu H
+        \delta_H I_S - (\gamma_H + \mu_H +  \mu) H 
     \\
     R' & =
         \gamma_S I_S + \gamma_A I_A + \gamma_H H - \mu R

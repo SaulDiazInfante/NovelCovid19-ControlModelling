@@ -19,7 +19,7 @@ functions {
     real beta_a = theta[2];
     real kappa = theta[3];
     real p = theta[4];
-    real delta_h = theta[5];
+    real delta_h = 0.05;
     real mu_i_s = theta[6];
     real mu_h = theta[7];
     real gamma_s = theta[8];
@@ -36,7 +36,7 @@ functions {
     dy_dt[3] = p * kappa * e - (gamma_s + mu_i_s + delta_h) * i_s;
     dy_dt[4] = (1.0 - p) * kappa * e - (gamma_a + mu) * i_a;
     dy_dt[5] = delta_h * i_s  - (gamma_h + mu_h + mu) * h;
-    dy_dt[6] = gamma_s * i_s + gamma_a * i_a  + gamma_h * h - mu * r;
+    dy_dt[6] = gamma_s * i_s + gamma_a * i_a + gamma_h * h - mu * r;
     dy_dt[7] = mu_i_s * i_s + mu_h * h;
     dy_dt[8] = p * kappa * i_s;
     return dy_dt;
@@ -91,8 +91,8 @@ model {
     theta[3] ~ gamma(10, 40);       // kappa
     theta[4] ~ uniform(0.1, 0.5);   // p
     theta[5] ~ gamma(10, 40);       // delta_h
-    theta[6] ~ exponential(33.33333);   // mu_i_s
-    theta[7] ~ exponential(25);   // mu_h
+    theta[6] ~ exponential(15);   // mu_i_s
+    theta[7] ~ exponential(60);   // mu_h
     theta[8] ~ gamma(10, 100);      // gamma_s
     theta[9] ~ gamma(10, 50);       // gamma_a
     theta[10] ~ gamma(10, 250);      // gamma_h

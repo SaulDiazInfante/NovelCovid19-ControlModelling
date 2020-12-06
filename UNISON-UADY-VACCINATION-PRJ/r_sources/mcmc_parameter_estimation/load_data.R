@@ -7,13 +7,17 @@ library(bayesplot)
 library(data.table)
 library(knitr)
 library(kableExtra)
+librry(ggthemr)
+
 load_data <- function(path="/data", location="cdmx"){
     sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-    sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-    sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/data"
+    sub_path_2 <- "NovelCovid19-ControlModelling/NovelCovid19-ControlModellingGitHub"
+    sub_path_3 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_4 <- "r_sources/mcmc_parameter_estimation/data"
     file_name <- "cdmx_prevalence_data.csv"
     data_path <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4, 
+            file_name, sep = "/")
     covid19_data <- fread(data_path,
                                     select = c("FECHA_SINTOMAS",
                                               "i_s",
@@ -26,19 +30,25 @@ load_data <- function(path="/data", location="cdmx"){
         filter(as.Date(FECHA_SINTOMAS) >= reference_date &
                    as.Date(FECHA_SINTOMAS) <= final_date_sample)
     head(data_star_dynamics)
+    ggthemr_reset()
+    ggthemr('greyscale')
     data_plot <- ggplot(data = data_star_dynamics,
                         aes(x = FECHA_SINTOMAS, cumulative_i_s)) +
                     geom_bar(stat="identity", width = 0.05) +
                     geom_point() +
                     theme(axis.text.x = element_text(angle = 90)) +
-                    ggtitle("CDMX")
+                    ggtitle("CDMX data") +
+                    xlab("symptom onset date") + 
+                    ylab("cumulative incidence")
     #
     sub_path_1 <- "/home/saul/sauld@cimat.mx/UNISON/Articles/NovelCovid-19"
-    sub_path_2 <- "NovelCovid19-ControlModelling/COVID19-VACINATION/r_sources"
-    sub_path_3 <- "mcmc_parameter_estimation/UNISON-UADY-Project/plots"
+    sub_path_2 <- "NovelCovid19-ControlModelling/NovelCovid19-ControlModellingGitHub"
+    sub_path_3 <- "UNISON-UADY-VACCINATION-PRJ"
+    sub_path_4 <- "r_sources/mcmc_parameter_estimation/plots"
     file_name <- "cdmx_input_data.pdf"
     plot_path <- 
-        paste(sub_path_1, sub_path_2, sub_path_3, file_name, sep = "/")
+        paste(sub_path_1, sub_path_2, sub_path_3, sub_path_4, 
+            file_name, sep = "/")
     ggsave(plot_path)
     onset <- data_star_dynamics %>%
         select(FECHA_SINTOMAS)

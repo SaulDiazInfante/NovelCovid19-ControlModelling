@@ -9,8 +9,9 @@
 \usepackage{booktabs}
 \usepackage{siunitx}
 \usepackage{graphicx}
-\usepackage{cleveref}
+\usepackage[nameinlink,noabbrev]{cleveref}
 \usepackage{changes}
+\graphicspath{{./Figures/}}
 \definechangesauthor[color=orange]{SDIV}
 \begin{document}
   \input{frontmatter}
@@ -20,11 +21,11 @@
     \input{model_formulation}
   \section{Imperfect-preventive Covid-19 vaccination}
     \input{vaccination_model}
+  \section{Parameter callibration}
+    \input{parameters_callibration}
   \section{Vaccination reproductive number}
   \section{Optimal controlled version}
     \input{cotrolled_version}
-  \section{Parameter callibration}
-    \input{parameters_callibration}
   \section{Optimal control problem}
   \section{Numerical Results}   
   \appendix
