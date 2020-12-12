@@ -41,5 +41,24 @@ ee = e + x_e + y_e;
 ii_a = i_a + x_i_a + y_i_a;
 rr_a = x_r_a + y_r_a;
 
+tiledlayout('flow')
+nexttile
+plot(t, s)
+hold on
+nexttile
+plot(t, e)
+
+nexttile
 plot(t, i_s)
+
+nexttile
+plot(t, i_a)
+
+nexttile
+plot(t, h)
+
+nexttile
+plot(t, d)
+
+
 

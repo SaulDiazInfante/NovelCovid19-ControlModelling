@@ -1,13 +1,10 @@
-function SerologicalShields!(du,u,par,t)
+function seir_i(du, u, par, t)
     β_a,β_s,p,γ_e,γ_a,γ_s,γ_h,h,ξ,μ,α,S_ind,E_ind,Ia_ind,Is_ind,Ihsub_ind,Ihcrit_ind,R_ind,D_ind = par
-
     TOTI_a = sum(u[Ia_ind]) #Total asymptomatic infectious individuals
     TOTI_s = sum(u[Is_ind]) #Total symptomatic infectious individuals
-
     ShieldRTOT = sum(u[R_ind[3:6]]) #Total serological shields - those who are recovered and 20-60 yo.
     NTOT = sum(u[1:40])+sum(u[61:70]) #All individuals not in the hospitalised (Ihsub,Ihcrit) or dead (D) states
     SHIELD = ShieldRTOT
-
     for aa = 1:length(S_ind)#for each age class
         INDS = [S_ind[aa],E_ind[aa],Ia_ind[aa],Is_ind[aa],Ihsub_ind[aa],Ihcrit_ind[aa],R_ind[aa],D_ind[aa]]
         S,E,Ia,Is,Ihsub,Ihcrit,R,D = u[INDS]
@@ -20,5 +17,4 @@ function SerologicalShields!(du,u,par,t)
         du[INDS[7]] = γ_a*Ia + (1-h[aa])*γ_s*Is + γ_h*Ihsub + (1-μ[aa])*γ_h*Ihcrit  #dR/dt
         du[INDS[8]] = μ[aa]*γ_h*Ihcrit #dD/dt
     end
-
 end
