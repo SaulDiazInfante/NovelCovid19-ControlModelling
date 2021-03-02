@@ -8,8 +8,7 @@
 \usepackage{amsfonts}
 \usepackage{amstext}
 \usepackage{mathrsfs}
-\usepackage{graphpap}
-\usepackage{graphics,graphicx}
+\usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage{subcaption}
 \usepackage{multicol}
@@ -20,41 +19,36 @@
 \usepackage[section]{placeins}
 \usepackage{xargs}
 \usepackage{dirtytalk}
+\usepackage{soul}
 \usepackage[pdftex,dvipsnames]{xcolor}
 \usepackage[colorinlistoftodos,
-prependcaption,
-textsize=tiny]{todonotes}
+    prependcaption,
+    textsize=tiny]{todonotes}
+\usepackage[draft]{changes}
 \usepackage{mathtools, cuted}
 \usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{lineno}
+\usepackage{epstopdf}
+\DeclareGraphicsExtensions{.png,.pdf}
+\modulolinenumbers[1]
+\linenumbers
 \graphicspath{{./plotly_chart_studio_figures/}}
 \graphicspath{{./figures/}}
 %
 %
+\definechangesauthor[name=DOL, color=NavyBlue]{DOL}
+\definechangesauthor[name=SDIV, color=Melon]{SDIV}
+\definechangesauthor[name=MAAZ, color=BrickRed]{MAAZ}
+\definechangesauthor[name=DBC, color=Red]{DBC}
+
 \def\appendixname{}
 \newcommandx{\unsure}[2][1=]{%
     \todo[
-    linecolor=red,
-    backgroundcolor=red!25,
-    bordercolor=red, #1]{#2}
+        linecolor=red,
+        backgroundcolor=red!25,
+        bordercolor=red, #1]{#2}
 }%
-\newcommandx{\change}[2][1=]{%
-    \todo[
-    linecolor=blue,
-    backgroundcolor=blue!25,
-    bordercolor=blue, #1]{#2}
-}
-\newcommandx{\info}[2][1=]{%
-    \todo[
-    linecolor=OliveGreen,
-    backgroundcolor=OliveGreen!25,
-    bordercolor=OliveGreen, #1]{#2}
-}
-\newcommandx{\improvement}[2][1=]{
-    \todo[linecolor=Plum,
-    backgroundcolor=Plum!25,
-    bordercolor=Plum,#1]{#2}
-}
-\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 \hypersetup{colorlinks = true, allcolors = blue}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\e}{\varepsilon}
@@ -63,10 +57,18 @@ textsize=tiny]{todonotes}
 \newcommand{\N}{\mathbb{N}}
 \newtheorem{teor}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newdefinition{definition}{Definition}
+\newdefinition{rmk}{Remark}
 \newcommand{\az}{\color{red}\em }
 \newcommand{\za}{\rm \color{black}}
-
-\newdefinition{rmk}{Remark}
+\newcommand{\db}{\color{blue}\em }
+\newcommand{\bd}{\rm \color{black}}
+%
+%
+%%%
+%\newcommand{\az}{\color{red}\em }   %% Begin
+%\newcommand{\za}{\rm \color{black}} %% end
+%
 \begin{document}
     \begin{frontmatter}
         \title{
@@ -94,58 +96,65 @@ textsize=tiny]{todonotes}
             Blvd. Luis Encinas y Rosales S/N,
             Hermosillo, Sonora, M\'exico, C.P. 83000.
         }
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \author[add:itson]%
-        {David Baca-Carrasco}
-        \ead{david.baca@itson.edu.mx}
+            {David Baca-Carrasco}
+            \ead{david.baca@itson.edu.mx}
         \address[add:itson]{
-            Departamento de Matem\'aticas, Instituto Tecnol\'ogico de
-            Sonora, 5 de Febrero 818 Sur, Colonia Centro, Ciudad
-            Obregón,
-            Sonora, M\'exico, C.P. 85000.
+                Departamento de Matem\'aticas, Instituto Tecnol\'ogico de
+                Sonora, 5 de Febrero 818 Sur, Colonia Centro, Ciudad
+                Obregón,
+                Sonora, M\'exico, C.P. 85000.
         }
         \author[add:unison]%
         {Daniel Olmos Liceaga}
         \ead{daniel.olmos@unison.mx}
-        \cortext[corresponding_author]{Corresponding author}
-        \begin{keyword}
-            COVID-19, Optimal Control, COVAX,
-            Vaccination, WHO-SAGE, DALYs.
-        \end{keyword}
-        \input{abstract}
-        \journal{Mathematical Biosciences}
-    \end{frontmatter}
-    %
+    \cortext[corresponding_author]{Corresponding author}
+    \begin{keyword}
+        COVID-19, optimal control, vaccination policy
+        vaccine profile, vaccine-induced immunity,
+        natural immunity, reinfection,
+        vaccine efficacy, WHO-SAGE, DALYs.
+    \end{keyword}
+    \input{abstract}
+   \journal{Mathematical Biosciences}
+\end{frontmatter}
+%
     \section{Introduction}
-    \input{introduction}
-    \section{Mathematical model formulation}
-    \label{Sec:MathematicalModelFormulation}
-    \input{model_formulation}
-    \section{Model Analysis}
-    \label{Sec:Rv_Analysis}
-    \input{analysis}
+        %\input{introduction}
+        \input{introduction_}
+    \section{Formulation of mathematical model}
+        \label{Sec:MathematicalModelFormulation}
+        \input{model_formulation}
+    \section{Vaccine Reproduction Number}
+        \label{Sec:Rv_Analysis}
+        %\input{analysis}
+        \input{RV_Section}
     \section{Optimal Vaccination policies}
-    \label{Sec:OptimalVaccinePolicies}
-    \input{optimal_controll_modeling}
+        \label{Sec:OptimalVaccinePolicies}
+        \input{optimal_controll_modeling}
     \section{Numerical experiments}
-    \label{Sec:NumericalExperiment}
-    \input{numerical_experiments}
+        \label{Sec:NumericalExperiment}
+        \input{numerical_experiments}
+    \section{Discussion}
+        \label{Sec:Discussion}
+        \input{discussion}
     \section{Conclusions}
-    \input{conclusions}
+        \input{conclusions}
     \section*{Data availability}
-    \input{repo_info}
+        \input{repo_info}
     \section*{Authors’ contributions}
-    \input{author_contributions}
+        \input{author_contributions}
     \section*{Acknowledgments}
-    \input{acknowledgments}
+        \input{acknowledgments}
     \section*{Conflicts of interest}
-    The authors have no competing interests.
+        The authors have no competing interests.
     \bibliographystyle{elsarticle-num-names}
     \bibliography{Vaccination_Bibliography}
     \appendix
     \section{Parameter estimation}
-    \input{first_appendix}
+        \input{first_appendix}
     \section{Positivity and Invariance of the Interest Region}
-    \label{apx:positivity_invariace}
-    \input{second_appendix}
+        \label{apx:positivity_invariace}
+        \input{second_appendix}
 \end{document}

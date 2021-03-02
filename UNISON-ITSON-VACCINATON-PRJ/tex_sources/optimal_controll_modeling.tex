@@ -1,96 +1,197 @@
 %!TEX root = main.tex
-According to dynamics in \Cref{model1,eqn:model1_counters}, we
-modulate the vaccination rate by a
-time-dependent control signal $u_V(t)$ to
-achieve an imposed vaccine coverage. That is,
-according to the components $S$,
-$V$, $X$ of \Cref{model1,eqn:model1_counters}, we modulate the
-vaccination rate $\lambda_V$ by an additive control $u_V(t)$. Thus,
-we modify components equations related to $S$, $V$, $X$ as
+
+
+In the remains of this manuscript, we use the following definitions.
+\begin{definition}[Constant vaccination policy]
+Consider the model in \Cref{model1,eqn:model1_counters}. A constant 
+    vaccination policy (CP) is a policy where the vaccination rate 
+    $\psi_V$ remains constant for all time $t \in [0, T]$. 
+    Thus the number of administered vaccine doses at time $t$
+    with this CP results 
+\begin{equation}
+        \label{eqn:constant_policy}
+        \psi_V \left(
+            S(t) + E(t) + I_A(t) + R(t)
+        \right) N.
+    \end{equation}
+\end{definition}
+
+    Our main idea is taking $\psi_V$ as  \Cref{eqn:lambda_base}
+and modulating it additively by a time function $u_V(t)$. 
+We impose that 
+$
+    u_V(t)\in [-m_1 \psi_V, m_2 
+    \psi_V],\forall t\in [0, T]
+$,
+ $m_1 \in [0,1]$, $m_2 \in \mathbb{Q}^{+}$, then term
+\begin{equation}
+    \label{eqn:vaccine_rate_modulation}
+    \psi_V + u_V(t),
+\end{equation}
+amplifies or attenuates the constant vaccination rate $\psi_V$.
+If $m_1 \in (0,1]$, then control signal $u_V(t)$ attenuates the vaccination 
+rate $\psi_V$. Meanwhile, if $m_2 > 0$, then control signal $u_V(t)$ 
+amplifies this vaccination rate.
+
+We modify components equations corresponding to $S$, $V$, $X$ in 
+\Cref{model1,eqn:model1_counters} by
 \begin{equation}
     \label{eqn:counter}
     \begin{aligned}
         S'(t)  = &
-            \mu \bar{N} + \delta_V V + \delta_R R
-            \\
+            \mu \widehat{N} - f_{\lambda}S - 
+            \left(
+                \mu + (\psi_V + u_V(t)
+            \right) S
+        \\
             &
-            - \frac{\beta_S I_S + \beta_AI_A}{\bar{N}}S
-            - (\mu + (\lambda_V + u_V(t)) S
+             + \omega_V V + \sigma_{R} R
         \\
         V'(t) = &
-            (\lambda_V + u_V(t)) S-(1-\epsilon)
-            \frac{\beta_S I_S + \beta_A I_A}{\bar{N}}V
+            \left(\psi_V + u_V(t)\right) S-(1-\varepsilon_V)
+            f_{\lambda}V
         \\
             &-
-             (\mu+\delta_V) V
+             (\mu+\omega_V) V
         \\
         X'(t) =&
-        (\lambda_V + u_V(t)) (S + E + I_A + R).
+        \left(\psi_V + u_V(t)\right) (S + E + I_A + R).
     \end{aligned}
 \end{equation}
-To assure the solution of our controlled model
-we consider the functional space
-\begin{align*}
-    \mathcal{U}[0:T] := &
-    \left\{
-        u_V: [0, T] \to \mathbb{R},
-    \right.
-        \\
-        &
-        \text{ such that $u_V(\cdot)$ bounded and}
-        \\
-        &
-    \left.
-        \text{ piecewise continuous}
-    \right \}.
-\end{align*}
 %
-Let ${x(t):= (S,E,I_S,I_A,R,D,V,X)^{\top}(t)}$
+Then our controlled dynamics reads
+%
+\begin{equation}
+    \label{eqn:controlled_ode}
+    \begin{aligned}
+        S'(t)
+        &=
+        \mu \widehat{N} - f_{\lambda} S - 
+        ( \mu + \psi_V +  u_V(t)) S + \omega_V V + \sigma_{R} R  
+        \\
+        E'(t)
+        &=
+        f_{\lambda} (S + (1-\varepsilon_V) V)
+        - (\mu+\sigma_E) E
+        \\
+        I'_S(t)
+        &=p
+        \sigma_E
+        E-(\mu + \alpha_S) I_S
+        \\
+        I'_A(t)
+        &= (1 - p) \sigma_E E-(\mu + \alpha_A) I_A
+        \\
+        R'(t)
+        &= (1 - \theta) \alpha_S I_S + \alpha_A I_A
+        - (\mu + \sigma_{R}) R
+        \\
+        D'(t)&=
+        \theta \alpha_S I_S
+        \\
+        V'(t)&=
+        (\psi_V + u_V(t)) S -
+        \left(
+        (1 -\varepsilon_V) f_{\lambda} V +
+        \mu + \omega_V
+        \right) V
+        \\
+        X'(t)&=
+        (\psi_V + u_V(t))(S + E + I_A + R)
+        \\
+        Y'_{I_S}(t) &=p
+        \sigma_E E,
+        \\
+        \\
+        S(0) &= S_0, \ E(0) = E_0, \ I_S(0) = I_{S_{0}},
+        \\
+        I_A(0) &= I_{A_{0}}, \ R(0) = R_0, \ D(0) = D_0,
+        \\
+        V(0) &= 0, \ X(0) = 0, \ Y_S(0) = Y_{S_0}
+        \\
+        \widehat{N}(t) &= S + E + I_S + I_A + R + V.
+    \end{aligned}
+\end{equation}
+
+Formally we define a controlled vaccination policy as follows.
+
+\begin{definition}[Controlled vaccination policy]
+    Conforming the model in \Cref{eqn:controlled_ode} we say that
+    $$
+        \psi_V + u_V(t), \quad t \in [0, T],
+    $$
+    is a controlled vaccination policy (CVP). Then,
+    $$
+        (\psi_V + u_V (t))
+        \left(
+            S(t) + E(t) + I_A(t) + R(t)
+        \right) N,
+    $$
+    denote the number of doses at time $t$ according to 
+    the modulated vaccination rate $(\psi_V + u_V (t))$.
+\end{definition}
+
+    We aim to obtain time-control functions $u_V(\cdot)$ that hold natural 
+modeling constraints\textemdash as a fixed bound for hospitalized 
+prevalence and coverage at the final time\textemdash and optimize a 
+conveniently cost functional. To this end, we have to assure our optimal controlled model solution, so we consider the functional space
+\begin{equation}
+    \label{eqn:picewise_continuous}
+    \begin{aligned}
+        \mathcal{U}[0,T] := &
+        \left\{
+            u_V: [0, T] \to \mathbb{R},
+        \right.
+            \\
+            &
+            \text{ such that $u_V(\cdot)$ bounded and}
+            \\
+            &
+        \left.
+            \text{ piecewise continuous}
+        \right \}.
+    \end{aligned}
+\end{equation}
+
+    Let ${x(t):= (S,E,I_S,I_A,R,D,V,X,Y_{I_S})^{\top}(t)}$
 and control signal $u_V(\cdot)\in \mathcal{U}[0, T]$.
-Following the guidelines of
-WHO-SAGE modeling questions \cite{sage2020},
-we quantify the burden of COVID-19, according
-to the Disability-Adjusted Life Year (DALY) unit. Thus adapting the
-WHO
-definition of DALY \cite{WhoDALY}, we optimize the number of years of
-life lost
-with a vaccination policy. In other words, we calculate a minimum of
-the penalization functional
+Following the guidelines of WHO-SAGE modeling questions \cite{sage2020},
+we quantify the burden of COVID-19, according to the Disability-Adjusted Life 
+Year (DALY) indicator. Adapting DALY's definition reported in 
+\cite{WhoDALY}, we optimize the number of years of life lost with a 
+controlled  vaccination policy. Our formulation 
+calculates a minimum of the penalization functional 
+%
 \begin{align}
     \label{eqn:cost_functional}
     J(u_V) =
     a_D ( D(T) - D(0)) +
     a_S (Y_{I_S}(T) - Y_{I_S}(0)).
 \end{align}
-Here, $a_S$ and $a_D$ are parameters related to the definition of the unit of
-the Years of Life Lost (YLL) due to premature mortality and the Years Lost due
-to Disability (YLD). We estimate $a_D$ as the mean life expectancy at the age of
-death, and according to Mexico City+Mexico state data, we handle
-$a_D = \SI{7.5}{years}$.
-Parameter $a_S$ is the product of a disability weight (DW) and the
-average duration of cases until remission or death in years, that is,
+Here, $a_S$ and $a_D$ are parameters related to the definition of the Years of 
+Life Lost (YLL) due to premature mortality and the Years Lost due to 
+Disability (YLD). We estimate $a_D$ as the average remaining 
+life expectancy at the age of
+death, and according to the union of Mexico-City and Mexico-State data,
+we set  $a_D = \SI{7.5}{years}$. Parameter $a_S$ is the product of a disability
+weight (DW) and the average duration of cases until remission or death in years, that is,
 $
 a_S = DW \times \alpha_S^{-1}
 $.
 Here we postulate the disability weight as the arithmetic average of
-disability weight regarding comorbidities reported in \cite{Jo2020}. Thus, our
+disability weight regarding comorbidities reported in \cite{Jo2020}. Our
 simulations employ $a_S= \SI{0.008418473}{years}$.
 %
 Thus, functional $J$ penalizes the pandemic burden\textemdash in Years
-of Life Lost\textemdash due to mortality or disability. We display in
-\Cref{tbl:ocp_parameters_description} parameters regarding the
-optimal controlled model.
+of Life Lost\textemdash due to mortality or disability. 
 
-Since we aim to simulate vaccination policies contra factual scenarios
-following the SAGE modeling guidelines reported in \cite{sage2020},
-we impose the vaccination counter state's horizon time condition
-$X(T)$
+To describe vaccination coverage, we ask the terminal conditon
 \begin{equation}
     \label{eqn:coverage_constrain}
     \begin{aligned}
-        x(T) &=
-        (\cdot, \cdot, \cdot, \cdot, \cdot, X(T))^{\top}
-        \in \Omega,
+     \varphi(x(T))&=X(T),
+        \\
+        S(T) &+ E(T) + I_S(T) + I_A(T) + R(T) + V(T) + D(T) = 1,
         \\
         X(T)
         &= x_{cover age},
@@ -102,9 +203,9 @@ $X(T)$
         \right \} .
     \end{aligned}
 \end{equation}
-Thus, given the time horizon $T$, we set the last fraction of
-vaccinated population corresponds to 20\% or 50\%, and the rest of
-final states are free. We also impose the path constraint
+That is, given the time horizon $T$, we set the vaccination coverage to 
+\SI{20}{\percent} or \SI{50}{\percent} of the total population, and the rest 
+of final states free. Likewise, we impose the path constraint
 \begin{equation}
     \label{eqn:path_constrain}
     \Phi(x,t):= \kappa I_S(t) \leq B,
@@ -112,123 +213,166 @@ final states are free. We also impose the path constraint
 \end{equation}
 to ensure that critical symptomatic cases
 will not overload healthcare services. Here $\kappa$
-denotes hospitalization rate, and $B$ is the load capacity of a
-health system. We illustrate the main ideas of the above discussion
-in \Cref{Fig:SchemeModel_opt}.
-\begin{figure*}[tbh]
-    \centering
-    \includegraphics[scale = 1]{SchemeModel_0211_v4.pdf}
-    \caption{Compartmental diagram of COVID-19 transmission dynamics
-    which
-        including optimal vaccination dynamics, penalization and path
-        constraint.}
-    \label{Fig:SchemeModel_opt}
-\end{figure*}
+denotes hospitalization rate, and $B$ is the load capacity of the
+health system. 
 
-Given a fixed time horizon and vaccine with efficacy $\epsilon$,
-we estimate the constant vaccination rate $\lambda_V$ as the solution
-of \Cref{eqn:lambda_base}. That is, $\lambda_V$ estimates the constant rate
-to cover\textemdash with a vaccine dose per individual\textemdash
-population fraction $x_{coverage}$ in time horizon $T$. Thus, according to this
-vaccination rate, we postulate a policy $u_V$ that modulates vaccination rate
-according to $\lambda_V$ as a baseline.
-
-Then, optimal vaccination amplifies or attenuates this estimated
-baseline $\lambda_V$ in an interval $[\lambda_V^{\min}, \lambda_V^{\max}]$
-to optimize functional $J(\cdot)$\textemdash minimizing symptomatic, death
-reported cases and optimizing resources.
-
-We aim to minimize the cost functional
+\begin{definition}[Admissible control vaccination policy]
+    \label{dfn:admisible_policy}
+    Let $(x(\cdot), u_V(\cdot))$ be a pair satisfying the ODE
+    \eqref{eqn:controlled_ode}. Consider $\mathcal{U}[0, T]$
+    as in \eqref{eqn:picewise_continuous}. If
+    \begin{enumerate}[({\textbf{AC}}-1)]
+        \item
+            $u_V(\cdot) \in \mathcal{U} [0, T]$
+        \item
+            $u(t)\in [-m_1 \psi_V, m_2 \lambda_{V}],\ \forall t\in [0, T]$,
+            \ $m_i \in \mathbb{Q}$
+        \item
+            $
+            x(T) = (\cdot, \cdot, \cdot, 
+                    \cdot, \cdot, \cdot,  
+                    \cdot,  x_{coverage}, \cdot)^{\top}
+            $
+        \item
+            $
+                \kappa I_S(t) \leq B, \quad \forall t \in [0, T]
+            $
+    \end{enumerate}
+    holds, then the CVP $\psi_V + u_V (\cdot)$ is
+    admissible.
+\end{definition}
+In other words, an admissible vaccination policy (AVP) is a CVP that 
+satisfies the coverage and hospitalization constraints imposed on
+model \eqref{eqn:controlled_ode}. Furhter,
+if an AVP optimizes functional cost \eqref{eqn:cost_functional}, then this AVP is an optimal vaccination policy (OVP). Formally we have the following definition.
+\begin{definition}[Optimal Vaccination Policy]
+    Let $(x(\cdot), u_V(\cdot))$ a pair that satisfies the ODE 
+    \eqref{eqn:controlled_ode} such that (\textbf{AC}-1)--(\textbf{AC}-4) of 
+    \Cref{dfn:admisible_policy} holds. Let cost functional $J$ as in 
+    \eqref{eqn:cost_functional}. If
+    \begin{equation}
+        \begin{aligned}
+            J(u_V) &=
+                \min_{u  \in \mathcal{U}^{\star}}
+                     J(u),
+            \\
+            \mathcal{U}^{\star} &: =
+                \mathcal{U}[0, T]
+                \cap\{
+                    u(\cdot): \text{(ADC-1)--(ADC--4) holds}
+                \},
+        \end{aligned}
+    \end{equation}
+    then  $\psi_V + u_V(\cdot)$ is an optimal vaccination policy.
+\end{definition}
+\begin{rmk}
+    Optimal vaccination amplifies or attenuates the estimated
+    baseline $\psi_V$ in an interval $[\psi_V^{\min}, \psi_V^{\max}]$
+    to optimize functional $J(\cdot)$\textemdash minimizing  symptomatic incidence and death reported cases in DALYs and satisfying hospitalization occupancy and coverage constraints.
+\end{rmk}
+    
+    We aim to minimize the cost functional
 \eqref{eqn:cost_functional}\textemdash over an appropriated
-space\textemdash subject to the dynamics in
-\Cref{model1,eqn:counter}, boundary conditions
-related to
-\eqref{eqn:coverage_constrain}, and path
-constrain \eqref{eqn:path_constrain}.
-That is, we seek for vaccination policies $u_V(\cdot)$, that
-solves the following optimal control problem
-(OCP)%
+space\textemdash subject to the dynamics in \Cref{eqn:controlled_ode},
+coverage related to the boundary condition \eqref{eqn:coverage_constrain}, 
+and path constraints \eqref{eqn:path_constrain}. We call this kind of 
+policies as optimal vaccination policies (OVP). That is, we seek 
+vaccination policies that solve the following problem.
+
+\emph{Optimal Control Problem (OCP):}
+    Find the optimal vaccination rate $(\psi_V + u_V^{*})$ such that, 
+    
 \begin{equation}
     \label{eqn:optimal_control_problem}
     \begin{aligned}
-        &\min_{u_V  \in \mathcal{U}[0, T]}
-        J(u_V) :=
-        %\int_0 ^ T
-        % a_D D(s) + a_S Y_{I_S}(s) ds
+        J(u_V^*) &=
+            \min_{u_V  \in \mathcal{U}^{\star}}
+        J(u_V) 
+        \\
+        J(u_V) &:=
         a_D ( D(T) - D(0)) +
         a_S (Y_{I_S}(T) - Y_{I_S}(0))
         \\
-        \text{s.t.} &
+        \text{subject to} &
         \\
-        &f_{\lambda}
-        :=
-        \frac{\beta_S I_S + \beta_AI_A}{\bar{N}}
+        f_{\lambda}
+        & :=
+        \frac{\beta_S I_S + \beta_AI_A}{\widehat{N}}
         \\
         S'(t)
         &=
-        \mu \bar{N} + \delta_V V + \delta_R R
-        \\
-        &-
-        (f_{\lambda} + \mu + \lambda_V +  u_V(t)) S
+        \mu \widehat{N}-f_{\lambda} S -( \mu + \psi_V +  u_V(t)) S+ \omega_V V + \sigma_{R} R
         \\
         E'(t)
         &=
-        f_{\lambda} (S + (1-\epsilon) V)
-        - (\mu+\delta_E) E
+        f_{\lambda} (S + (1-\varepsilon_V) V)
+        - (\mu+\sigma_E) E
         \\
         I'_S(t)
         &=p
-        \delta_E
+        \sigma_E
         E-(\mu + \alpha_S) I_S
         \\
         I'_A(t)
-        &= (1 - p) \delta_E E-(\mu + \alpha_A) I_A
+        &= (1 - p) \sigma_E E-(\mu + \alpha_A) I_A
         \\
         R'(t)
         &= (1 - \theta) \alpha_S I_S + \alpha_A I_A
-        - (\mu + \delta_R) R
+        - (\mu + \sigma_{R}) R
         \\
         D'(t)&=
         \theta \alpha_S I_S
         \\
         V'(t)&=
-        (\lambda_V + u_V(t)) S -
+        (\psi_V + u_V(t)) S -
         \left(
-        (1 -\epsilon) f_{\lambda} V +
-        \mu + \delta_V
+        (1 -\varepsilon_V) f_{\lambda} V +
+        \mu + \omega_V
         \right) V
         \\
         X'(t)&=
-        (\lambda_V + u_V(t))(S + E + I_A + R)
+        (\psi_V + u_V(t))(S + E + I_A + R)
+        \\
+        Y'_{I_S}(t) &=p
+        \sigma_E E,
         \\
         \\
         S(0) &= S_0, \ E(0) = E_0, \ I_S(0) = I_{S_{0}},
         \\
         I_A(0) &= I_{A_{0}}, \ R(0) = R_0, \ D(0) = D_0,
         \\
-        V(0) &= 0, \ X(0) = 0, \ X(T) = x_{coverage},
+        V(0) &= 0, \ X(0) = 0, \ Y_S(0) = Y_{S_0}, 
+        \ X(T) = x_{coverage},
         \\
         u_V(\cdot) & \in [u_{\min}, u^{\max}],
         \\
         \kappa I_S(t) & \leq B, \quad \forall t \in [0, T],
         \\
-        \bar{N}(t) &= S + E + I_S + I_A + R + V.
+        \widehat{N}(t) &= S + E + I_S + I_A + R + V.
     \end{aligned}
 \end{equation}
-\Cref{tbl:ocp_parameters_description} encloses a
-parameter description
-regarding this controlled version.
+%
+\Cref{Fig:SchemeModel_opt} 
+illustrates the main ideas of the above discussion.
+\Cref{tbl:ocp_parameters_description} 
+enclose parameter information of the functional cost and constraints. 
 
-Existence of solution to our (OCP) in
-\Cref{eqn:optimal_control_problem} drops in the theory
-developed by Francis Clark
-\cite[see e.g.][Thm. 23.11]{Clarke2013}. Since our aim is the
-simulation of
-hypothetical scenarios,
-we omit here a rigorus proof, instead we refer interested readers to
-\cite{Sethi1995,Lenhart2007} and the reference
-there in.
-
+Existence of solution to our (OCP) in \Cref{eqn:optimal_control_problem} drops
+in the theory developed by Francis Clark
+\cite[see e.g.][Thm. 23.11]{Clarke2013}. Since we aim to simulate
+hypothetical scenarios, we omit here a rigorous proof. Instead, we refer
+interested readers to \cite{Sethi1995,Lenhart2007} and the reference therein.
+%
+\begin{figure*}[tbh]
+    \centering
+    \includegraphics[scale = 1]{Figure_5.pdf}
+    \caption{Compartmental diagram of COVID-19 transmission dynamics
+        that
+        includes optimal vaccination dynamics, penalization and a path
+        constraint.}
+    \label{Fig:SchemeModel_opt}
+\end{figure*}
+%
 \begin{table*}[htb]
     \centering
     \begin{tabular}{%
@@ -248,7 +392,7 @@ there in.
         $a_D$
         &
         Penalization weight due to  premature mortality (YLL)
-        and estimated from CDMX data
+        and estimated from Mexico-City an Mexico-State data
         & $\SI{7.5}{years}$ & \cite{WhoDALY,DataMX}
         \\
         $a_S$
@@ -260,31 +404,28 @@ there in.
         &
         Covering constraint at time horizon $T$
         & & \cite{sage2020}
-
         \\
         $\kappa$
         &
         Hospitalization rate
         &
-        $0.05$
+        \num{0.05}
         &
         Estimated
         \\
         $B$
         &
         Health service capacity in number of beds
-        normalized by the whole
-        population $N$
         &
-        $9500$
+        \num{9500}
         &
-
+        Estimated
         \\
         \bottomrule
     \end{tabular}
     \caption{
-        Parameters regarding
-        controlled version model (OCP) in
-        \Cref{eqn:optimal_control_problem}.}
+        Parameters regarding the
+constraints conditions and cost functional of the OCP
+\eqref{eqn:optimal_control_problem}.}
     \label{tbl:ocp_parameters_description}
 \end{table*}
