@@ -1,7 +1,7 @@
 # Title :     Estimation Program
 # Objective : Parameter estimation before mitigation measures were implemented,
 #             that is, from February 19 to October 31, 2020
-# Created by: Biomathematics Sonoran Team
+# Created by: Biomathematics Sonora Team
 # Created on: 25/01/2021
 #
 library(deSolve)
